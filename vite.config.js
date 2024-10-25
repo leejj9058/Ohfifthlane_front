@@ -1,16 +1,22 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue(),
-  ],
+  plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
-})
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+  build: {
+    outDir: "../final_project_team03_back/src/main/resources/static",
+  },
+  server: {
+    proxy: {
+      "/api": "http://localhost:9000",
+    },
+  },
+});
