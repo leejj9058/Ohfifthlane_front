@@ -27,8 +27,8 @@ const password = ref('');
 const handleLogin = async () => {
   try {
     const response = await axios.post('/api/login', {
-      userId: userId.value,
-      password: password.value
+      accountEmail: userId.value,
+      accountPassword: password.value
     });
 
     // 로그인 성공 (상태 코드 200-299)

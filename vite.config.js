@@ -12,11 +12,11 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../final_project_team03_back/src/main/resources/static",
+    outDir: "../Ohfifthlane_back/src/main/resources/static",
   },
   server: {
     proxy: {
-      "/api": "http://localhost:9000",
+      "/api": "http://localhost:8080",
     },
   },
 });
