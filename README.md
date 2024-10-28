@@ -27,3 +27,17 @@ npm run dev
 ```sh
 npm run build
 ```
+
+#header
+웹에서는 사이드바
+앱에는 상단에 위치(햄버거 바)
+
+#컬러 #000080(진한 네이비) #FFFF00(노랑)
+
+#image
+src/assets/images
+
+#install 목록
+타임피커
+qrcode
+bootstrap
