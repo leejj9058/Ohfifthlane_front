@@ -9,6 +9,11 @@ import BoardDetail from '../views/BoardDetailView.vue';
 import NewBoard from '../views/BoardWriteView.vue';
 import Report from '../views/ReportView.vue';
 import ReportDetail from '../views/ReportDetailView.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import AboutView from '../views/AboutView.vue'
+import QRcodeView from '../views/QRcodeView.vue'
+import QRcodeReportView from '../views/QRcodeReportView.vue'
 
 
 const router = createRouter({
@@ -64,8 +69,25 @@ const router = createRouter({
       name: 'reportdetail',
       component: ReportDetail
     },
-
+    {
+      path: '/about', 
+      name: 'about',
+      component: AboutView
+    },
+    {
+      path: '/qrcode',
+      name: 'qrcode',
+      component: QRcodeView
+    },
+    {
+      path: '/qrcodereport',
+      name: 'qrcodereport',
+      component: QRcodeReportView
+    },
+    
+ 
   ]
-})
+  
+});
 
 export default router;
