@@ -27,3 +27,24 @@ npm run dev
 ```sh
 npm run build
 ```
+
+#header
+웹에서는 사이드바
+앱에는 상단에 위치(햄버거 바 클릭시 메뉴 나옴)
+
+#컬러 #000080(진한 네이비) #FFFF00(노랑)
+
+#image
+src/assets/images
+
+#install 목록
+1) 타임피커
+npm install vue3-datepicker
+npm install vue3-timepicker
+
+2) QRcode
+npm install vue-qrcode-reader
+npm install vue-router
+
+3) 부트스트랩
+npm install boostrap
