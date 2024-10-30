@@ -23,9 +23,9 @@
     </form>
 
     <div class="mt-4 text-center">
-      <router-link to="/find-id" class="btn btn-link">아이디 찾기</router-link>
+      <router-link to="/findId" class="btn btn-link">아이디 찾기</router-link>
         <span class="mx-2">|</span>
-        <router-link to="/find-password" class="btn btn-link">비밀번호 찾기</router-link>
+        <router-link to="/findPassword" class="btn btn-link">비밀번호 찾기</router-link>
     </div>
 
     <div class="mt-4 text-center">
@@ -47,8 +47,8 @@ const password = ref('');
 const handleLogin = async () => {
   try {
     const response = await axios.post('/api/login', {
-      userId: userId.value,
-      password: password.value
+      accountEmail: userId.value,
+      accountPassword: password.value
     });
 
     // 로그인 성공 (상태 코드 200-299)
