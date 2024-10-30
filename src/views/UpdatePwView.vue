@@ -10,16 +10,29 @@
       <section class="password-change-section my-4 text-center">
         <h3 class="fw-bold">비밀번호 변경</h3>
         <form>
-          <label for="new-password">변경할 비밀번호</label>
-          <input type="password" id="new-password" v-model="newPassword" />
-          <p v-if="errors.newPassword" class="error-message">{{ errors.newPassword }}</p>
+          <!-- 새 비밀번호 입력 -->
+          <label for="accountPassword">새 비밀번호</label>
+          <input
+            type="password"
+            id="accountPassword"
+            v-model="accountPassword" 
+            placeholder="새 비밀번호를 입력하세요"
+          />
+          <p v-if="errors.accountPassword" class="error-message">{{ errors.accountPassword }}</p>
 
-          <label for="confirm-password">일치 확인</label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" />
+           <!-- 비밀번호 확인 입력 -->
+           <label for="confirmPassword">새 비밀번호 확인</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            v-model="confirmPassword"
+            placeholder="비밀번호를 다시 입력하세요"
+          />
           <p v-if="errors.confirmPassword" class="error-message">
             {{ errors.confirmPassword }}
           </p>
 
+          <!-- 비밀번호 변경 버튼 -->
           <button type="button" class="btn btn-primary mt-3" @click="changePassword">
             비밀번호 변경
           </button>
@@ -30,66 +43,45 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router"; // vue-router 가져오기
-import Header from "@/components/Header.vue";
-import axios from "axios";
-const router = useRouter(); // router 인스턴스 생성
+import { ref } from "vue"; 
+import { useRouter } from "vue-router"; // 라우터 사용을 위해 vue-router 가져오기
+import Header from "@/components/Header.vue"; 
+import axios from "axios"; 
 
-// 비밀번호 입력 필드
-const newPassword = ref("");
-const confirmPassword = ref("");
-const errors = ref({}); // 에러 메시지 저장 객체
+const router = useRouter(); // 라우터 인스턴스 생성
 
-// 비밀번호 변경 함수
+// 새 비밀번호와 확인 비밀번호를 관리할 ref 객체
+const accountPassword = ref(""); // 새 비밀번호
+const confirmPassword = ref(""); // 새 비밀번호 확인
+const errors = ref({}); // 에러 메시지 저장용 객체
+
+/**
+ * 비밀번호 변경을 처리하는 함수
+ */
 const changePassword = async () => {
   errors.value = {}; // 에러 메시지 초기화
-  let isValid = true;
 
-  // 비밀번호 유효성 검사 - 8자리 이상 및 대문자 포함 여부 확인
-  if (!newPassword.value) {
-    errors.value.newPassword = "비밀번호를 입력하세요.";
-    isValid = false;
-  } else {
-    // 비밀번호 길이 검사
-    if (newPassword.value.length < 8) {
-      errors.value.newPassword = "비밀번호는 최소 8자리여야 합니다.";
-      isValid = false;
-    }
-
-    // 대문자 포함 여부 검사
-    let hasUpperCase = false;
-    for (let i = 0; i < newPassword.value.length; i++) {
-      if (newPassword.value[i] >= "A" && newPassword.value[i] <= "Z") {
-        hasUpperCase = true;
-        break;
-      }
-    }
-    if (!hasUpperCase) {
-      errors.value.newPassword = "비밀번호에는 대문자가 1개 이상 포함되어야 합니다.";
-      isValid = false;
-    }
-  }
-
-  // 비밀번호 확인 일치 여부 검사
-  if (newPassword.value !== confirmPassword.value) {
+  // 1. 유효성 검사 수행
+  if (!accountPassword.value) {
+    errors.value.accountPassword = "비밀번호를 입력하세요.";
+  } else if (accountPassword.value.length < 8) {
+    errors.value.accountPassword = "비밀번호는 최소 8자리여야 합니다.";
+  } else if (!/[A-Z]/.test(accountPassword.value)) {
+    errors.value.accountPassword = "비밀번호에는 대문자가 1개 이상 포함되어야 합니다.";
+  } else if (accountPassword.value !== confirmPassword.value) {
     errors.value.confirmPassword = "비밀번호가 일치하지 않습니다.";
-    isValid = false;
-  }
-
-  // 모든 유효성 검사를 통과하면 비밀번호 변경 요청
-  if (isValid) {
+  } else {
+    // 모든 유효성 검사를 통과한 경우 서버 요청 실행
     try {
-      const response = await axios.post("/api/change-password", {
-        newPassword: newPassword.value,
-        confirmPassword: confirmPassword.value,
+      const response = await axios.post("/api/changeAccountPassword", {
+        accountPassword: accountPassword.value,
       });
 
-      if (response.status >= 200 && response.status < 300) { // 성공 시
+      if (response.status >= 200 && response.status < 300) {
         alert("비밀번호가 성공적으로 변경되었습니다.");
-        router.replace({ path: "/login" });
-      } else if (response.status === 400) { // 실패 시
-        errors.value = response.data.errors;
+        router.replace({ path: "/login" }); // 로그인 페이지로 이동
+      } else {
+        alert("비밀번호 변경에 실패했습니다.");
       }
     } catch (error) {
       console.error("비밀번호 변경 중 오류 발생:", error);

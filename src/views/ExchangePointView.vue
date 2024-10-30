@@ -30,7 +30,7 @@
         >
           <div class="d-flex align-items-center">
             <img
-              src="@/assets/images/5000p.png"
+              src="@/assets/images/5000.png"
               alt="상품 이미지"
               class="product-image me-3"
             />
@@ -39,12 +39,12 @@
               <span> 교환가 : 5000p</span>
             </div>
           </div>
-          <div class="quantity-controls d-flex align-items-center">
-            <button class="btn btn-outline-secondary" @click="decreaseQuantity(0)">
+          <div class="count-controls d-flex align-items-center">
+            <button class="btn btn-outline-secondary" @click="decreaseCount(0)">
               -
             </button>
-            <span class="mx-2">{{ quantities[0] }}</span>
-            <button class="btn btn-outline-secondary" @click="increaseQuantity(0)">
+            <span class="mx-2">{{ count[0] }}</span>
+            <button class="btn btn-outline-secondary" @click="increaseCount(0)">
               +
             </button>
           </div>
@@ -54,7 +54,7 @@
         <div class="product-item d-flex align-items-center justify-content-between mb-4">
           <div class="d-flex align-items-center">
             <img
-              src="@/assets/images/10000p.png"
+              src="@/assets/images/10000.png"
               alt="상품 이미지"
               class="product-image me-3"
             />
@@ -63,12 +63,12 @@
               <span> 교환가 : 10000p</span>
             </div>
           </div>
-          <div class="quantity-controls d-flex align-items-center">
-            <button class="btn btn-outline-secondary" @click="decreaseQuantity(1)">
+          <div class="count-controls d-flex align-items-center">
+            <button class="btn btn-outline-secondary" @click="decreaseCount(1)">
               -
             </button>
-            <span class="mx-2">{{ quantities[1] }}</span>
-            <button class="btn btn-outline-secondary" @click="increaseQuantity(1)">
+            <span class="mx-2">{{ count[1] }}</span>
+            <button class="btn btn-outline-secondary" @click="increaseCount(1)">
               +
             </button>
           </div>
@@ -78,7 +78,7 @@
         <div class="product-item d-flex align-items-center justify-content-between mb-3">
           <div class="d-flex align-items-center">
             <img
-              src="@/assets/images/50000p.png"
+              src="@/assets/images/50000.png"
               alt="상품 이미지"
               class="product-image me-3"
             />
@@ -87,12 +87,12 @@
               <span> 교환가 : 50000p</span>
             </div>
           </div>
-          <div class="quantity-controls d-flex align-items-center">
-            <button class="btn btn-outline-secondary" @click="decreaseQuantity(2)">
+          <div class="count-controls d-flex align-items-center">
+            <button class="btn btn-outline-secondary" @click="decreaseCount(2)">
               -
             </button>
-            <span class="mx-2">{{ quantities[2] }}</span>
-            <button class="btn btn-outline-secondary" @click="increaseQuantity(2)">
+            <span class="mx-2">{{ count[2] }}</span>
+            <button class="btn btn-outline-secondary" @click="increaseCount(2)">
               +
             </button>
           </div>
@@ -105,15 +105,15 @@
         <div class="point-summary d-flex flex-column align-items-center">
           <div class="d-flex justify-content-between" style="width: 300px">
             <span>보유한 포인트</span>
-            <span>{{ userPoints }}p</span>
+            <span>{{ userPoint }}p</span>
           </div>
           <div class="d-flex justify-content-between text-danger" style="width: 300px">
             <span>사용예정 포인트</span>
-            <span>{{ totalPoints }}p</span>
+            <span>{{ totalPoint }}p</span>
           </div>
           <div class="d-flex justify-content-between" style="width: 300px">
             <span>총 잔여 포인트</span>
-            <span>{{ remainingPoints }}p</span>
+            <span>{{ remainPoint }}p</span>
           </div>
           <button class="btn btn-primary mt-3" style="width: 100px">교환하기</button>
         </div>
@@ -122,6 +122,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
@@ -129,43 +130,44 @@ import Header from "@/components/Header.vue";
 
 // 사용자 정보
 const userName = ref("");
-const userPoints = ref(""); 
+const userPoint = ref(""); 
 
 // 개수 관리 배열
-const quantities = ref([0, 0, 0]);
+const count = ref([0, 0, 0]);
 
 // 총 사용 예정 포인트 계산
-const totalPoints = computed(
+const totalPoint = computed(
   () =>
-    quantities.value[0] * 5000 + quantities.value[1] * 10000 + quantities.value[2] * 50000
+    count.value[0] * 5000 + count.value[1] * 10000 + count.value[2] * 50000
 );
 
 // 잔여 포인트 계산
-const remainingPoints = computed(() => userPoints.value - totalPoints.value);
+const remainPoint = computed(() => userPoint.value - totalPoint.value);
 
 // 수량 증가 함수
-const increaseQuantity = (index) => {
-  quantities.value[index] += 1;
+const increaseCount = (index) => {
+  count.value[index] += 1;
 };
 
 // 수량 감소 함수
-const decreaseQuantity = (index) => {
-  if (quantities.value[index] > 0) {
-    quantities.value[index] -= 1;
+const decreaseCount = (index) => {
+  if (count.value[index] > 0) {
+    count.value[index] -= 1;
   }
 };
 
 // Axios를 사용하여 데이터베이스에서 사용자 정보 가져오기
 onMounted(async () => {
   try {
-    const response = await axios.get("/api/user"); // API 엔드포인트에 맞게 URL 수정
+    const response = await axios.get("/api/exchangePoint"); 
     userName.value = response.data.name;
-    userPoints.value = response.data.points;
+    userpoint.value = response.data.point;
   } catch (error) {
     console.error("사용자 정보를 가져오는 중 오류 발생:", error);
   }
 });
 </script>
+
 
 <style scoped>
 .container-fluid {

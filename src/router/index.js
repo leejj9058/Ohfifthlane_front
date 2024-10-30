@@ -17,6 +17,11 @@ import ResidentInputView from '../views/ResidentInputView.vue'
 
 import Search from '../views/SearchView.vue';
 import Login from '../views/Login.vue';
+import PaymentComplete from '../views/PaymentComplete.vue'
+import RentListView from '../views/RentListView.vue'
+import RentDetail from '../views/RentDetail.vue'
+import SearchView from '../views/SearchView.vue'
+import ParkingPayment from '../views/ParkingPayment.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -132,6 +137,32 @@ const router = createRouter({
       component: ResidentInputView,
       props: true,
     },
+    {
+      path: '/paymentComplete',
+      name: 'paymentComplete',
+      component: PaymentComplete
+    },
+    {
+      path: '/rentList',
+      name: 'rentList',
+      component: RentListView
+    },
+    {
+      path: '/rentDetail',
+      name: 'rentDetail',
+      component: RentDetail
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView
+    },
+    {
+      path: '/parkingPay',
+      name: 'parkingPay',
+      component: ParkingPayment
+    }
+
     
 
   ]
