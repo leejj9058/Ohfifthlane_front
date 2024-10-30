@@ -15,6 +15,8 @@ import AboutView from '../views/AboutView.vue'
 import QRcodeView from '../views/QRcodeView.vue'
 import QRcodeReportView from '../views/QRcodeReportView.vue'
 
+import Search from '../views/SearchView.vue';
+import Login from '../views/Login.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,13 +27,13 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/setparking',
-      name: 'setparking',
+      path: '/setParking',
+      name: 'setParking',
       component: SetParking
     },
     {
-      path: '/timeset',
-      name: 'timeset',
+      path: '/timeSet',
+      name: 'timeSet',
       component: ParkingTime
     },
     {
@@ -50,13 +52,13 @@ const router = createRouter({
       component: Notice
     },
     {
-      path: '/boarddetail',
-      name: 'boarddetail',
+      path: '/boardDetail/:noticeId',  // 동적 라우트 경로
+      name: 'boardDetail',
       component: BoardDetail
     },
     {
-      path: '/newboard',
-      name: 'newboard',
+      path: '/newBoard',
+      name: 'newBoard',
       component: NewBoard
     },
     {
@@ -65,8 +67,8 @@ const router = createRouter({
       component: Report
     },
     {
-      path: '/reportdetail',
-      name: 'reportdetail',
+      path: '/reportDetail',
+      name: 'reportDetail',
       component: ReportDetail
     },
     {
@@ -84,8 +86,44 @@ const router = createRouter({
       name: 'qrcodereport',
       component: QRcodeReportView
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue')
+    },
+    {
+      path: '/updateRegister',
+      name: 'updateRegister',
+      component: () => import('../views/UpdateRegisterView.vue')
+    },
+    {
+      path: '/findId',
+      name: 'findId',
+      component: () => import('../views/FindIdView.vue')
+    },
+    {
+      path: '/findPassword',
+      name: 'findPassword',
+      component: () => import('../views/FindPwView.vue')
+    },
+    {
+      path: '/updatePw',
+      name: 'updatePw',
+      component: () => import('../views/UpdatePwView.vue')
+    },
+    {
+      path: '/exchange',
+      name: 'exchange',
+      component: () => import('../views/ExchangePointView.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Login.vue')
+    }
+
     
- 
+
   ]
   
 });
