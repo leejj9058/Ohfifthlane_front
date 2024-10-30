@@ -9,7 +9,8 @@ import BoardDetail from '../views/BoardDetailView.vue';
 import NewBoard from '../views/BoardWriteView.vue';
 import Report from '../views/ReportView.vue';
 import ReportDetail from '../views/ReportDetailView.vue';
-
+import Search from '../views/SearchView.vue';
+import Login from '../views/Login.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,7 +46,7 @@ const router = createRouter({
       component: Notice
     },
     {
-      path: '/boardDetail',
+      path: '/boardDetail/:noticeId',  // 동적 라우트 경로
       name: 'boardDetail',
       component: BoardDetail
     },
