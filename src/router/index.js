@@ -5,15 +5,15 @@ import ParkingTime from '../views/ParkingTimeView.vue';
 import NoticeBoard from '../views/NoticeView.vue';
 import InquiryBoard from '../views/InquiryBoardView.vue';
 import Notice from '../views/NoticeView.vue';
-import BoardDetail from '../views/BoardDetailView.vue';
+import BoardDetail from '../views/BoardDetailView.vue';   
 import NewBoard from '../views/BoardWriteView.vue';
 import Report from '../views/ReportView.vue';
 import ReportDetail from '../views/ReportDetailView.vue';
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
-import QRcodeView from '../views/QRcodeView.vue'
-import QRcodeReportView from '../views/QRcodeReportView.vue'
+import AboutView from '../views/AboutView.vue';
+import QRcodeView from '../views/QRcodeView.vue';
+import QRcodeReportView from '../views/QRcodeReportView.vue';
+import ReportResidentView from '../views/ReportResidentView.vue' 
+import ResidentInputView from '../views/ResidentInputView.vue'
 
 import Search from '../views/SearchView.vue';
 import Login from '../views/Login.vue';
@@ -120,8 +120,18 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('../views/Login.vue')
-    }
-
+    },
+    {
+      path: '/reportresident',
+      name: 'reportresident',
+      component: ReportResidentView
+    },
+    {
+      path: '/residentinput',
+      name: 'residentinput',
+      component: ResidentInputView,
+      props: true,
+    },
     
 
   ]

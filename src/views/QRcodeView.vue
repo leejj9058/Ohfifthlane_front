@@ -3,7 +3,7 @@
   <div class="qr-tutorial-container" v-if="!scanning">
     <div class="qr-modal">
       <button class="qr-back-button" @click="goBack">←</button>
-      <p class="qr-title">장애인표지의 QR을 찍어주세요</p>
+      <p class="qr-title">다음과 같이 장애인표지의 QR을 찍어주세요</p>
       <div class="qr-container">
         <img :src="qrCodeImage" alt="QR 코드" class="qr-code" />
       </div>
@@ -19,36 +19,43 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import Header from '@/components/Header.vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
 import qrCodeImage from '@/assets/images/qr-code.png';
+import axios from 'axios';
 
 export default {
   components: {
     Header,
     QrcodeStream,
   },
-  data() {
-    return {
-      qrCodeImage, // Vue가 빌드 경로를 자동으로 설정
-      scanning: false,
+  setup() {
+    // Define reactive references
+    const qrCodeImageRef = ref(qrCodeImage);
+    const scanning = ref(false);
+    const decodedContent = ref("");
+
+    // Define methods
+    const goBack = () => {
+      window.history.back();
     };
-  },
-  methods: {
-    goBack() {
-      this.$router.go(-1); // 이전 페이지로 돌아가기
-    },
-    startScanning() {
-      this.scanning = true; // 스캔 모드로 전환
-    },
-    stopScanning() {
-      this.scanning = false; // 스캔 모드 종료
-    },
-    onDecode(decodedContent) {
-      alert(`QR 코드가 인식되었습니다: ${decodedContent}`);
-      this.scanning = false; // 스캔 완료 후 종료
-    },
-    onInit(promise) {
+
+    const startScanning = () => {
+      scanning.value = true;
+    };
+
+    const stopScanning = () => {
+      scanning.value = false;
+    };
+
+    const onDecode = (content) => {
+      decodedContent.value = content;
+      alert(`QR 코드가 인식되었습니다: ${content}`);
+      scanning.value = false;
+    };
+
+    const onInit = (promise) => {
       promise
         .then(() => {
           console.log("카메라 접근 성공");
@@ -56,17 +63,39 @@ export default {
         .catch((error) => {
           console.error("카메라 접근 오류:", error);
           alert("카메라에 접근할 수 없습니다.");
-          this.scanning = false;
+          scanning.value = false;
         });
-    },
-    goToNextStep() {
+    };
+
+    const goToNextStep = async () => {
       if (confirm("다음 단계로 진행하시겠습니까?")) {
-        this.$router.push({ 
-          name: 'qrcodereport',
-          query: { vehicleNumber: this.decodedContent } 
-        });
+        try {
+          const response = await axios.post("/api/qr-data", {
+            qrContent: decodedContent.value,
+          });
+
+          if (response.status === 200) {
+            alert("QR 데이터가 서버에 전송되었습니다.");
+            window.location.href = `/qrcodereport?vehicleNumber=${decodedContent.value}`;
+          }
+        } catch (error) {
+          console.error("QR 데이터 전송 실패:", error);
+          alert("QR 데이터 전송 중 오류가 발생했습니다.");
+        }
       }
-    },
+    };
+
+    return {
+      qrCodeImage: qrCodeImageRef,
+      scanning,
+      decodedContent,
+      goBack,
+      startScanning,
+      stopScanning,
+      onDecode,
+      onInit,
+      goToNextStep,
+    };
   },
 };
 </script>

@@ -21,37 +21,52 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import Header from '@/components/Header.vue';
 import qrCodeImage from '@/assets/images/qr-code.png';
+import axios from 'axios';
 
 export default {
   components: {
     Header,
   },
-  data() {
-    return {
-      qrCodeImage,             // 이미지 경로 가져오기
-      vehicleNumber: "",        // 차량번호 입력값
-      isRegistered: false,      // 차량 등록 여부
-      registrationChecked: false, // 조회 여부 체크
+  setup() {
+    const vehicleNumber = ref("");
+    const isRegistered = ref(false);
+    const registrationChecked = ref(false);
+
+    const checkVehicleRegistration = async () => {
+      try {
+        const response = await axios.post('/api/check-vehicle', {
+          vehicleNumber: vehicleNumber.value,
+        });
+
+        isRegistered.value = response.data.isRegistered;
+        registrationChecked.value = true;
+      } catch (error) {
+        console.error("차량 등록 조회 오류:", error);
+        alert("차량 정보를 조회할 수 없습니다. 다시 시도해 주세요.");
+      }
     };
-  },
-  methods: {
-    checkVehicleRegistration() {
-      
-      // DB 조회 결과 예제
-      const registeredVehicles = ["123가1234", "456나5678"]; // 예시 차량 번호 리스트
-      this.isRegistered = registeredVehicles.includes(this.vehicleNumber);
-      this.registrationChecked = true; // 조회가 수행되었음을 표시
-    },
-    submitReport() {
-      // 입력값 유효성 검사
-      if (!this.vehicleNumber) {
+
+    const submitReport = () => {
+      if (!vehicleNumber.value) {
         alert("모든 항목을 입력해주세요");
+      } else if (!isRegistered.value) {
+        alert("등록되지 않은 차량입니다. 신고할 수 없습니다.");
       } else {
         alert("신고접수 되었습니다");
       }
-    },
+    };
+
+    return {
+      qrCodeImage,
+      vehicleNumber,
+      isRegistered,
+      registrationChecked,
+      checkVehicleRegistration,
+      submitReport,
+    };
   },
 };
 </script>
