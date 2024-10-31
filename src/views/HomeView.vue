@@ -28,7 +28,7 @@
 
           <!-- 오른쪽 두 개의 작은 카드 -->
           <div>
-            <div class="card mb-3 p-3 shadow-sm custom-card d-flex flex-column justify-content-center align-items-center" style="height: 140px; width: 200px" @click="ggoToReportResident">
+            <div class="card mb-3 p-3 shadow-sm custom-card d-flex flex-column justify-content-center align-items-center" style="height: 140px; width: 200px" @click="goToReportResident">
               <img src="@/assets/images/parkingd.png" style="height: 60px;"  />
               <h6 class="mt-3" style="font-weight: bold;">거주자 주차신고</h6>
             </div>
@@ -99,6 +99,8 @@ const goNoticeDetail = (noticeId) => {
   router.push(`/boardDetail/${noticeId}`);
 };
 
+const posts = ref([]);
+
 // 공지사항 데이터 가져오기
 const fetchPosts = async () => {
   try {
@@ -132,7 +134,7 @@ const goToPublicParking = () => {
   router.replace({ path: "/publicparking", query: {} });
 };
 
-const ggoToReportResident = () => {
+const goToReportResident = () => {
   router.replace({ path: "/reportresident", query: {} });
 };
 
