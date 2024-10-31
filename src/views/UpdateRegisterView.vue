@@ -139,18 +139,21 @@ const updateRegister = async () => {
     // 모든 유효성 검사를 통과한 경우 서버 요청 실행
     try {
       const response = await axios.post("/api/updateRegister", {
+        userName: userName.value,
         accountPassword: accountPassword.value,
+        userTel: `${userTelPart1.value}-${userTelPart2.value}-${userTelPart3.value}`,
+        userAddress: userAddress.value,
       });
 
       if (response.status >= 200 && response.status < 300) {
-        alert("비밀번호가 성공적으로 변경되었습니다.");
+        alert("회원정보가 성공적으로 변경되었습니다.");
         router.replace({ path: "/login" }); // 로그인 페이지로 이동
       } else {
-        alert("비밀번호 변경에 실패했습니다.");
+        alert("회원정보 변경에 실패했습니다.");
       }
     } catch (error) {
-      console.error("비밀번호 변경 중 오류 발생:", error);
-      alert("비밀번호 변경 중 오류가 발생했습니다. 다시 시도해 주세요.");
+      console.error("회원정보 변경 중 오류 발생:", error);
+      alert("회원정보 변경 중 오류가 발생했습니다. 다시 시도해 주세요.");
     }
   }
 };
@@ -162,7 +165,8 @@ const updateRegister = async () => {
   border-radius: 12px;
   border: 1px solid #ddd;
   padding: 20px;
-  width: 460px;
+  max-width: 460px;
+  overflow: hidden;
 }
 
 form {

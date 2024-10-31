@@ -3,7 +3,7 @@
     <Header />
 
     <!-- 전체 페이지 컨테이너 -->
-    <div class="container-fluid d-flex flex-column align-items-center">
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
       <!-- 잔여 포인트 섹션 -->
       <section class="point-balance-section text-center">
         <div class="point-info d-flex align-items-center justify-content-between">
@@ -34,7 +34,7 @@
               alt="상품 이미지"
               class="product-image me-3"
             />
-            <div class="d-flex flex-column align-items-start" style="margin-left: 30px">
+            <div class="d-flex flex-column align-items-start" style="margin-left: 20px">
               <span>문화상품권 5000원</span>
               <span> 교환가 : 5000p</span>
             </div>
@@ -58,7 +58,7 @@
               alt="상품 이미지"
               class="product-image me-3"
             />
-            <div class="d-flex flex-column align-items-start" style="margin-left: 30px">
+            <div class="d-flex flex-column align-items-start" style="margin-left: 20px">
               <span>문화상품권 10000원</span>
               <span> 교환가 : 10000p</span>
             </div>
@@ -82,7 +82,7 @@
               alt="상품 이미지"
               class="product-image me-3"
             />
-            <div class="d-flex flex-column align-items-start" style="margin-left: 30px">
+            <div class="d-flex flex-column align-items-start" style="margin-left: 20px">
               <span>문화상품권 50000원</span>
               <span> 교환가 : 50000p</span>
             </div>
@@ -161,7 +161,7 @@ onMounted(async () => {
   try {
     const response = await axios.get("/api/exchangePoint"); 
     userName.value = response.data.name;
-    userpoint.value = response.data.point;
+    userPoint.value = response.data.point;
   } catch (error) {
     console.error("사용자 정보를 가져오는 중 오류 발생:", error);
   }
@@ -174,7 +174,9 @@ onMounted(async () => {
   min-height: 100vh;
   padding-top: 20px;
   overflow-x: hidden;
-  
+  width: 100%; /* 반응형 너비 */
+  max-width: 460px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
 }
 
 .point-balance-section {
@@ -183,6 +185,7 @@ onMounted(async () => {
   border: 1px solid #ddd;
   padding: 20px;
   width: 460px;
+
 }
 
 .point-info {
@@ -231,5 +234,14 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.count-controls button {
+  width: 35px; /* 버튼 너비 조정 */
+  height: 35px; /* 버튼 높이 조정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px; /* 버튼 글자 크기 조정 */
 }
 </style>
