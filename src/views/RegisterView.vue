@@ -239,8 +239,6 @@ const registerForm = async () => {
 
 <style scoped>
 .container-fluid {
-  background: linear-gradient(to bottom, #e0f7fa, #ffffff);
-  min-height: 100vh;
   padding-top: 20px;
   overflow-x: hidden;
 }

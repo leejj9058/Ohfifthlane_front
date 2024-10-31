@@ -139,6 +139,10 @@ const findPassword  = async () => {
 
 
 <style scoped>
+.container-fluid {
+  padding-top: 20px;
+  overflow-x: hidden;
+}
 
 .password-reset-section {
   background-color: #fff;
