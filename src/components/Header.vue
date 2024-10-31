@@ -2,14 +2,14 @@
   <div :class="['header-container', { 'mobile-header': isMobile }]">
     <div v-if="isMobile" class="mobile-top-bar">
       <button @click="toggleSidebar" class="sidebar-toggle">
-        <i class="bi bi-list"></i>
+        <i class="bi bi-list" ></i>
       </button>
-      <h1 class="logo-text">주 차</h1>
+      <h1 class="logo-text" >주 차</h1>
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
       <div class="logo-container" v-if="!isMobile">
-        <img width="50" height="50" src="https://img.icons8.com/fluency/48/car--v1.png" alt="car-icon" />
+        <img width="50" height="50" src="https://img.icons8.com/fluency/48/car--v1.png" alt="car-icon" @click="goToHome" />
         <h1 class="logo-text">주 차</h1>
       </div>
 
@@ -17,16 +17,14 @@
         <button class="btn btn-primary" @click="goToLogin">로그인 / 회원가입</button>
         <hr class="my-4" />
         <ul class="nav-list" style="font-size: 20px;">
-          <li><a @click="moveView">회원정보수정</a></li>
-          <li><a @click="moveView">내 주차장 관리</a></li>
+          <li><a @click="moveView('/updateRegister')">회원정보수정</a></li>
+          <li><a @click="moveView('/timeset')">내 주차장 관리</a></li>
           <li><a @click="moveView('/setparking')">주차장 등록하기</a></li>
-          <hr class="my-4" />
-          <li><a @click="moveView">주차장 예약</a></li>
-          <li><a @click="moveView">최근신고내역</a></li>
+
           <hr class="my-4" />
           <li><a @click="moveView('/notice')">공지사항</a></li>
           <li><a @click="moveView('/board')">문의사항</a></li>
-          <li><a @click="moveView('/board')">교환소</a></li>
+          <li><a @click="moveView('/exchange')">교환소</a></li>
         </ul>
       </nav>
 
@@ -46,6 +44,10 @@ const sidebarOpen = ref(false);
 
 const goToLogin = () => {
   router.push('/login');
+};
+
+const goToHome = () => {
+  router.push('/');
 };
 
 const checkMobile = () => {

@@ -33,12 +33,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios'; // Axios 임포트
+import { useRoute} from 'vue-router';
 
-const searchQuery = ref('');
 
 const listItems = ref([]);
+const route = useRoute(); // 현재 라우트의 정보
+const searchQuery = ref('');
+
+onMounted(() => {
+  if(route.params.destination != null){
+    searchQuery.value = route.params.destination;
+    console.log('성공'+searchQuery.value);
+    sendSearchQuery();
+  }
+});
 
 const goToMap = (item) => {
   console.log(item)
