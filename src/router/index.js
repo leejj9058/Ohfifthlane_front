@@ -14,6 +14,7 @@ import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
 import ReportResidentView from '../views/ReportResidentView.vue' 
 import ResidentInputView from '../views/ResidentInputView.vue'
+import MapView from '../views/MapView.vue'
 
 import Search from '../views/SearchView.vue';
 import Login from '../views/Login.vue';
@@ -161,8 +162,12 @@ const router = createRouter({
       path: '/parkingPay',
       name: 'parkingPay',
       component: ParkingPayment
-    }
-
+    },
+    {
+      path: '/map',
+      name: 'map',
+      component: MapView,
+    },
     
 
   ]
