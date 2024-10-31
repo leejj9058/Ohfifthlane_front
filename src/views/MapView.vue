@@ -1,14 +1,14 @@
 <template>
     <Header></Header>
-    
+
     <div class="map-container">
         <!-- Map -->
         <div id="map" style="width:100%; height:1000px;"></div>
 
         <!-- Search bar -->
-        <div class="search-bar">
-            <input type="text" placeholder="목적지를 입력하세요." v-model="searchQuery">
-            <button class="btn-search" @click="searchLocation"><i class="bi bi-search"></i></button>
+        <div class="search-bar" @click="navigateToSearchView">
+            <input type="text" placeholder="목적지를 입력하세요." readonly>
+            <button class="btn-search"><i class="bi bi-search"></i></button>
         </div>
 
         <!-- Filter buttons below search bar -->
@@ -18,6 +18,15 @@
             <button class="filter-option" @click="filterGasStations">주유소</button>
             <button class="filter-option" @click="filterChargingStations">충전소</button>
         </div>
+
+        <button class="revisitButton" @click="revisit()">
+            <i class="bi bi-geo-alt-fill"></i> <!-- 재탐색 버튼 -->
+        </button>
+
+        <!-- Button to return to current location -->
+        <button class="return-location-button" @click="returnToCurrentLocation()">
+            <i class="bi bi-geo-alt-fill"></i> <!-- GPS icon -->
+        </button>
 
         <!-- Floating filter button -->
         <button class="filter-button" @click="openFilter">
@@ -36,13 +45,10 @@ const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
 
-const cafes = ref([]);
+const markerObject = ref([]);
 const isLoggedIn = ref(false);
 const router = useRouter();
 const isOpen = ref(false);
-const reviewScore = ref(3);
-const searchQuery = ref('');
-
 
 onMounted(() => {
     const script = document.createElement('script');
@@ -63,24 +69,55 @@ onMounted(() => {
 
             window.kakao.maps.event.addListener(map, 'center_changed', () => {
                 const center = map.getCenter();
-                const centerLat = center.getLat();
-                const centerLng = center.getLng();
+                centerPoint.value.lat = center.getLat();
+                centerPoint.value.lng = center.getLng();
+                console.log(centerPoint);
 
-                console.log('현재 지도 중심 좌표:', centerLat, centerLng);
-
-                searchCafeList(centerLat, centerLng);
             });
         });
     };
 });
 
+const revisit = () => { //이동한 좌표로 재탐색
+    searchCafeList(centerPoint.value.lat, centerPoint.value.lng);
+    console.log(centerPoint);
+}
+
+
+// Navigate to the search view when the search bar is clicked
+const navigateToSearchView = () => {
+    router.push({ path: '/search' });
+};
+
 const searchCafeList = async (lng, lat) => {
     try {
-        const response = await axios.post('/api/mylocation', { lng, lat });
-        cafes.value = response.data;
-        createMarker(cafes.value);
+        const response = await axios.post('/api/nearRPZList', {
+            userLat: lat,
+            userLon: lon
+        });
+        markerObject.value = response.data;
+        createMarker(markerObject.value);
     } catch (error) {
         console.error('API 요청 실패:', error);
+    }
+};
+
+// Function to return to the current location
+const returnToCurrentLocation = () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const currentPos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            const newCenter = new window.kakao.maps.LatLng(currentPos.lat, currentPos.lng);
+            map.setCenter(newCenter); // Move the map center to the current location
+            console.log('현재 위치로 이동:', currentPos);
+        }, () => {
+            alert("위치 정보를 가져오는 데 실패했습니다.");
+        });
+    } else {
+        alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
     }
 };
 
@@ -161,6 +198,8 @@ const createMarker = (cafeList) => {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    /* Add cursor pointer for visual feedback */
 }
 
 .search-bar input {
@@ -168,6 +207,8 @@ const createMarker = (cafeList) => {
     padding: 10px;
     border: none;
     border-radius: 10px 0 0 10px;
+    pointer-events: none;
+    /* Disable input interaction */
 }
 
 .search-bar button {
@@ -202,6 +243,31 @@ const createMarker = (cafeList) => {
     color: white;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Return location button */
+.return-location-button {
+    position: absolute;
+    bottom: 20px;
+    /* Positioned at the bottom */
+    right: 20px;
+    /* Positioned to the right */
+    z-index: 1;
+    background-color: #007bff;
+    /* Blue background for the button */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    /* Adjust button size */
+    height: 50px;
+    /* Adjust button size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    /* Icon size */
     cursor: pointer;
 }
 
