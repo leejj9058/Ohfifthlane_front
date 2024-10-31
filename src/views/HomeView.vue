@@ -131,7 +131,7 @@ onMounted(() => {
 });
 
 const goToPublicParking = () => {
-  router.replace({ path: "/publicparking", query: {} });
+  router.replace({ path: "/map", query: {} });
 };
 
 const goToReportResident = () => {
