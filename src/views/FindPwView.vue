@@ -59,7 +59,7 @@ import { ref, computed } from "vue";
 import Header from "@/components/Header.vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-// 이메일 입력 필드
+
 const router = useRouter();
 
 const userName = ref("");
@@ -103,7 +103,6 @@ const userSSNBackMasked = computed({
 const findPassword  = async () => {
   errors.value = {}; // 에러 메시지 초기화
 
-
   if (!userName.value) {
     errors.value.userName = "이름을 입력하세요.";
   } else if (userSSNFront.value.length !== 6 || userSSNBack.value.length !== 7) {
@@ -118,7 +117,10 @@ const findPassword  = async () => {
     // 모든 유효성 검사를 통과한 경우 서버 요청 실행
     try {
       const response = await axios.post("/api/findAccountPassword", {
-        accountPassword: accountPassword.value,
+        userName: userName.value,
+        userSSNFront: userSSNFront.value,
+        userSSNBack: userSSNBack.value,
+        accountEmail: accountEmail.value,
       });
 
       if (response.status >= 200 && response.status < 300) {
@@ -137,12 +139,13 @@ const findPassword  = async () => {
 
 
 <style scoped>
+
 .password-reset-section {
   background-color: #fff;
   border-radius: 12px;
   border: 1px solid #ddd;
   padding: 20px;
-  width: 460px;
+  max-width: 460px;
 }
 
 form {
