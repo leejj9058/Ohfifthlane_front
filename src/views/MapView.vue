@@ -44,6 +44,7 @@ import axios from 'axios';
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
+let markers = [];
 
 const markerObject = ref([]);
 const isLoggedIn = ref(false);
@@ -65,42 +66,63 @@ onMounted(() => {
 
             map = new window.kakao.maps.Map(mapContainer, mapOption);
 
-            searchCafeList(centerPoint.value.lat, centerPoint.value.lng);
-
             window.kakao.maps.event.addListener(map, 'center_changed', () => {
                 const center = map.getCenter();
                 centerPoint.value.lat = center.getLat();
                 centerPoint.value.lng = center.getLng();
                 console.log(centerPoint);
 
+                searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
             });
         });
     };
 });
 
 const revisit = () => { //이동한 좌표로 재탐색
-    searchCafeList(centerPoint.value.lat, centerPoint.value.lng);
+    searchRPZList(centerPoint.value.lat, centerPoint.value.lng);
     console.log(centerPoint);
 }
-
 
 // Navigate to the search view when the search bar is clicked
 const navigateToSearchView = () => {
     router.push({ path: '/search' });
 };
 
-const searchCafeList = async (lng, lat) => {
+const searchRPZList = async (lng, lat) => {
     try {
         const response = await axios.post('/api/nearRPZList', {
-            userLat: lat,
-            userLon: lon
+            userLon: lng,
+            userLat: lat
         });
-        markerObject.value = response.data;
+        console.log(`API 응답: `, response.data)
+
+        markerObject.value = response.data.map(item => ({
+            lat: item.rpzLat,
+            lng: item.rpzLon,
+            address: item.rpzAddress,
+            fee: item.rpzFee,
+            id: item.rpzId,
+            manageName: item.rpzManageName,
+            manageTel: item.rpzManageTel,
+            num: item.rpzNum,
+            userId: item.userId
+        }));
+
+        //기존 마커 제거
+        removeMarkers();
+
         createMarker(markerObject.value);
     } catch (error) {
         console.error('API 요청 실패:', error);
     }
 };
+
+const removeMarkers = () => {
+    markers.forEach(marker => {
+        marker.setMap(null);
+    });
+    markers = [];
+}
 
 // Function to return to the current location
 const returnToCurrentLocation = () => {
@@ -153,21 +175,23 @@ const goToHome = () => {
     router.replace({ path: '/' });
 };
 
-const moveCafeInfo = (tblid) => {
-    router.replace({ path: '/cafeinfo/', query: { tblid: tblid } });
+const moveRPZInfo = (rpzId) => {
+    router.replace({ path: '/rpzinfo/', query: { rpzId: rpzId } });
 }
 
-const createMarker = (cafeList) => {
-    cafeList.forEach((cafe) => {
-        const markerPosition = new window.kakao.maps.LatLng(cafe.lat, cafe.lng);
+const createMarker = (rpzList) => {
+    rpzList.forEach((rpz) => {
+        const markerPosition = new window.kakao.maps.LatLng(rpz.lat, rpz.lng);
         const marker = new window.kakao.maps.Marker({
             position: markerPosition,
-            title: cafe.name
+            title: rpz.num // 마커 제목 설정
         });
         marker.setMap(map);
 
+        markers.push(marker);
+
         window.kakao.maps.event.addListener(marker, 'click', () => {
-            moveCafeInfo(cafe.tblId);
+            moveRPZInfo(rpz.rpzId);
         });
     });
 };
@@ -199,7 +223,6 @@ const createMarker = (cafeList) => {
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    /* Add cursor pointer for visual feedback */
 }
 
 .search-bar input {
@@ -207,8 +230,7 @@ const createMarker = (cafeList) => {
     padding: 10px;
     border: none;
     border-radius: 10px 0 0 10px;
-    pointer-events: none;
-    /* Disable input interaction */
+    pointer-events: none; /* Disable input interaction */
 }
 
 .search-bar button {
@@ -250,24 +272,18 @@ const createMarker = (cafeList) => {
 .return-location-button {
     position: absolute;
     bottom: 20px;
-    /* Positioned at the bottom */
     right: 20px;
-    /* Positioned to the right */
     z-index: 1;
     background-color: #007bff;
-    /* Blue background for the button */
     color: white;
     border: none;
     border-radius: 50%;
     width: 50px;
-    /* Adjust button size */
     height: 50px;
-    /* Adjust button size */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    /* Icon size */
     cursor: pointer;
 }
 
