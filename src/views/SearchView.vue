@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center">
     <div class="search-container">
-      <div class="input-group mb-3">
+      <div class="input-group mb-1">
         <span class="input-group-text">
           <i class="bi bi-arrow-left"></i>
         </span>
@@ -22,6 +22,12 @@
           </span>
         </div>
       </div>
+      <div v-for="(item, index) in listItems" :key="index" class="list-item m-2" @click="goToMap(item)">
+        <div class="clickable-item"> 
+          <strong v-html="item.title"></strong><br>
+          <span>{{ item.address }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -32,6 +38,14 @@ import axios from 'axios'; // Axios 임포트
 
 const searchQuery = ref('');
 
+const listItems = ref([]);
+
+const goToMap = (item) => {
+  console.log(item)
+  
+  /* router.push(`/map/${item.latitude}/${item.longitude}`); */
+};
+
 // 검색 쿼리를 서버로 전송하는 함수
 const sendSearchQuery = async () => {
   if (searchQuery.value.trim() === '') {
@@ -40,10 +54,11 @@ const sendSearchQuery = async () => {
   }
 
   try {
-    const response = await axios.post('https://your-api-endpoint.com/search', {
-      query: searchQuery.value, // 입력된 쿼리 전송
+    const response = await axios.get('/api/search', {
+      params: { name: searchQuery.value } // 입력된 쿼리 전송
     });
     console.log('서버 응답:', response.data); // 서버 응답 확인
+    listItems.value = response.data;
   } catch (error) {
     console.error('오류 발생:', error); // 오류 처리
   }
@@ -51,6 +66,13 @@ const sendSearchQuery = async () => {
 </script>
 
 <style scoped>
+
+/* 마우스 커서를 포인터로 변경 */
+.clickable-item {
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
 .container-fluid {
   padding-top: 20px;
   overflow-x: hidden;
@@ -58,7 +80,7 @@ const sendSearchQuery = async () => {
 .search-container {
   width: 100%;
   max-width: 400px;
-  margin: auto;
+  margin-right: 320px;
   padding-top: 2rem;
 }
 
