@@ -1,14 +1,14 @@
 <template>
     <Header></Header>
-    
+
     <div class="map-container">
         <!-- Map -->
         <div id="map" style="width:100%; height:1000px;"></div>
 
         <!-- Search bar -->
-        <div class="search-bar">
-            <input type="text" placeholder="목적지를 입력하세요." v-model="searchQuery">
-            <button class="btn-search" @click="searchLocation"><i class="bi bi-search"></i></button>
+        <div class="search-bar" @click="navigateToSearchView">
+            <input type="text" placeholder="목적지를 입력하세요." readonly>
+            <button class="btn-search"><i class="bi bi-search"></i></button>
         </div>
 
         <!-- Filter buttons below search bar -->
@@ -18,6 +18,15 @@
             <button class="filter-option" @click="filterGasStations">주유소</button>
             <button class="filter-option" @click="filterChargingStations">충전소</button>
         </div>
+
+        <button class="revisitButton" @click="revisit()">
+            <i class="bi bi-geo-alt-fill"></i> <!-- 재탐색 버튼 -->
+        </button>
+
+        <!-- Button to return to current location -->
+        <button class="return-location-button" @click="returnToCurrentLocation()">
+            <i class="bi bi-geo-alt-fill"></i> <!-- GPS icon -->
+        </button>
 
         <!-- Floating filter button -->
         <button class="filter-button" @click="openFilter">
@@ -35,14 +44,12 @@ import axios from 'axios';
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
+let markers = [];
 
-const cafes = ref([]);
+const markerObject = ref([]);
 const isLoggedIn = ref(false);
 const router = useRouter();
 const isOpen = ref(false);
-const reviewScore = ref(3);
-const searchQuery = ref('');
-
 
 onMounted(() => {
     const script = document.createElement('script');
@@ -59,28 +66,80 @@ onMounted(() => {
 
             map = new window.kakao.maps.Map(mapContainer, mapOption);
 
-            searchCafeList(centerPoint.value.lat, centerPoint.value.lng);
-
             window.kakao.maps.event.addListener(map, 'center_changed', () => {
                 const center = map.getCenter();
-                const centerLat = center.getLat();
-                const centerLng = center.getLng();
+                centerPoint.value.lat = center.getLat();
+                centerPoint.value.lng = center.getLng();
+                console.log(centerPoint);
 
-                console.log('현재 지도 중심 좌표:', centerLat, centerLng);
-
-                searchCafeList(centerLat, centerLng);
+                searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
             });
         });
     };
 });
 
-const searchCafeList = async (lng, lat) => {
+const revisit = () => { //이동한 좌표로 재탐색
+    searchRPZList(centerPoint.value.lat, centerPoint.value.lng);
+    console.log(centerPoint);
+}
+
+// Navigate to the search view when the search bar is clicked
+const navigateToSearchView = () => {
+    router.push({ path: '/search' });
+};
+
+const searchRPZList = async (lng, lat) => {
     try {
-        const response = await axios.post('/api/mylocation', { lng, lat });
-        cafes.value = response.data;
-        createMarker(cafes.value);
+        const response = await axios.post('/api/nearRPZList', {
+            userLon: lng,
+            userLat: lat
+        });
+        console.log(`API 응답: `, response.data)
+
+        markerObject.value = response.data.map(item => ({
+            lat: item.rpzLat,
+            lng: item.rpzLon,
+            address: item.rpzAddress,
+            fee: item.rpzFee,
+            id: item.rpzId,
+            manageName: item.rpzManageName,
+            manageTel: item.rpzManageTel,
+            num: item.rpzNum,
+            userId: item.userId
+        }));
+
+        //기존 마커 제거
+        removeMarkers();
+
+        createMarker(markerObject.value);
     } catch (error) {
         console.error('API 요청 실패:', error);
+    }
+};
+
+const removeMarkers = () => {
+    markers.forEach(marker => {
+        marker.setMap(null);
+    });
+    markers = [];
+}
+
+// Function to return to the current location
+const returnToCurrentLocation = () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const currentPos = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            const newCenter = new window.kakao.maps.LatLng(currentPos.lat, currentPos.lng);
+            map.setCenter(newCenter); // Move the map center to the current location
+            console.log('현재 위치로 이동:', currentPos);
+        }, () => {
+            alert("위치 정보를 가져오는 데 실패했습니다.");
+        });
+    } else {
+        alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
     }
 };
 
@@ -116,21 +175,23 @@ const goToHome = () => {
     router.replace({ path: '/' });
 };
 
-const moveCafeInfo = (tblid) => {
-    router.replace({ path: '/cafeinfo/', query: { tblid: tblid } });
+const moveRPZInfo = (rpzId) => {
+    router.replace({ path: '/rpzinfo/', query: { rpzId: rpzId } });
 }
 
-const createMarker = (cafeList) => {
-    cafeList.forEach((cafe) => {
-        const markerPosition = new window.kakao.maps.LatLng(cafe.lat, cafe.lng);
+const createMarker = (rpzList) => {
+    rpzList.forEach((rpz) => {
+        const markerPosition = new window.kakao.maps.LatLng(rpz.lat, rpz.lng);
         const marker = new window.kakao.maps.Marker({
             position: markerPosition,
-            title: cafe.name
+            title: rpz.num // 마커 제목 설정
         });
         marker.setMap(map);
 
+        markers.push(marker);
+
         window.kakao.maps.event.addListener(marker, 'click', () => {
-            moveCafeInfo(cafe.tblId);
+            moveRPZInfo(rpz.rpzId);
         });
     });
 };
@@ -161,6 +222,7 @@ const createMarker = (cafeList) => {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .search-bar input {
@@ -168,6 +230,7 @@ const createMarker = (cafeList) => {
     padding: 10px;
     border: none;
     border-radius: 10px 0 0 10px;
+    pointer-events: none; /* Disable input interaction */
 }
 
 .search-bar button {
@@ -202,6 +265,25 @@ const createMarker = (cafeList) => {
     color: white;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Return location button */
+.return-location-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
     cursor: pointer;
 }
 
