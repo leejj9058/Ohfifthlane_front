@@ -34,12 +34,17 @@
 import { ref, computed } from "vue";
 import Header from "@/components/Header.vue";
 import axios from 'axios';
+import { useRouter } from 'vue-router'; // Vue Router 추가
+
+// router 인스턴스 생성
+const router = useRouter();
 
 // 이름과 주민번호를 ref로 선언
 const userName = ref("");
 const userSSNFront = ref("");
 const userSSNBack = ref("");
 const errors = ref({}); // 에러 메시지 저장
+
 
 // 주민번호 뒷자리 마스킹된 값을 계산하는 computed
 const userSSNBackMasked = computed({
@@ -97,14 +102,14 @@ const findId = async () => {
       alert(`당신의 아이디는 ${response.data} 입니다.`);
       router.replace({ path: "/login" });
     }
-  } catch (error) {
-    if (error.response && error.response.status === 400) {
-      alert('아이디를 찾을 수 없습니다.');
-    } else {
-      console.error('아이디 찾기 오류:', error);
-      alert('오류가 발생 하였습니다.');
+    else {
+        alert("아이디 찾기에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("비밀번호 변경 중 오류 발생:", error);
+      alert("비밀번호 찾기 중 오류가 발생했습니다. 다시 시도해 주세요.");
     }
-  }
+  
 };
 </script>
 

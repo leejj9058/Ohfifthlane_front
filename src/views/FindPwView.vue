@@ -59,7 +59,7 @@ import { ref, computed } from "vue";
 import Header from "@/components/Header.vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-// 이메일 입력 필드
+
 const router = useRouter();
 
 const userName = ref("");
@@ -140,16 +140,12 @@ const findPassword  = async () => {
 
 <style scoped>
 
-.container-fluid {
-  padding-top: 20px;
-  overflow-x: hidden;
-}
-
 .password-reset-section {
-  width: 100%;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 20px;
   max-width: 460px;
-  margin: auto;
-  padding-top: 2rem;
 }
 
 form {
