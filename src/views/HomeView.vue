@@ -8,9 +8,9 @@
       <!-- 검색창 -->
       <div class="search-container" style="width: 460px;">
         <div class="input-group">
-          <input type="text" class="rounded-search form-control" placeholder="어디로 갈까요?" />
+          <input type="text" class="rounded-search form-control" placeholder="어디로 갈까요?" v-model="destination" />
           <span class="input-group-text">
-            <i class="bi bi-search"></i>
+            <i class="bi bi-search" @click="searchDestination()"></i>
           </span>
         </div>
       </div>
@@ -53,9 +53,9 @@
           <button class="btn btn-primary animated-button" style="background-color: #add8e6; border: none" @click="goToNoticePage">+</button>
         </div>
         <ul class="list-unstyled">
-          <li v-for="(post, index) in posts" :key="index" class="d-flex justify-content-between align-items-center py-2 border-bottom">
-            <span>{{ post.title }}</span>
-            <span class="text-muted">{{ post.date }}</span>
+          <li v-for="post in notices" :key="post.noticeId" class="d-flex justify-content-between align-items-center py-2 border-bottom"  @click="goNoticeDetail(post.noticeId)">
+            <span>{{ post.noticeTitle }}</span>
+            <span class="text-muted">{{ post.noticeDate }}</span>
           </li>
         </ul>
       </section>
@@ -74,27 +74,53 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import Header from "@/components/Header.vue";
 import router from "@/router";
+import axios from 'axios';
 
+// 공지사항 
+const notices = ref([]);
 
+// 목적지 입력값 
+const destination = ref('');
 
-const posts = ref([]);
+// 목적지 입력 후 검색 시 검색 페이지로 값 가지고 이동
+const searchDestination = () => {
+  console.log(destination.value)
+  
+  router.push(`/search/${destination.value}`);
+};
+
+// 공지사항 클릭 시 상세 페이지로 이동
+const goNoticeDetail = (noticeId) => {
+  console.log(noticeId)
+  
+  router.push(`/boardDetail/${noticeId}`);
+};
 
 // 공지사항 데이터 가져오기
 const fetchPosts = async () => {
   try {
-    const response = {
-      data: [
-        { title: " 첫 번째 게시글", date: "2024-10-01" },
-        { title: " 두 번째 게시글", date: "2024-10-02" },
-        { title: " 세 번째 게시글", date: "2024-10-03" },
-      ],
-    };
-    posts.value = response.data;
+    const response = await axios.post('/api/getNotice');
+    // 공지사항 불러오기 성공 (상태 코드 200-299)
+    if (response.status >= 200 && response.status < 300) {
+      notices.value = response.data;
+    } else {
+      // 예상치 못한 상태 코드
+      throw new Error('Unexpected response status');
+    }
   } catch (error) {
-    console.error("공지사항을 불러오는 중 오류가 발생했습니다.", error);
+    if (error.response) {
+      // 서버가 2xx 범위를 벗어나는 상태 코드로 응답한 경우
+      console.error('공지사항 실패:', error.response.data.message || '알 수 없는 오류 발생');
+    } else if (error.request) {
+      // 요청이 전송되었으나 응답을 받지 못한 경우
+      console.error('서버 응답 없음');
+    } else {
+      // 요청 설정 중에 오류가 발생한 경우
+      console.error('요청 오류:', error.message);
+    }
   }
 };
 
@@ -119,7 +145,7 @@ const goToNoticePage = () => {
 };
 
 const goToReservationHistory = () => {
-  router.replace({ path: "/reservationHistory", query: {} });
+  router.replace({ path: "/rentList", query: {} });
 };
 </script>
 
