@@ -95,11 +95,11 @@ const findId = async () => {
     });
     if (response.status >= 200 && response.status < 300) {
       alert(`당신의 아이디는 ${response.data} 입니다.`);
+      router.replace({ path: "/login" });
     }
   } catch (error) {
     if (error.response && error.response.status === 400) {
       alert('아이디를 찾을 수 없습니다.');
-      router.replace({ path: "/login" });
     } else {
       console.error('아이디 찾기 오류:', error);
       alert('오류가 발생 하였습니다.');
@@ -120,7 +120,7 @@ const findId = async () => {
   border-radius: 12px;
   border: 1px solid #ddd;
   padding: 20px;
-  width: 460px;
+  max-width: 460px;
   /* 메인 페이지와 동일한 너비 */
 }
 
