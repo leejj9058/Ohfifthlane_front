@@ -12,7 +12,7 @@ import ReportDetail from '../views/ReportDetailView.vue';
 import AboutView from '../views/AboutView.vue';
 import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
-import ReportResidentView from '../views/ReportResidentView.vue' 
+import ResidentReportView from '../views/ResidentReportView.vue' 
 import ResidentInputView from '../views/ResidentInputView.vue'
 import MapView from '../views/MapView.vue'
 
@@ -128,9 +128,9 @@ const router = createRouter({
       component: () => import('../views/Login.vue')
     },
     {
-      path: '/reportresident',
-      name: 'reportresident',
-      component: ReportResidentView
+      path: '/residentReport',
+      name: 'residentReport',
+      component: ResidentReportView
     },
     {
       path: '/residentinput',
