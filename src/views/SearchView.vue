@@ -1,10 +1,8 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center">
     <div class="search-container">
-      <div class="input-group mb-1">
-        <span class="input-group-text">
-          <i class="bi bi-arrow-left"></i>
-        </span>
+      <div class="input-group mb-3">
+        <button @click="goBack" class="input-group-text"><i class="bi bi-arrow-left"></i></button>
         <div class="position-relative flex-grow-1">
           <input
             type="text"
@@ -49,6 +47,10 @@ onMounted(() => {
     sendSearchQuery();
   }
 });
+
+const goBack = () => {
+  window.history.back(); // 브라우저 히스토리에서 뒤로 이동
+};
 
 const goToMap = (item) => {
   console.log(item)

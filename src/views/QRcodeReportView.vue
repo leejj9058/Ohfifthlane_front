@@ -20,54 +20,38 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import Header from '@/components/Header.vue';
 import qrCodeImage from '@/assets/images/qr-code.png';
 import axios from 'axios';
 
-export default {
-  components: {
-    Header,
-  },
-  setup() {
-    const vehicleNumber = ref("");
-    const isRegistered = ref(false);
-    const registrationChecked = ref(false);
+const vehicleNumber = ref("");
+const isRegistered = ref(false);
+const registrationChecked = ref(false);
 
-    const checkVehicleRegistration = async () => {
-      try {
-        const response = await axios.post('/api/check-vehicle', {
-          vehicleNumber: vehicleNumber.value,
-        });
+const checkVehicleRegistration = async () => {
+  try {
+    const response = await axios.post('/api/checkVehicle', {
+      disablePersonCarNum : vehicleNumber.value,
+    });
+    console.log(response.data);
+    isRegistered.value = response.data;
+    registrationChecked.value = true;
+  } catch (error) {
+    console.error("차량 등록 조회 오류:", error);
+    alert("차량 정보를 조회할 수 없습니다. 다시 시도해 주세요.");
+  }
+};
 
-        isRegistered.value = response.data.isRegistered;
-        registrationChecked.value = true;
-      } catch (error) {
-        console.error("차량 등록 조회 오류:", error);
-        alert("차량 정보를 조회할 수 없습니다. 다시 시도해 주세요.");
-      }
-    };
-
-    const submitReport = () => {
-      if (!vehicleNumber.value) {
-        alert("모든 항목을 입력해주세요");
-      } else if (!isRegistered.value) {
-        alert("등록되지 않은 차량입니다. 신고할 수 없습니다.");
-      } else {
-        alert("신고접수 되었습니다");
-      }
-    };
-
-    return {
-      qrCodeImage,
-      vehicleNumber,
-      isRegistered,
-      registrationChecked,
-      checkVehicleRegistration,
-      submitReport,
-    };
-  },
+const submitReport = () => {
+  if (!vehicleNumber.value) {
+    alert("모든 항목을 입력해주세요");
+  } else if (!isRegistered.value) {
+    alert("등록되지 않은 차량입니다. 신고할 수 없습니다.");
+  } else {
+    alert("신고접수 되었습니다");
+  }
 };
 </script>
 
