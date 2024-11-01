@@ -154,6 +154,11 @@ const router = createRouter({
       component: RentDetail
     },
     {
+      path: '/search/:destination',
+      name: 'searchDestination',
+      component: SearchView
+    },
+    {
       path: '/search',
       name: 'search',
       component: SearchView
