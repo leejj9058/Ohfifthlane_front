@@ -19,19 +19,32 @@
             <button class="filter-option" @click="filterChargingStations">충전소</button>
         </div>
 
-        <button class="revisitButton" @click="revisit()">
-            <i class="bi bi-geo-alt-fill"></i> <!-- 재탐색 버튼 -->
-        </button>
-
-        <!-- Button to return to current location -->
-        <button class="return-location-button" @click="returnToCurrentLocation()">
-            <i class="bi bi-geo-alt-fill"></i> <!-- GPS icon -->
-        </button>
+        <div class="button-container">
+            <button class="revisitButton" @click="revisit()">
+                <i class="bi bi-arrow-clockwise"></i>현재위치에서 재탐색
+            </button>
+            <button class="return-location-button" @click="returnToCurrentLocation()">
+                <i class="bi bi-geo-alt-fill"></i>
+            </button>
+        </div>
 
         <!-- Floating filter button -->
         <button class="filter-button" @click="openFilter">
             <i class="bi bi-funnel-fill"></i>
         </button>
+
+        <!-- Bottom Sheet Modal -->
+        <transition name="slide-fade">
+            <div v-if="showModal" class="bottom-sheet" @mousedown="startDrag" @mouseup="stopDrag" @mouseleave="stopDrag" @mousemove="drag">
+                <div class="modal-content">
+                    <h3>{{ selectedRPZ.manageName }}</h3>
+                    <p>주소: {{ selectedRPZ.address }}</p>
+                    <p>10분 요금: {{ selectedRPZ.fee }}</p>
+                    <button @click="moveReservation(selectedRPZ.id)">자세히 보기</button>
+                    <button @click="showModal = false">닫기</button>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -47,9 +60,11 @@ let map;
 let markers = [];
 
 const markerObject = ref([]);
-const isLoggedIn = ref(false);
+const selectedRPZ = ref({});
+const showModal = ref(false);
+const isDragging = ref(false);
+const startY = ref(0);
 const router = useRouter();
-const isOpen = ref(false);
 
 onMounted(() => {
     const script = document.createElement('script');
@@ -70,20 +85,15 @@ onMounted(() => {
                 const center = map.getCenter();
                 centerPoint.value.lat = center.getLat();
                 centerPoint.value.lng = center.getLng();
-                console.log(centerPoint);
-
-                searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
             });
         });
     };
 });
 
-const revisit = () => { //이동한 좌표로 재탐색
-    searchRPZList(centerPoint.value.lat, centerPoint.value.lng);
-    console.log(centerPoint);
-}
+const revisit = () => {
+    searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
+};
 
-// Navigate to the search view when the search bar is clicked
 const navigateToSearchView = () => {
     router.push({ path: '/search' });
 };
@@ -94,7 +104,6 @@ const searchRPZList = async (lng, lat) => {
             userLon: lng,
             userLat: lat
         });
-        console.log(`API 응답: `, response.data)
 
         markerObject.value = response.data.map(item => ({
             lat: item.rpzLat,
@@ -108,9 +117,7 @@ const searchRPZList = async (lng, lat) => {
             userId: item.userId
         }));
 
-        //기존 마커 제거
         removeMarkers();
-
         createMarker(markerObject.value);
     } catch (error) {
         console.error('API 요청 실패:', error);
@@ -122,9 +129,8 @@ const removeMarkers = () => {
         marker.setMap(null);
     });
     markers = [];
-}
+};
 
-// Function to return to the current location
 const returnToCurrentLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -133,8 +139,7 @@ const returnToCurrentLocation = () => {
                 lng: position.coords.longitude
             };
             const newCenter = new window.kakao.maps.LatLng(currentPos.lat, currentPos.lng);
-            map.setCenter(newCenter); // Move the map center to the current location
-            console.log('현재 위치로 이동:', currentPos);
+            map.setCenter(newCenter);
         }, () => {
             alert("위치 정보를 가져오는 데 실패했습니다.");
         });
@@ -149,52 +154,70 @@ const openFilter = () => {
 
 const filterResident = () => {
     console.log("거주자 필터 클릭됨");
-    // Add filtering logic here
 };
 
 const filterPublicParking = () => {
     console.log("공영주차장 필터 클릭됨");
-    // Add filtering logic here
 };
 
 const filterGasStations = () => {
     console.log("주유소 필터 클릭됨");
-    // Add filtering logic here
 };
 
 const filterChargingStations = () => {
     console.log("충전소 필터 클릭됨");
-    // Add filtering logic here
 };
 
-const toggleLogin = () => {
-    isLoggedIn.value = !isLoggedIn.value;
+const moveReservation = (rpzId) => {
+    router.replace({ path: '/reservation/', query: { rpzId: rpzId } });
 };
-
-const goToHome = () => {
-    router.replace({ path: '/' });
-};
-
-const moveRPZInfo = (rpzId) => {
-    router.replace({ path: '/rpzinfo/', query: { rpzId: rpzId } });
-}
 
 const createMarker = (rpzList) => {
     rpzList.forEach((rpz) => {
         const markerPosition = new window.kakao.maps.LatLng(rpz.lat, rpz.lng);
         const marker = new window.kakao.maps.Marker({
             position: markerPosition,
-            title: rpz.num // 마커 제목 설정
+            title: rpz.num
         });
         marker.setMap(map);
-
         markers.push(marker);
 
         window.kakao.maps.event.addListener(marker, 'click', () => {
-            moveRPZInfo(rpz.rpzId);
+            selectedRPZ.value = rpz;
+            showModal.value = true;
         });
     });
 };
+
+// Dragging functions
+const startDrag = (event) => {
+    isDragging.value = true;
+    startY.value = event.clientY;
+};
+
+const stopDrag = () => {
+    isDragging.value = false;
+};
+
+const drag = (event) => {
+    if (!isDragging.value) return;
+
+    const deltaY = event.clientY - startY.value;
+    startY.value = event.clientY;
+
+    const bottomSheet = document.querySelector('.bottom-sheet');
+    const currentTransform = getComputedStyle(bottomSheet).transform;
+    const translateY = currentTransform === 'none' ? 0 : parseInt(currentTransform.split(',')[5]);
+
+    const newTransform = `translateY(${translateY + deltaY}px)`;
+    bottomSheet.style.transform = newTransform;
+
+    // 슬라이드 내리기
+    if (translateY + deltaY > 100) {
+        showModal.value = false; // 아래로 내릴 때 모달 닫기
+    }
+};
+
 </script>
 
 <style scoped>
@@ -203,7 +226,7 @@ const createMarker = (rpzList) => {
     display: flex;
     justify-content: center;
     width: 100%;
-    margin: 0 auto;
+    height: 100vh; /* 전체 높이 사용 */
 }
 
 #map {
@@ -230,7 +253,7 @@ const createMarker = (rpzList) => {
     padding: 10px;
     border: none;
     border-radius: 10px 0 0 10px;
-    pointer-events: none; /* Disable input interaction */
+    pointer-events: none;
 }
 
 .search-bar button {
@@ -268,23 +291,69 @@ const createMarker = (rpzList) => {
     cursor: pointer;
 }
 
-/* Return location button */
-.return-location-button {
+.button-container {
     position: absolute;
     bottom: 20px;
     right: 20px;
     z-index: 1;
+    display: flex;
+    gap: 10px;
+}
+
+.revisitButton {
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    border-radius: 5px;
+    padding: 10px 15px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
+    gap: 5px;
     cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.return-location-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Bottom Sheet Modal */
+.bottom-sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0; /* 항상 바닥에 고정 */
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    transform: translateY(100%);
+    z-index: 10;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+/* Slide fade transition */
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+    transition: transform 0.3s ease;
+}
+
+.slide-fade-enter {
+    transform: translateY(100%);
+}
+
+.slide-fade-leave-to {
+    transform: translateY(100%);
 }
 
 /* Floating filter button */

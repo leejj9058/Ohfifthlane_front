@@ -28,7 +28,7 @@
 
           <!-- 오른쪽 두 개의 작은 카드 -->
           <div>
-            <div class="card mb-3 p-3 shadow-sm custom-card d-flex flex-column justify-content-center align-items-center" style="height: 140px; width: 200px" @click="goToReportResident">
+            <div class="card mb-3 p-3 shadow-sm custom-card d-flex flex-column justify-content-center align-items-center" style="height: 140px; width: 200px" @click="goToResidentReport">
               <img src="@/assets/images/parkingd.png" style="height: 60px;"  />
               <h6 class="mt-3" style="font-weight: bold;">거주자 주차신고</h6>
             </div>
@@ -131,11 +131,11 @@ onMounted(() => {
 });
 
 const goToPublicParking = () => {
-  router.replace({ path: "/publicparking", query: {} });
+  router.replace({ path: "/map", query: {} });
 };
 
-const goToReportResident = () => {
-  router.replace({ path: "/reportresident", query: {} });
+const goToResidentReport = () => {
+  router.replace({ path: "/residentReport", query: {} });
 };
 
 const goToQRcode = () => {

@@ -115,7 +115,6 @@ const findId = async () => {
 
 <style scoped>
 .container-fluid {
-  background: linear-gradient(to bottom, #e0f7fa, #ffffff);
   padding-top: 20px;
   overflow-x: hidden;
 }
