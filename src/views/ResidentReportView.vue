@@ -101,7 +101,7 @@ export default {
         if (response.data.success) {
           alert("사진이 확인되었습니다.");
           // 사진을 residentinput 페이지로 전송
-          window.location.href = `/residentinput?photo=${capturedPhoto.value}`;
+          window.location.href = `/residentReportWrite?photo=${capturedPhoto.value}`;
         } else {
           alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
         }
