@@ -42,7 +42,7 @@ const data = reactive({
 });
 
 const goBack = () => {
-  router.push({ name: 'rentList' }); // 예약 리스트로 돌아가는 로직
+  window.history.back(); // 브라우저 히스토리에서 뒤로 이동
 };
 
 // 길 찾기 함수

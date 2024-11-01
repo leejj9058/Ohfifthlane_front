@@ -2,7 +2,7 @@
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
     <div class="app-outer d-flex align-items-start justify-content-center">
       <div class="app-container p-4 shadow rounded">
-        <button class="btn btn-link text-danger mb-3" @click="goBack">
+        <button class="btn btn-link text-danger mb-2" @click="goBack">
           <i class="bi bi-arrow-left arrow-icon"></i>
         </button>
         <div
@@ -35,6 +35,11 @@ const reservations = ref([]);
 const displayedReservations = ref([]);
 const itemsToShow = ref(5);
 const showMore = ref(true);
+
+const goBack = () => {
+  console.log('눌림')
+  window.history.back(); // 브라우저 히스토리에서 뒤로 이동
+};
 
 // 가라 데이터 정의
 const mockData = [

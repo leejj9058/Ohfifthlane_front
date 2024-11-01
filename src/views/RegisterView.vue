@@ -6,7 +6,12 @@
     <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
       <!-- 회원가입 폼 -->
       <section class="signup-section my-4 text-center">
-        <h3 class="fw-bold">회원가입</h3>
+        <div class="d-flex align-items-center ">
+        <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+        <h3 class="fw-bold" style="margin-left: 120px;">회원가입</h3>
+        </div>
         <form>
           <label for="name">이름</label>
           <input type="text" id="name" v-model="userName" />
@@ -86,6 +91,11 @@ const userTelPart1 = ref(""); // 전화번호 첫 번째 부분
 const userTelPart2 = ref(""); // 전화번호 두 번째 부분
 const userTelPart3 = ref(""); // 전화번호 세 번째 부분
 const userAddress = ref("");
+
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
 
 let checkedEmail = false;
 // 에러 메시지 객체

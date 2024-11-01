@@ -147,7 +147,7 @@ const goToNoticePage = () => {
 };
 
 const goToReservationHistory = () => {
-  router.replace({ path: "/rentList", query: {} });
+  router.push("/rentList");
 };
 </script>
 
