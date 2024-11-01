@@ -4,8 +4,13 @@
     class="container-fluid d-flex flex-column align-items-center justify-content-center"
   >
     <div class="card p-5 login-container">
+      <div class="d-flex align-items-center ">
+      <button class="btn btn-link  mb-3" @click="goBack">
+          <i class="bi bi-arrow-left arrow-icon"></i>
+      </button>
+      </div>
       <form @submit.prevent="handleLogin" class="login-form">
-        <h2 class="text-center">로그인</h2>
+        <h2 class="fw-bold" style="margin-left: 90px;">로그인</h2>
 
         <div class="mt-5 form-group">
           <label for="userId">아이디:</label>
@@ -59,6 +64,12 @@ const router = useRouter();
 const userId = ref("");
 const password = ref("");
 
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
+
+
 const handleLogin = async () => {
   try {
     const response = await axios.post("/api/login", {
@@ -68,7 +79,7 @@ const handleLogin = async () => {
 
     // 로그인 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
-      console.log("로그인 성공");
+      console.log("로그인 성공" + response.data.accountLevel);
       router.push("/");
     } else {
       // 예상치 못한 상태 코드

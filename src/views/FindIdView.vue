@@ -6,7 +6,13 @@
     <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
       <!-- 아이디 찾기 폼 -->
       <section class="signup-section my-4 text-center">
-        <h3 class="fw-bold">아이디 찾기</h3>
+
+        <div class="d-flex align-items-center ">
+          <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+          <h3 class="fw-bold" style="margin-left: 100px;">아이디 찾기</h3>
+        </div>
         <form>
           <label for="name">이름</label>
           <input type="text" id="name" v-model="userName" />
@@ -44,6 +50,11 @@ const userName = ref("");
 const userSSNFront = ref("");
 const userSSNBack = ref("");
 const errors = ref({}); // 에러 메시지 저장
+
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
 
 
 // 주민번호 뒷자리 마스킹된 값을 계산하는 computed
