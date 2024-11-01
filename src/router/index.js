@@ -13,7 +13,7 @@ import AboutView from '../views/AboutView.vue';
 import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
 import ResidentReportView from '../views/ResidentReportView.vue' 
-import ResidentInputView from '../views/ResidentInputView.vue'
+import ResidentReportWriteView from '../views/ResidentReportWriteView.vue'
 import MapView from '../views/MapView.vue'
 
 import Search from '../views/SearchView.vue';
@@ -133,9 +133,9 @@ const router = createRouter({
       component: ResidentReportView
     },
     {
-      path: '/residentinput',
-      name: 'residentinput',
-      component: ResidentInputView,
+      path: '/residentReportWrite',
+      name: 'residentReportWrite',
+      component: ResidentReportWriteView,
       props: true,
     },
     {
