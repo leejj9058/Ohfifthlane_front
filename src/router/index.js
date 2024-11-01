@@ -173,6 +173,11 @@ const router = createRouter({
       name: 'map',
       component: MapView,
     },
+    {
+      path: '/main',
+      name: 'main',
+      component: () => import('../views/MainWebView.vue')
+    },
     
 
   ]

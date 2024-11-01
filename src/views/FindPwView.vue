@@ -8,7 +8,12 @@
     >
       <!-- 비밀번호 찾기 폼 -->
       <section class="password-reset-section my-4 text-center">
-        <h3 class="fw-bold">비밀번호 찾기</h3>
+        <div class="d-flex align-items-center ">
+        <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+        <h3 class="fw-bold" style="margin-left: 100px;">비밀번호 찾기</h3>
+      </div>
         <form>
 
           <label for="name">이름</label>
@@ -67,6 +72,11 @@ const userSSNFront = ref("");
 const userSSNBack = ref("");
 const accountEmail = ref("");
 const errors = ref({}); // 에러 메시지 저장 객체
+
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
 
 const userSSNBackMasked = computed({
   // get 함수: 마스킹된 주민번호 뒷자리를 반환합니다.
