@@ -79,8 +79,13 @@ const handleLogin = async () => {
 
     // 로그인 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
-      console.log("로그인 성공" + response.data.accountLevel);
-      router.push("/");
+      console.log(response.data.accountLevel + '로그인');
+      const accountLevel = response.data.accountLevel;
+      if(accountLevel == 1) {
+        router.push("/main");
+      }else{
+        router.push("/");
+      }
     } else {
       // 예상치 못한 상태 코드
       throw new Error("Unexpected response status");

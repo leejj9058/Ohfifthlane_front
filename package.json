@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev-host": "vite --host 172.168.10.18",
+    "dev-host": "vite --host 172.168.10.11",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
