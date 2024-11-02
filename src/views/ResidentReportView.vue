@@ -2,134 +2,112 @@
   <Header />
   <div class="report-tutorial-container" v-if="showModal">
     <div class="report-modal">
-      <button class="report-back-button" @click="goBack">←</button>
+      <button class="report-back-button" @click="goBack()">←</button>
       <p class="report-title">번호판이 나오도록 촬영해주세요</p>
       <div class="report-container">
         <img src="@/assets/images/example-photo.png" alt="예시 이미지" class="report-example" />
       </div>
-      <button class="report-button" @click="startCamera">촬영하기</button>
+      <button class="report-button" @click="startCamera()">촬영하기</button>
     </div>
   </div>
 
-  <div v-else-if="showPreview" class="photo-preview-modal">
+  <div v-else-if="showPreview()" class="photo-preview-modal">
     <div class="photo-preview">
       <p class="preview-title">이 사진으로 하시겠습니까?</p>
       <div class="preview-container">
-        <img :src="capturedPhoto" alt="Captured Photo" class="captured-photo" />
+        <img :src="capturedPhoto()" alt="Captured Photo" class="captured-photo" />
       </div>
-      <button class="confirm-button" @click="confirmPhoto">확인</button>
-      <button class="cancel-button" @click="retakePhoto">다시 촬영</button>
+      <button class="confirm-button" @click="confirmPhoto()">확인</button>
+      <button class="cancel-button" @click="retakePhoto()">다시 촬영</button>
     </div>
   </div>
 
   <div v-else class="camera-view">
     <video ref="video" class="camera-video" autoplay></video>
-    <button class="capture-button" @click="capturePhoto">사진 찍기</button>
+    <button class="capture-button" @click="capturePhoto()">사진 찍기</button>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import Header from '@/components/Header.vue';
 import axios from 'axios';
 
-export default {
-  components: {
-    Header,
-  },
-  setup() {
-    // 반응형 참조 정의
-    const showModal = ref(true);       // 모달 표시 여부
-    const showPreview = ref(false);     // 사진 미리보기 모달 표시 여부
-    const capturedPhoto = ref(null);    // 캡처된 사진의 URL
-    const videoStream = ref(null);      // 비디오 스트림 객체
+// 반응형 참조 정의
+const showModal = ref(true);
+const showPreview = ref(false);
+const capturedPhoto = ref(null);
+const videoStream = ref(null);
 
-    // 메서드 정의
-    const goBack = () => {
-      window.history.back();
-    };
+// 메서드 정의
+const goBack = () => {
+  window.history.back();
+};
 
-    const startCamera = () => {
-      showModal.value = false;
-      enableCamera();
-    };
+const startCamera = () => {
+  showModal.value = false;
+  enableCamera();
+};
 
-    const enableCamera = () => {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices
-          .getUserMedia({ video: true })
-          .then((stream) => {
-            videoStream.value = stream;
-            // 비디오 스트림을 참조에 연결
-            const videoElement = document.querySelector("video");
-            if (videoElement) {
-              videoElement.srcObject = stream;
-            }
-          })
-          .catch((error) => {
-            console.error("카메라 접근 오류:", error);
-            alert("카메라에 접근할 수 없습니다.");
-          });
-      } else {
-        alert("카메라를 지원하지 않는 브라우저입니다.");
-      }
-    };
-
-    const capturePhoto = () => {
-      const video = document.querySelector("video");
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-      capturedPhoto.value = canvas.toDataURL("image/png");
-      showPreview.value = true;
-      stopCamera();
-    };
-
-    const stopCamera = () => {
-      if (videoStream.value) {
-        videoStream.value.getTracks().forEach((track) => track.stop());
-      }
-    };
-
-    const confirmPhoto = async () => {
-      try {
-        const response = await axios.post('/api/upload-photo', {
-          photo: capturedPhoto.value,
-        });
-
-        if (response.data.success) {
-          alert("사진이 확인되었습니다.");
-          // 사진을 residentinput 페이지로 전송
-          window.location.href = `/residentReportWrite?photo=${capturedPhoto.value}`;
-        } else {
-          alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
+const enableCamera = () => {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then((stream) => {
+        videoStream.value = stream;
+        const videoElement = document.querySelector("video");
+        if (videoElement) {
+          videoElement.srcObject = stream;
         }
-      } catch (error) {
-        console.error("사진 전송 오류:", error);
-        alert("서버에 사진을 전송할 수 없습니다.");
-      }
-      showPreview.value = false;
-    };
+      })
+      .catch((error) => {
+        console.error("카메라 접근 오류:", error);
+        alert("카메라에 접근할 수 없습니다.");
+      });
+  } else {
+    alert("카메라를 지원하지 않는 브라우저입니다.");
+  }
+};
 
-    const retakePhoto = () => {
-      showPreview.value = false;
-      startCamera();
-    };
+const capturePhoto = () => {
+  const video = document.querySelector("video");
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  capturedPhoto.value = canvas.toDataURL("image/png");
+  showPreview.value = true;
+  stopCamera();
+};
 
-    return {
-      showModal,
-      showPreview,
-      capturedPhoto,
-      goBack,
-      startCamera,
-      enableCamera,
-      capturePhoto,
-      stopCamera,
-      confirmPhoto,
-      retakePhoto,
-    };
-  },
+const stopCamera = () => {
+  if (videoStream.value) {
+    videoStream.value.getTracks().forEach((track) => track.stop());
+  }
+};
+
+const confirmPhoto = async () => {
+  try {
+    const response = await axios.post('/api/uploadPhoto', {
+      photo: capturedPhoto.value,
+    });
+
+    if (response.data.success) {
+      alert("사진이 확인되었습니다.");
+      window.location.href = `/residentReportWrite?photo=${capturedPhoto.value}`;
+    } else {
+      alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
+    }
+  } catch (error) {
+    console.error("사진 전송 오류:", error);
+    alert("서버에 사진을 전송할 수 없습니다.");
+  }
+  showPreview.value = false;
+};
+
+const retakePhoto = () => {
+  showPreview.value = false;
+  startCamera();
 };
 </script>
 
