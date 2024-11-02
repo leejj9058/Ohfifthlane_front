@@ -4,6 +4,11 @@
 
     <!-- 전체 페이지 컨테이너 -->
     <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+      <div class="d-flex align-items-center ">
+        <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+        </div>
       <!-- 잔여 포인트 섹션 -->
       <section class="point-balance-section text-center">
         <div class="point-info d-flex align-items-center justify-content-between">
@@ -127,10 +132,18 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import Header from "@/components/Header.vue";
-
+import { useRouter } from 'vue-router';  
 // 사용자 정보
 const userName = ref("");
 const userPoint = ref(""); 
+
+// Vue Router 인스턴스 생성
+const router = useRouter();
+
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
 
 // 개수 관리 배열
 const count = ref([0, 0, 0]);
@@ -168,15 +181,10 @@ onMounted(async () => {
 });
 </script>
 
-
 <style scoped>
 .container-fluid {
-  min-height: 100vh;
   padding-top: 20px;
   overflow-x: hidden;
-  width: 100%; /* 반응형 너비 */
-  max-width: 460px; /* 최대 너비 설정 */
-  margin: 0 auto; /* 중앙 정렬 */
 }
 
 .point-balance-section {
