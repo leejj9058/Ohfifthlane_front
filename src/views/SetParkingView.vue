@@ -1,6 +1,7 @@
 <template>
   <Header></Header>
 
+<div class="container-fluid d-flex flex-column align-items-center justify-content-center">
   <div class="d-flex justify-content-center align-items-center p-3" id="background">
 
     <div class="p-4 p-md-5 w-100 ">
@@ -114,6 +115,7 @@
     </div>
 
   </div>
+</div>
 </template>
 
 <script setup>
@@ -242,6 +244,11 @@ const showModal = () => {
   min-height: 80px;
   vertical-align: top;
   position: relative;
+}
+
+.container-fluid {
+  padding-top: 20px;
+  overflow-x: hidden;
 }
 
 @media (max-width: 768px) {

@@ -9,7 +9,6 @@ import BoardDetail from '../views/BoardDetailView.vue';
 import NewBoard from '../views/BoardWriteView.vue';
 import Report from '../views/ReportView.vue';
 import ReportDetail from '../views/ReportDetailView.vue';
-import AboutView from '../views/AboutView.vue';
 import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
 import ResidentReportView from '../views/ResidentReportView.vue' 
@@ -45,17 +44,12 @@ const router = createRouter({
     {
       path: '/notice',
       name: 'notice',
-      component: NoticeBoard
+      component: Notice
     },
     {
       path: '/board',
       name: 'board',
       component: InquiryBoard
-    },
-    {
-      path: '/notice',
-      name: 'notice',
-      component: Notice
     },
     {
       path: '/boardDetail/:noticeId',  // 동적 라우트 경로
@@ -76,11 +70,6 @@ const router = createRouter({
       path: '/reportDetail',
       name: 'reportDetail',
       component: ReportDetail
-    },
-    {
-      path: '/about', 
-      name: 'about',
-      component: AboutView
     },
     {
       path: '/qrcode',

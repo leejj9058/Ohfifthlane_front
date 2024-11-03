@@ -33,8 +33,8 @@
           <tbody>
             <tr v-for="notice in notices":key="notice.noticeId"class="noticeIndex" @click="gotoNoticeOne(notice.noticeId)" > 
               <td class="text-center">{{ notice.noticeId }}</td>
-              <td  class="noticeTitleOne">{{ notice.noticeTitle }}</td>
-              <td class="text-center">{{notice.noticeDate}}</td>
+              <td  class="noticeTitleOne text-center">{{ notice.noticeTitle }}</td>
+              <td class="text-center">{{formatDate(notice.noticeDate)}}</td>
             </tr>
             
           </tbody>
@@ -70,6 +70,16 @@ const gotoNoticeOne = (noticeId) => {
 const gotoNew = () => {
   router.push(`/newboard`)
 }
+
+//목록에서 작성일 날짜만 나오게끔 형식을 정해준다. 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  //padStart : 문자열 길이 2가 되도록 앞에 0 => 11.01
+  return `${year}-${month}-${day}`;
+};
 
 const getNotice = async () => {
   console.log('공지사항 요청 시작');
