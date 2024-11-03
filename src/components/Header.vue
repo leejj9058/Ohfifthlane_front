@@ -8,9 +8,11 @@
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
-      <div class="logo-container" v-if="!isMobile">
-        <img width="50" height="50" src="https://img.icons8.com/fluency/48/car--v1.png" alt="car-icon" @click="goToHome" />
-        <h1 class="logo-text">주 차</h1>
+      <div class="logo-container text-center" v-if="!isMobile">
+        <div class="go-home" @click="goToHome" >
+        <img width="50" height="50" src="https://img.icons8.com/fluency/48/car--v1.png" alt="car-icon"/>
+        <h1 class="logo-text">오차로</h1>
+        </div>
       </div>
 
       <nav class="nav-menu text-center">
@@ -214,6 +216,23 @@ const goToLogout = async () => {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
+}
+
+.go-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.go-home {
+  transform: scale(1.05);
+  opacity: 0.8;
+}
+
+.go-home:active {
+  transform: scale(0.95);
 }
 
 /* 데스크톱 */

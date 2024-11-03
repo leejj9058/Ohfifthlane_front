@@ -104,8 +104,11 @@ const handleLogin = async () => {
       // 요청 설정 중에 오류가 발생한 경우
       console.error("요청 오류:", error.message);
     }
+  };
   }
-};
+</script>
+
+
 </script>
 
 <style scoped>
