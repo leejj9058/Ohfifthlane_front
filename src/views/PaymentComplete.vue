@@ -32,10 +32,12 @@
 
 <script setup>
 import { reactive, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'; // useRouter 추가
 import axios from 'axios';
 
+
 const route = useRoute();
+const router = useRouter(); // useRouter 초기화
 const data = reactive({
   rpzNum: route.query.rpzNum || 'N/A',
   rpzAddress: route.query.rpzAddress || 'N/A',
@@ -79,9 +81,9 @@ const navigateToDirections = () => {
 
 // 홈으로 버튼 클릭 시 동작할 함수
 const goHome = () => {
-  // 홈으로 이동하는 로직 추가 (예: router.push('/home'))
-  console.log("홈으로 이동");
+  router.push('/'); // 홈으로 이동
 };
+
 </script>
 
 <style scoped>

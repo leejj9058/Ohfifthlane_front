@@ -35,9 +35,9 @@ const router = useRouter();
 const data = reactive({
   rpzNum: route.query.rpzNum || '서초45-1234',
   rpzAddress: route.query.rpzAddress || '서울 서초구 12345',
-  reservationDay: '2024.10.24', // 예약일
-  reservationStartTime: '10:00', // 예약 시작 시간
-  reservationEndTime: '12:00', // 예약 종료 시간
+  reservationDay: route.query.reservationDay ||'2024.10.24', // 예약일
+  reservationStartTime: route.query.reservationStartTime || '10:00', // 예약 시작 시간
+  reservationEndTime: route.query.reservationEndTime || '10:00', // 예약 종료 시간
   paymentDate: new Date().toLocaleString() // 현재 날짜와 시간 표시
 });
 
