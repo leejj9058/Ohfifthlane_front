@@ -4,13 +4,17 @@
 
     <!-- 전체 페이지 컨테이너 -->
     <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
-      <div class="d-flex align-items-center ">
-        <button class="btn btn-link  mb-3" @click="goBack">
-            <i class="bi bi-arrow-left arrow-icon"></i>
-          </button>
-        </div>
+      
       <!-- 잔여 포인트 섹션 -->
       <section class="point-balance-section text-center">
+        <div class="d-flex align-items-center justify-content-between w-100 mb-3">
+          <!-- 뒤로가기 버튼 -->
+          <button class="btn btn-link" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+          <!-- 교환소 제목 -->
+          <h4 class="fw-bold mb-0" style="margin-right: 170px;">교환소</h4>
+        </div>
         <div class="point-info d-flex align-items-center justify-content-between">
           <span>{{ userName }}님</span>
           <div class="d-flex align-items-center">
@@ -19,14 +23,14 @@
               class="coin-icon me-1"
               alt="포인트 아이콘"
             />
-            <span>{{ userPoints }}p</span>
+            <span>{{ userPoint }}p</span>
           </div>
         </div>
       </section>
 
       <!-- 상단 교환소 섹션 -->
       <section class="point-exchange-section text-center">
-        <h4 class="fw-bold">교환소</h4>
+        <h4 class="fw-bold">문화상품권 교환</h4>
 
         <!-- 상품 1 -->
         <div
@@ -120,7 +124,7 @@
             <span>총 잔여 포인트</span>
             <span>{{ remainPoint }}p</span>
           </div>
-          <button class="btn btn-primary mt-3" style="width: 100px">교환하기</button>
+          <button class="btn btn-primary mt-3" style="width: 100px" @click="handleExchange">교환하기</button>
         </div>
       </section>
     </div>
@@ -166,6 +170,18 @@ const increaseCount = (index) => {
 const decreaseCount = (index) => {
   if (count.value[index] > 0) {
     count.value[index] -= 1;
+  }
+};
+
+// 교환하기 버튼 클릭 핸들러
+const handleExchange = () => {
+  if (totalPoint.value > userPoint.value) {
+    alert("보유 포인트가 부족합니다. 교환할 수 없습니다.");
+  } else if (totalPoint.value === 0) {
+    alert("교환할 상품을 선택하세요.");
+  } else {
+    alert("교환이 완료되었습니다!");
+    // 추가로 교환 처리 로직을 넣을 수 있습니다.
   }
 };
 

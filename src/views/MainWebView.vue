@@ -18,16 +18,16 @@
       </div>
     </div>
   </div>
-</section>
+ </section>
 
   <!-- 첫 번째 섹션: 왼쪽에서 날아오는 애니메이션 적용 -->
-  <section>
+  <section id="intro-section">
     <div class="container" >
       <div class="row">
         <!-- 왼쪽 열 -->
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
-          <h3 class="subheading text-primary">거주자 우선주차 쉐어 | 거주자 우선주차 신고 | 장애인QR신고</h3>
+          <h3 class="subheading text-primary">거주자 우선주차 쉐어링 | 거주자 우선주차 신고 | 장애인QR신고</h3>
         <h2 class="main-heading fw-bold">한번에 해결하는 ALL IN ONE 플랫폼<br>(OH!)차로</h2>
           <button class="btn btn-primary mt-3 px-4 py-3" @click="goToHome">
             오차로 웹으로 체험하기
@@ -44,7 +44,7 @@
   </section>
 
   <!-- 두 번째 섹션: 오른쪽에서 날아오는 애니메이션 적용 -->
-  <section>
+  <section id="mobile-intro-section">
     <div class="container">
       <div class="row">
         <!-- 왼쪽 열 -->
@@ -65,7 +65,7 @@
   </section>
 
   <!-- 세 번째 섹션: 위에서 아래로 날아오는 애니메이션 적용 -->
-  <section>
+  <section id="share-intro-section">
     <div class="container">
       <div class="row">
         <!-- 왼쪽 열 -->
@@ -87,12 +87,13 @@
   </section>
 
   <!-- 네 번째 섹션: 아래에서 올라오는 애니메이션 적용 -->
-  <section>
+  <section id="QR-intro-section">
     <div class="container">
       <div class="row">
         <!-- 왼쪽 열 -->
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
+          <h4 class="subheading text-primary">QR신고하기 </h4>
           <h1 class="fw-bold">장애인 주차구역에서</h1>
           <h2 class="fw-bold">불법주정차가 의심된다면</h2>
           <p>장애인차량에 표지가 없거나,<br>장애인 차량인지 의심된다면.<br>장애인 주차 표지의 QR을 찍어서 확인하세요!</p>
@@ -149,7 +150,9 @@ document.addEventListener("scroll", function() {
   padding: 60px 0;
   display: flex;
   text-align: center;
+  background-color: #e0f7ff;
 }
+
 
 
 .subheading {
@@ -197,7 +200,7 @@ document.addEventListener("scroll", function() {
   opacity: 0;
   transform: translateY(100px);
   transition: opacity 0.6s ease, transform 0.6s ease;
-  margin-left: 350px;
+  margin-left: 360px;
 }
 
 .fade-in-up.clear {

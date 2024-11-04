@@ -1,5 +1,4 @@
 <template>
-    <Header></Header>
     <div class="map-container">
         <div id="map" style="width:100%; height:auto;"></div>
         <div class="search-bar">
@@ -66,7 +65,6 @@
 </template>
 
 <script setup>
-import Header from "@/components/Header.vue";
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
