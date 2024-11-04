@@ -1,22 +1,31 @@
 <template>
-  <Header></Header>
-  <div class="form-container">
-    <img :src="qrCodeImage" alt="Captured Photo" class="form-photo" />
-    <p class="form-title">차량번호</p>
-    <div class="input-row">
-      <input type="text" class="form-input" placeholder="차량번호 입력" v-model="vehicleNumber" />
-      <button class="lookup-button" @click="checkVehicleRegistration">조회</button>
-    </div>
-    <div v-if="registrationChecked">
-      <div v-if="isRegistered" class="info-box registered">
-        <p><strong>{{ vehicleNumber }}</strong>는 등록된 차량입니다</p>
+  <div>
+    <Header />
+
+    <!-- 컨테이너 중앙 정렬 -->
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+
+      <!-- 차량 조회 창 -->
+      <div class="form-container">
+        <img :src="qrCodeImage" alt="Captured Photo" class="form-photo" />
+        <p class="form-title">차량번호</p>
+        <div class="input-row">
+          <input type="text" class="form-input" placeholder="차량번호 입력" v-model="vehicleNumber" />
+          <button class="lookup-button" @click="checkVehicleRegistration">조회</button>
+        </div>
+        <div v-if="registrationChecked">
+          <div v-if="isRegistered" class="info-box registered">
+            <p><strong>{{ vehicleNumber }}</strong>는 등록된 차량입니다</p>
+          </div>
+          <div v-else class="info-box unregistered">
+            <p><strong>{{ vehicleNumber }}</strong>는 등록되지 않은 차량입니다.</p>
+            <p class="warning">*차량번호가 일치하는지 한번 더 확인해 주세요*</p>
+          </div>
+        </div>
+        <button class="submit-button" @click="submitReport">신고하기</button>
       </div>
-      <div v-else class="info-box unregistered">
-        <p><strong>{{ vehicleNumber }}</strong>는 등록되지 않은 차량입니다.</p>
-        <p class="warning">*차량번호가 일치하는지 한번 더 확인해 주세요*</p>
-      </div>
+
     </div>
-    <button class="submit-button" @click="submitReport">신고하기</button>
   </div>
 </template>
 
@@ -29,11 +38,12 @@ import axios from 'axios';
 const vehicleNumber = ref("");
 const isRegistered = ref(false);
 const registrationChecked = ref(false);
+const notices = ref([]);
 
 const checkVehicleRegistration = async () => {
   try {
     const response = await axios.post('/api/checkVehicle', {
-      disablePersonCarNum : vehicleNumber.value,
+      disablePersonCarNum: vehicleNumber.value,
     });
     console.log(response.data);
     isRegistered.value = response.data;
@@ -53,9 +63,22 @@ const submitReport = () => {
     alert("신고접수 되었습니다");
   }
 };
+
+const goToNoticePage = () => {
+  // 공지사항 페이지로 이동
+};
+
+const goNoticeDetail = (noticeId) => {
+  // 공지사항 상세 페이지로 이동
+};
 </script>
 
 <style scoped>
+.container-fluid {
+  padding-top: 20px;
+  overflow-x: hidden;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -63,7 +86,7 @@ const submitReport = () => {
   padding: 20px;
   background-color: #f9f9f9;
   width: 100%;
-  max-width: 400px;
+  max-width: 460px;
   margin: 30px auto;
   border-radius: 15px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -146,5 +169,35 @@ const submitReport = () => {
   width: 100%;
   max-width: 300px;
   margin-top: 20px;
+}
+
+.board-section {
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 460px;
+}
+
+.list-unstyled li {
+  position: relative;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.list-unstyled li:hover {
+  background-color: #f0f8ff;
+}
+
+.animated-button {
+  transition: transform 0.3s ease;
+}
+
+.animated-button:hover {
+  transform: rotate(360deg);
+}
+
+.animated-button:active {
+  transform: scale(1.1);
 }
 </style>

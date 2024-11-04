@@ -9,7 +9,6 @@ import BoardDetail from '../views/BoardDetailView.vue';
 import NewBoard from '../views/BoardWriteView.vue';
 import Report from '../views/ReportView.vue';
 import ReportDetail from '../views/ReportDetailView.vue';
-import AboutView from '../views/AboutView.vue';
 import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
 import ResidentReportView from '../views/ResidentReportView.vue' 
@@ -23,6 +22,7 @@ import RentListView from '../views/RentListView.vue'
 import RentDetail from '../views/RentDetail.vue'
 import SearchView from '../views/SearchView.vue'
 import ParkingPayment from '../views/ParkingPayment.vue'
+import Reservation from '../views/Reservation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,17 +45,12 @@ const router = createRouter({
     {
       path: '/notice',
       name: 'notice',
-      component: NoticeBoard
+      component: Notice
     },
     {
       path: '/board',
       name: 'board',
       component: InquiryBoard
-    },
-    {
-      path: '/notice',
-      name: 'notice',
-      component: Notice
     },
     {
       path: '/boardDetail/:noticeId',  // 동적 라우트 경로
@@ -76,11 +71,6 @@ const router = createRouter({
       path: '/reportDetail',
       name: 'reportDetail',
       component: ReportDetail
-    },
-    {
-      path: '/about', 
-      name: 'about',
-      component: AboutView
     },
     {
       path: '/qrcode',
@@ -178,6 +168,13 @@ const router = createRouter({
       name: 'main',
       component: () => import('../views/MainWebView.vue')
     },
+    {
+      path: '/reservation',
+      name: 'reservation',
+      component: Reservation
+    }
+    
+
     
 
   ]

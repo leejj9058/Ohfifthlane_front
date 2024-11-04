@@ -19,7 +19,7 @@
           </div>
           <hr class="thick-line" />
           <p>결제일시: {{ data.paymentDate }}</p>
-          <p>총 금액: {{ data.reservationTotalFee }} 원</p>
+          <p>총 금액: {{ data.reservationTotalFee }}원</p>
         </div>
         <div class="text-center mt-4">
           <button class="btn btn-outline-danger me-2" @click="navigateToDirections">🚗 길 찾기</button>
@@ -32,16 +32,18 @@
 
 <script setup>
 import { reactive, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'; // useRouter 추가
 import axios from 'axios';
 
+
 const route = useRoute();
+const router = useRouter(); // useRouter 초기화
 const data = reactive({
   rpzNum: route.query.rpzNum || 'N/A',
   rpzAddress: route.query.rpzAddress || 'N/A',
-  reservationDay: '2024.10.24', // 예약일
-  reservationStartTime: '10:00', // 예약 시작 시간
-  reservationEndTime: '12:00', // 예약 종료 시간
+  reservationDay: route.query.reservationDay || 'N/A', // URL에서 예약일 가져오기
+  reservationStartTime: route.query.reservationStartTime || 'N/A', // URL에서 시작시간 가져오기
+  reservationEndTime: route.query.reservationEndTime || 'N/A', // URL에서 종료시간 가져오기
   paymentDate: route.query.paymentDate || new Date().toLocaleString(), // 결제일시 기본값으로 현재 시간
   reservationTotalFee: route.query.reservationTotalFee || 'N/A', // 총 금액 추가
   image: route.query.image || '@/assets/images/default_parking_image.png', // 주차 이미지 추가
@@ -79,9 +81,9 @@ const navigateToDirections = () => {
 
 // 홈으로 버튼 클릭 시 동작할 함수
 const goHome = () => {
-  // 홈으로 이동하는 로직 추가 (예: router.push('/home'))
-  console.log("홈으로 이동");
+  router.push('/'); // 홈으로 이동
 };
+
 </script>
 
 <style scoped>
