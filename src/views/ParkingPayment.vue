@@ -8,7 +8,6 @@
     <div class="card app-card p-4 shadow rounded">
       <h4 class="text-center fw-bold">결제 정보</h4>
 
-      <!-- 테두리 추가 -->
       <div class="bordered-info p-2 mt-3 d-flex justify-content-between align-items-center">
         <div>
           <p style="font-size: 0.95rem;"><strong>구획번호:</strong> {{ reservation.rpzNum }}</p>
@@ -30,10 +29,11 @@
             style="width: 500px; padding: 0.3rem; font-size: 0.9rem;"
             v-model.number="usedPoints"
             @input="updateUsedPoints"
+             :value="usedPoints === '' ? '' : usedPoints"
           >
         </div>
         <div class="d-flex justify-content-between align-items-center mt-2">
-          <p class="me-2" style="font-size: 0.9rem; margin-bottom: 0;">보유 : {{ user.points }}P</p>
+          <p class="me-2" style="font-size: 0.9rem; margin-bottom: 0;">보유 : {{ userPoint }}P</p>
           <div class="d-flex align-items-center">
             <input type="checkbox" id="useAllPoints" class="me-1" @change="toggleUseAllPoints">
             <label for="useAllPoints" style="font-size: 0.9rem; margin-bottom: 0;">모두 사용</label>
@@ -41,7 +41,6 @@
         </div>
       </div>
 
-      <!-- 결제 버튼 추가 -->
       <div class="payment-buttons d-flex justify-content-around mt-3">
         <button class="btn btn-success">네이버페이</button>
         <button class="btn btn-warning">카카오페이</button>
@@ -51,11 +50,11 @@
       <hr class="thick-line">
       <div class="d-flex justify-content-between">
         <p>주차금액</p>
-        <p class="text-end">{{ reservation.amount }} 원</p>
+        <p class="text-end">{{ reservation.reservationFee }} 원 </p>
       </div>
       <div class="d-flex justify-content-between">
         <p>포인트 사용</p>
-        <p class="text-end">{{ usedPoints }} 원</p> <!-- 업데이트된 포인트 사용 금액 표시 -->
+        <p class="text-end">{{ usedPoints || 0 }} 원</p>
       </div>
       <div class="d-flex justify-content-between">
         <p><strong>총 금액</strong></p>
@@ -69,38 +68,46 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import axios from 'axios'; // axios 임포트
 import parkingImage from '@/assets/images/parkingarea.png';
 
 const router = useRouter();
+const route = useRoute();
 
+const userPoint = ref(0); // 사용자 포인트 저장
+const usedPoints = ref(''); // 사용될 포인트 기본값을 0으로 설정
+
+// reservation 객체 정의
 const reservation = ref({
-  rpzNum: '122-189',
-  rpzAddress: '서울시 강남구 테헤란로 123',
-  reservationDay: '2024.10.24', // 예약일 추가
-  reservationStartTime: '10:00', // 예약 시작 시간 추가
-  reservationEndTime: '12:00', // 예약 종료 시간 추가
-  image: parkingImage,
-  amount: 5000,
+  rpzNum: route.query.rpzNum,
+  rpzAddress: route.query.rpzAddress,
+  reservationDay: route.query.reservationDay,
+  reservationStartTime: route.query.reservationStartTime,
+  reservationEndTime: route.query.reservationEndTime,
+  reservationFee: route.query.reservationFee, // 주차 요금 가져오기
+  image: parkingImage // 기본 이미지 또는 다른 이미지 경로를 설정
 });
 
-const user = ref({
-  points: 25741,
-  usedPoints: 1000,
+// 총 금액 계산
+const reservationTotalFee = computed(() => {
+  const fee = Number(reservation.value.reservationFee) || 0; // 주차 요금이 숫자인지 확인
+  const points = Number(usedPoints.value) || 0; // 사용 포인트가 숫자인지 확인
+  
+  // 포인트 사용 여부에 따라 총 금액 계산
+  return Math.max(fee - points, 0); 
 });
 
-const usedPoints = ref(0); // 사용될 포인트 저장
-
-const reservationTotalFee = computed(() => reservation.value.amount - usedPoints.value);
-
+// 뒤로 가기
 const goBack = () => {
   router.back(); // 이전 화면으로 돌아가는 로직
 };
 
+// 결제하기
 const completePayment = () => {
   router.push({
-    name: 'paymentComplete',
+    name: 'paymentComplete', // 결제 완료 페이지 이름
     query: {
       rpzNum: reservation.value.rpzNum,
       rpzAddress: reservation.value.rpzAddress,
@@ -116,19 +123,39 @@ const completePayment = () => {
 
 // 포인트 입력에 따른 업데이트
 const updateUsedPoints = () => {
-  if (usedPoints.value > user.value.points) {
-    usedPoints.value = user.value.points; // 최대 포인트 제한
+  if (usedPoints.value > userPoint.value) {
+    usedPoints.value = userPoint.value; // 최대 포인트 제한
+  }
+  
+  if (usedPoints.value < 0) {
+    usedPoints.value = 0; // 음수 입력 방지
   }
 };
 
 // 모두 사용 체크박스 처리
 const toggleUseAllPoints = (event) => {
   if (event.target.checked) {
-    usedPoints.value = user.value.points; // 모든 포인트 사용
+    usedPoints.value = userPoint.value; // 모든 포인트 사용
   } else {
     usedPoints.value = 0; // 체크 해제 시 포인트 초기화
   }
+  updateUsedPoints();
 };
+
+// 사용자 포인트 가져오기
+const fetchUserPoints = async () => {
+  try {
+    const response = await axios.get('/api/user/points'); // 사용자 포인트 API 호출
+    userPoint.value = response.data.points; // 받아온 포인트 값 설정
+  } catch (error) {
+    console.error("포인트를 가져오는 데 실패했습니다:", error);
+  }
+};
+
+// 컴포넌트 마운트 시 사용자 포인트 가져오기
+onMounted(() => {
+  fetchUserPoints();
+});
 </script>
 
 <style scoped>
@@ -170,7 +197,6 @@ const toggleUseAllPoints = (event) => {
   margin: 1rem 0;
 }
 
-/* 결제 버튼 스타일 */
 .payment-buttons {
   margin: 1rem 0;
 }
