@@ -8,7 +8,12 @@
     >
       <!-- 비밀번호 변경 폼 -->
       <section class="password-change-section my-4 text-center">
-        <h3 class="fw-bold">비밀번호 변경</h3>
+        <div class="d-flex align-items-center ">
+        <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+        <h3 class="fw-bold" style="margin-left: 90px;">비밀번호 변경</h3>
+        </div>
         <form>
           <!-- 새 비밀번호 입력 -->
           <label for="accountPassword">새 비밀번호</label>
@@ -49,6 +54,12 @@ import Header from "@/components/Header.vue";
 import axios from "axios"; 
 
 const router = useRouter(); // 라우터 인스턴스 생성
+
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
+
 
 // 새 비밀번호와 확인 비밀번호를 관리할 ref 객체
 const accountPassword = ref(""); // 새 비밀번호

@@ -1,77 +1,84 @@
 <template>
-  <Header></Header>
-  <div class="form-container">
-    <img :src="qrCodeImage" alt="Captured Photo" class="form-photo" />
-    <p class="form-title">차량번호</p>
-    <div class="input-row">
-      <input type="text" class="form-input" placeholder="차량번호 입력" v-model="vehicleNumber" />
-      <button class="lookup-button" @click="checkVehicleRegistration">조회</button>
-    </div>
-    <div v-if="registrationChecked">
-      <div v-if="isRegistered" class="info-box registered">
-        <p><strong>{{ vehicleNumber }}</strong>는 등록된 차량입니다</p>
+  <div>
+    <Header />
+
+    <!-- 컨테이너 중앙 정렬 -->
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+
+      <!-- 차량 조회 창 -->
+      <div class="form-container">
+        <img :src="qrCodeImage" alt="Captured Photo" class="form-photo" />
+        <p class="form-title">차량번호</p>
+        <div class="input-row">
+          <input type="text" class="form-input" placeholder="차량번호 입력" v-model="vehicleNumber" />
+          <button class="lookup-button" @click="checkVehicleRegistration">조회</button>
+        </div>
+        <div v-if="registrationChecked">
+          <div v-if="isRegistered" class="info-box registered">
+            <p><strong>{{ vehicleNumber }}</strong>는 등록된 차량입니다</p>
+          </div>
+          <div v-else class="info-box unregistered">
+            <p><strong>{{ vehicleNumber }}</strong>는 등록되지 않은 차량입니다.</p>
+            <p class="warning">*차량번호가 일치하는지 한번 더 확인해 주세요*</p>
+          </div>
+        </div>
+        <button class="submit-button" @click="submitReport">신고하기</button>
       </div>
-      <div v-else class="info-box unregistered">
-        <p><strong>{{ vehicleNumber }}</strong>는 등록되지 않은 차량입니다.</p>
-        <p class="warning">*차량번호가 일치하는지 한번 더 확인해 주세요*</p>
-      </div>
+
     </div>
-    <button class="submit-button" @click="submitReport">신고하기</button>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import Header from '@/components/Header.vue';
 import qrCodeImage from '@/assets/images/qr-code.png';
 import axios from 'axios';
 
-export default {
-  components: {
-    Header,
-  },
-  setup() {
-    const vehicleNumber = ref("");
-    const isRegistered = ref(false);
-    const registrationChecked = ref(false);
+const vehicleNumber = ref("");
+const isRegistered = ref(false);
+const registrationChecked = ref(false);
+const notices = ref([]);
 
-    const checkVehicleRegistration = async () => {
-      try {
-        const response = await axios.post('/api/check-vehicle', {
-          vehicleNumber: vehicleNumber.value,
-        });
+const checkVehicleRegistration = async () => {
+  try {
+    const response = await axios.post('/api/checkVehicle', {
+      disablePersonCarNum: vehicleNumber.value,
+    });
+    console.log(response.data);
+    isRegistered.value = response.data;
+    registrationChecked.value = true;
+  } catch (error) {
+    console.error("차량 등록 조회 오류:", error);
+    alert("차량 정보를 조회할 수 없습니다. 다시 시도해 주세요.");
+  }
+};
 
-        isRegistered.value = response.data.isRegistered;
-        registrationChecked.value = true;
-      } catch (error) {
-        console.error("차량 등록 조회 오류:", error);
-        alert("차량 정보를 조회할 수 없습니다. 다시 시도해 주세요.");
-      }
-    };
+const submitReport = () => {
+  if (!vehicleNumber.value) {
+    alert("모든 항목을 입력해주세요");
+  } else if (!isRegistered.value) {
+    alert("등록되지 않은 차량입니다. 신고할 수 없습니다.");
+  } else {
+    alert("신고접수 되었습니다");
+  }
+};
 
-    const submitReport = () => {
-      if (!vehicleNumber.value) {
-        alert("모든 항목을 입력해주세요");
-      } else if (!isRegistered.value) {
-        alert("등록되지 않은 차량입니다. 신고할 수 없습니다.");
-      } else {
-        alert("신고접수 되었습니다");
-      }
-    };
+const goToNoticePage = () => {
+  // 공지사항 페이지로 이동
+};
 
-    return {
-      qrCodeImage,
-      vehicleNumber,
-      isRegistered,
-      registrationChecked,
-      checkVehicleRegistration,
-      submitReport,
-    };
-  },
+const goNoticeDetail = (noticeId) => {
+  // 공지사항 상세 페이지로 이동
 };
 </script>
 
 <style scoped>
+.container-fluid {
+  padding-top: 20px;
+  overflow-x: hidden;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -79,7 +86,7 @@ export default {
   padding: 20px;
   background-color: #f9f9f9;
   width: 100%;
-  max-width: 400px;
+  max-width: 460px;
   margin: 30px auto;
   border-radius: 15px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -162,5 +169,35 @@ export default {
   width: 100%;
   max-width: 300px;
   margin-top: 20px;
+}
+
+.board-section {
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 460px;
+}
+
+.list-unstyled li {
+  position: relative;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.list-unstyled li:hover {
+  background-color: #f0f8ff;
+}
+
+.animated-button {
+  transition: transform 0.3s ease;
+}
+
+.animated-button:hover {
+  transform: rotate(360deg);
+}
+
+.animated-button:active {
+  transform: scale(1.1);
 }
 </style>

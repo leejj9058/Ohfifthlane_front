@@ -8,7 +8,12 @@
     >
       <!-- 회원정보 수정 폼 -->
       <section class="signup-section my-4 text-center">
-        <h3 class="fw-bold">회원정보수정</h3>
+        <div class="d-flex align-items-center ">
+        <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+        <h3 class="fw-bold" style="margin-left: 100px;">회원정보수정</h3>
+        </div>
         <form>
           <!-- 이름 입력 -->
           <label for="name">이름</label>
@@ -109,6 +114,12 @@ const userTelPart3 = ref(""); // 전화번호 세 번째 부분
 const userAddress = ref("");
 const errors = ref({}); // 에러 메시지 객체
 
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
+
+
 // 폼 유효성 검사 함수
 const updateRegister = async () => {
   errors.value = {}; // 에러 메시지 초기화
@@ -160,6 +171,10 @@ const updateRegister = async () => {
 </script>
 
 <style scoped>
+.container-fluid {
+  overflow-x: hidden;
+}
+
 .signup-section {
   background-color: #fff;
   border-radius: 12px;

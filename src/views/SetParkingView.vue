@@ -119,6 +119,7 @@
     </div>
 
   </div>
+
 </template>
 
 <script setup>
@@ -261,6 +262,11 @@ const showModal = () => {
   min-height: 80px;
   vertical-align: top;
   position: relative;
+}
+
+.container-fluid {
+  padding-top: 20px;
+  overflow-x: hidden;
 }
 
 @media (max-width: 768px) {

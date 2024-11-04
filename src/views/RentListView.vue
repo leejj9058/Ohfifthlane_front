@@ -2,7 +2,7 @@
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
     <div class="app-outer d-flex align-items-start justify-content-center">
       <div class="app-container p-4 shadow rounded">
-        <button class="btn btn-link text-danger mb-3" @click="goBack">
+        <button class="btn btn-link text-danger mb-2" @click="goBack">
           <i class="bi bi-arrow-left arrow-icon"></i>
         </button>
         <div
@@ -36,28 +36,33 @@ const displayedReservations = ref([]);
 const itemsToShow = ref(5);
 const showMore = ref(true);
 
+const goBack = () => {
+  console.log('눌림')
+  window.history.back(); // 브라우저 히스토리에서 뒤로 이동
+};
+
 // 가라 데이터 정의
 const mockData = [
   {
-    rpzNum: '001',
-    rpzAddress: '서울시 강남구 123',
-    reservationDay: '2023-10-29', // 날짜 추가
-    reservationStartTime: '10:00',
-    reservationEndTime: '11:00',
+    rpzNum: '122-189',
+    rpzAddress: '서울 강남구 120-1',
+    reservationDay: '2024-11-06', // 날짜 추가
+    reservationStartTime: '14:00',
+    reservationEndTime: '16:10',
   },
   {
-    rpzNum: '002',
-    rpzAddress: '부산시 해운대구 456',
-    reservationDay: '2023-10-29',
+    rpzNum: '122-101',
+    rpzAddress: '서울 강남구 141-15',
+    reservationDay: '2024-10-15',
     reservationStartTime: '11:00',
-    reservationEndTime: '12:00',
+    reservationEndTime: '11:50',
   },
   {
-    rpzNum: '003',
-    rpzAddress: '대구시 중구 789',
-    reservationDay: '2023-10-29',
-    reservationStartTime: '12:00',
-    reservationEndTime: '13:00',
+    rpzNum: '101-34',
+    rpzAddress: '서울 서초구 154-12',
+    reservationDay: '2024-05-21',
+    reservationStartTime: '18:30',
+    reservationEndTime: '19:50',
   }
 ];
 

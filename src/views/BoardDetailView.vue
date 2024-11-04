@@ -41,14 +41,18 @@
 <!-- 제목 카드 -->
 
 
+      <!-- 줄 -->
       <hr>
+      <!-- 줄 -->
 
+      <!-- 본문 -->
       <div class="card p-4" style="height: 800px;">
-        {{notice.noticeContent}}
+        {{ notice.noticeContent }}
       </div>
+      <!-- 본문 -->
 
     </div>
-    <!-- 본문 -->
+
 
 
   </div>
@@ -59,6 +63,7 @@ import { ref, onMounted } from 'vue';
 import Header from "@/components/Header.vue";
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import router from '@/router';
 
 const router = useRouter(); // 현재 라우트의 정보
 const route = useRoute(); //라우터 객체 생성
@@ -75,6 +80,16 @@ onMounted(() => {
   getNoticeDetail();
 })
 
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+//뒤로가기
+const goBack = () => {
+  router.go(-1);
+};
+
 // 수정 로직 구현
 function editPost() {
   console.log('게시물 수정');
@@ -90,10 +105,10 @@ function deletePost() {
 const notice = ref({})
 
 const getNoticeDetail = async () => {
-  console.log('공지사항 요청 시작' );
+  console.log('공지사항 요청 시작');
 
   try {
-    const response = await axios.post('/api/getNoticeDetail', { noticeId});
+    const response = await axios.post('/api/getNoticeDetail', { noticeId });
     console.log('응답 데이터:', response);
     // 공지사항 불러오기 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
@@ -140,7 +155,24 @@ const getNoticeDetail = async () => {
   cursor: pointer;
 }
 
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 120px;
+  max-width: 200px;
+  z-index: 1000;
+}
 
+.dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.back {
+  cursor: pointer;
+}
 @media (max-width: 768px) {
   .noticeNo {
     width: 10%;

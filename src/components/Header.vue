@@ -39,11 +39,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from "axios";
 
 const router = useRouter();
 const isMobile = ref(false);
 const sidebarOpen = ref(false);
-
+const accountId = ref(0);
 const goToLogin = () => {
   router.push('/login');
 };
@@ -72,12 +73,71 @@ const moveView = (path) => {
 
 onMounted(() => {
   checkMobile();
+  getAccountId();
   window.addEventListener('resize', checkMobile);
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', checkMobile);
 });
+
+const getAccountId = async () => {
+  try {
+    const response = await axios.get("/api/getAccountId");
+
+    // 로그인 성공 (상태 코드 200-299)
+    if (response.status >= 200 && response.status < 300) {
+      accountId.value = response.data;
+      console.log(accountId.value);
+    } else {
+      // 예상치 못한 상태 코드
+      throw new Error("Unexpected response status");
+    }
+  } catch (error) {
+    if (error.response) {
+      // 서버가 2xx 범위를 벗어나는 상태 코드로 응답한 경우
+      console.error(
+        "실패:",
+        error.response.data.message || "알 수 없는 오류 발생"
+      );
+    } else if (error.request) {
+      // 요청이 전송되었으나 응답을 받지 못한 경우
+      console.error("서버 응답 없음");
+    } else {
+      // 요청 설정 중에 오류가 발생한 경우
+      console.error("요청 오류:", error.message);
+    }
+  }
+};
+
+const goToLogout = async () => {
+  try {
+    const response = await axios.get("/api/goToLogout");
+
+    // 로그인 성공 (상태 코드 200-299)
+    if (response.status >= 200 && response.status < 300) {
+        accountId.value = response.data;
+        console.log("로그아웃" + accountId.value)
+    } else {
+      // 예상치 못한 상태 코드
+      throw new Error("Unexpected response status");
+    }
+  } catch (error) {
+    if (error.response) {
+      // 서버가 2xx 범위를 벗어나는 상태 코드로 응답한 경우
+      console.error(
+        "실패:",
+        error.response.data.message || "알 수 없는 오류 발생"
+      );
+    } else if (error.request) {
+      // 요청이 전송되었으나 응답을 받지 못한 경우
+      console.error("서버 응답 없음");
+    } else {
+      // 요청 설정 중에 오류가 발생한 경우
+      console.error("요청 오류:", error.message);
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -156,6 +216,23 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.go-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.go-home {
+  transform: scale(1.05);
+  opacity: 0.8;
+}
+
+.go-home:active {
+  transform: scale(0.95);
 }
 
 /* 데스크톱 */

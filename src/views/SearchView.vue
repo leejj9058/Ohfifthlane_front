@@ -1,83 +1,279 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center">
-    <div class="search-container">
-      <div class="input-group mb-1">
-        <span class="input-group-text">
-          <i class="bi bi-arrow-left"></i>
-        </span>
+    <div class="search-wrapper">
+      <div class="input-group mb-3">
         <div class="position-relative flex-grow-1">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="목적지를 입력해주세요."
-            v-model="searchQuery"
-            style="padding-right: 40px;"
-          />
-          <span
-            class="position-absolute"
-            style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"
-            @click="sendSearchQuery"
-          >
-            <i class="bi bi-search"></i> <!-- 돋보기 아이콘 -->
+          <span class="position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%);" @click="goBack">
+            <i class="bi bi-chevron-left"></i>
+          </span>
+          <input type="text" class="form-control" placeholder="목적지 또는 주소 검색" v-model="searchQuery" style="padding-right: 40px; padding-left: 30px;" />
+          <span class="position-absolute search-icon" @click="sendSearchQuery">
+            <i class="bi bi-search"></i>
           </span>
         </div>
       </div>
-      <div v-for="(item, index) in listItems" :key="index" class="list-item m-2" @click="goToMap(item)">
-        <div class="clickable-item"> 
-          <strong v-html="item.title"></strong><br>
-          <span>{{ item.address }}</span>
+
+      <div v-if="!searchStarted" class="search-tip d-flex align-items-start flex-column mb-3">
+        <div class="tip-text d-flex align-items-center mb-1">
+          <i class="bi bi-bell-fill text-warning me-2"></i>
+          <span>검색 팁!</span>
+        </div>
+        <div>목적지 인근 <strong>지역명</strong> 또는 <strong>지하철역</strong>으로 검색해 보세요. (예: 삼성동, 홍대입구역 등)</div>
+      </div>
+
+      <div class="no-history-wrapper" v-if="!searchStarted">
+        <div class="no-history">
+          <i class="bi bi-search"></i>
+          <p>검색어를 입력해 주세요.</p>
+        </div>
+      </div>
+
+      <div class="no-history-wrapper" v-if="searchStarted && listItems.length === 0">
+        <div class="no-history">
+          <i class="bi bi-search"></i>
+          <p>검색 결과가 없습니다.</p>
+        </div>
+      </div>
+
+      <div v-if="searchStarted && listItems.length > 0" class="map-container">
+        <div id="map" style="width: 100%; height: 300px;"></div>
+      </div>
+
+      <div v-if="listItems.length > 0" class="list">
+        <div v-for="(item, index) in listItems" :key="index" class="list-item m-2" @click="goToMap(item)">
+          <div class="clickable-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong v-html="item.title"></strong><br>
+              <span>{{ item.address }}</span>
+            </div>
+            <i class="bi bi-geo-alt text-primary" style="font-size: 1.5rem; cursor: pointer;" @click.stop="moveToMap(item)"></i>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios'; // Axios 임포트
-import { useRoute} from 'vue-router';
-
+<script setup>import { ref, onMounted, nextTick } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 const listItems = ref([]);
-const route = useRoute(); // 현재 라우트의 정보
 const searchQuery = ref('');
+const searchStarted = ref(false);
+const map = ref(null);
+const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
+const router = useRouter();
 
-onMounted(() => {
-  if(route.params.destination != null){
-    searchQuery.value = route.params.destination;
-    console.log('성공'+searchQuery.value);
-    sendSearchQuery();
-  }
-});
+const initializeMap = (lat, lng) => {
+  nextTick(() => {
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) {
+      console.error('Map container not found');
+      return;
+    }
 
-const goToMap = (item) => {
-  console.log(item)
-  
-  /* router.push(`/map/${item.latitude}/${item.longitude}`); */
+    const mapOption = {
+      center: new window.kakao.maps.LatLng(lat, lng),
+      level: 5,
+    };
+
+    map.value = new window.kakao.maps.Map(mapContainer, mapOption);
+    console.log("Map initialized successfully.");
+  });
 };
 
-// 검색 쿼리를 서버로 전송하는 함수
-const sendSearchQuery = async () => {
-  if (searchQuery.value.trim() === '') {
-    alert('목적지를 입력해주세요.'); // 입력이 비어있으면 알림
+let currentMarker = null;
+
+const addMarker = (lat, lng) => {
+  if (!map.value) {
+    console.warn('지도 객체가 아직 초기화되지 않았습니다.');
     return;
   }
 
+  if (currentMarker) {
+    currentMarker.setMap(null);
+  }
+
+  const position = new window.kakao.maps.LatLng(lat, lng);
+  currentMarker = new window.kakao.maps.Marker({
+    position: position,
+    map: map.value,
+  });
+
+  console.log("Marker added at:", lat, lng);
+};
+
+const sendSearchQuery = async () => {
+  if (searchQuery.value.trim() === '') {
+    alert('목적지를 입력해주세요.');
+    return;
+  }
+
+  searchStarted.value = true;
+  console.log("Search started with query:", searchQuery.value);
+
   try {
     const response = await axios.get('/api/search', {
-      params: { name: searchQuery.value } // 입력된 쿼리 전송
+      params: { name: searchQuery.value }
     });
-    console.log('서버 응답:', response.data); // 서버 응답 확인
+    console.log('API 응답:', response.data);
     listItems.value = response.data;
+
+    if (listItems.value.length > 0) {
+      const firstItem = listItems.value[0];
+      const lat = firstItem.latitude || firstItem.lat;
+      const lng = firstItem.longitude || firstItem.lng;
+
+      initializeMap(lat, lng);
+      addMarker(lat, lng);
+    } else {
+      console.log('검색 결과가 없습니다.');
+    }
   } catch (error) {
-    console.error('오류 발생:', error); // 오류 처리
+    console.error('오류 발생:', error);
   }
 };
+
+onMounted(() => {
+  const script = document.createElement('script');
+  script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false`;
+  document.head.appendChild(script);
+
+  script.onload = () => {
+    console.log("Kakao Map script loaded successfully.");
+  };
+
+  script.onerror = () => {
+    console.error('Failed to load Kakao Map script. Check your API key and network.');
+  };
+});
+
+const goToMap = (item) => {
+  if (!item || (!item.latitude && !item.lat) || (!item.longitude && !item.lng)) {
+    console.warn('유효한 좌표가 없습니다:', item);
+    return;
+  }
+
+  const lat = item.latitude || item.lat;
+  const lng = item.longitude || item.lng;
+
+  updateMap(lat, lng);
+  addMarker(lat, lng);
+};
+
+const moveToMap = (item) => {
+  if (!item || (!item.latitude && !item.lat) || (!item.longitude && !item.lng)) {
+    console.warn('유효한 좌표가 없습니다:', item);
+    return;
+  }
+
+  const lat = item.latitude || item.lat;
+  const lng = item.longitude || item.lng;
+
+  alert(`위도: ${lat}, 경도: ${lng}`); // 위도, 경도를 alert로 확인
+  router.push({ name: 'map', query: { item: JSON.stringify(item) } });
+};
+
+// 지도 업데이트 함수
+const updateMap = (lat, lng) => {
+  if (!map.value) {
+    console.warn('지도 객체가 아직 초기화되지 않았습니다.');
+    return;
+  }
+
+  const position = new window.kakao.maps.LatLng(lat, lng);
+  map.value.setCenter(position);
+  console.log("Map center updated to:", lat, lng);
+};
+
+
 </script>
 
 <style scoped>
+.map-container {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+}
 
-/* 마우스 커서를 포인터로 변경 */
+#map {
+  width: 100%;
+  height: 400px;
+}
+
+.search-wrapper {
+  border: 1px solid #ccc;
+  min-height: 50vh;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 650px;
+}
+
+.no-history-wrapper {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 화면 크기가 768px 이하일 때 */
+@media (max-width: 768px) {
+  .search-wrapper {
+    max-width: 100%;
+    margin-right: 0;
+    padding: 15px;
+  }
+}
+
+/* 화면 크기가 576px 이하일 때 */
+@media (max-width: 576px) {
+  .search-wrapper {
+    padding: 10px;
+  }
+}
+
+/* placeholder 색상 조정 */
+::placeholder {
+  color: #888;
+  opacity: 8;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.search-tip {
+  background-color: #f1f5f9;
+  padding: 10px 15px;
+  border-radius: 9px;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.tip-text {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 3px 8px;
+  color: #333;
+  font-weight: bold;
+  font-size: 0.76rem;
+}
+
+.search-icon {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
 .clickable-item {
   cursor: pointer;
   transition: background-color 0.3s;
@@ -87,12 +283,6 @@ const sendSearchQuery = async () => {
   padding-top: 20px;
   overflow-x: hidden;
 }
-.search-container {
-  width: 100%;
-  max-width: 400px;
-  margin-right: 320px;
-  padding-top: 2rem;
-}
 
 .input-group-text {
   cursor: pointer;
@@ -101,7 +291,6 @@ const sendSearchQuery = async () => {
 .no-history {
   text-align: center;
   color: #888;
-  margin-top: 2rem;
 }
 
 .no-history i {

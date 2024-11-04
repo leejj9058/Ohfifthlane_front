@@ -33,8 +33,8 @@
           <tbody>
             <tr v-for="notice in notices":key="notice.noticeId"class="noticeIndex" @click="gotoNoticeOne(notice.noticeId)" > 
               <td class="text-center">{{ notice.noticeId }}</td>
-              <td  class="noticeTitleOne">{{ notice.noticeTitle }}</td>
-              <td class="text-center">{{notice.noticeDate}}</td>
+              <td  class="noticeTitleOne text-center">{{ notice.noticeTitle }}</td>
+              <td class="text-center">{{formatDate(notice.noticeDate)}}</td>
             </tr>
             
           </tbody>

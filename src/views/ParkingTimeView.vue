@@ -17,7 +17,6 @@
             <div v-for="(day, date) in week" :key="index" class="mb-4 day-setting">
 
               <div class="d-flex align-items-center flex-wrap justify-content-between">
-
                 <!-- 요일, checkbox 불러오기 -->
                 <div class="me-3 mb-3 d-flex align-items-center justify-content-between day-label">
                   {{ day }}
@@ -30,52 +29,53 @@
                   </div>
                   <!-- 요일 활성화 -->
                 </div>
-              </div>
 
-              <!-- 시간 설정 holder -->
-              <div v-if="timeSet[date].isActive" class="d-flex flex-column align-items-start time-picker-container">
+                <!-- 시간 설정 holder -->
+                <div v-if="timeSet[date].isActive" class="d-flex flex-column align-items-start time-picker-container">
 
-                <!-- 타임피커 timeSlots => timeBoxs로 받아줌 -->
-                <div v-for="(timeSlot, timeBoxs) in timeSet[date].timeSlots" :key="timeBoxs"
-                  class="d-flex align-items-center mb-2">
-                  <VueTimepicker v-model="timeSlot.start" format="A hh:mm" minute-interval="10"
-                    class="me-2 custom-placeholder" am-text="오전" pm-text="오후"
-                    input-class="form-control form-control-sm time-input" placeholder="시작"></VueTimepicker>
-                  <span class="mx-2">~</span>
-                  <VueTimepicker v-model="timeSlot.end" format="A hh:mm" minute-interval="10"
-                    class="me-2 custom-placeholder" am-text="오전" pm-text="오후"
-                    input-class="form-control form-control-sm time-input" placeholder="종료"></VueTimepicker>
-                  <!-- 타임피커 -->
+                  <!-- 타임피커 timeSlots => timeBoxs로 받아줌 -->
+                  <div v-for="(timeSlot, timeBoxs) in timeSet[date].timeSlots" :key="timeBoxs"
+                    class="d-flex align-items-center mb-2">
+                    <VueTimepicker v-model="timeSlot.start" format="A hh:mm" minute-interval="10"
+                      class="me-2 custom-placeholder" am-text="오전" pm-text="오후"
+                      input-class="form-control form-control-sm time-input" placeholder="시작"></VueTimepicker>
+                    <span class="mx-2">~</span>
+                    <VueTimepicker v-model="timeSlot.end" format="A hh:mm" minute-interval="10"
+                      class="me-2 custom-placeholder" am-text="오전" pm-text="오후"
+                      input-class="form-control form-control-sm time-input" placeholder="종료"></VueTimepicker>
+                    <!-- 타임피커 -->
 
-                  <!-- 타임피커 생성 : -1 은 마지막인지 확인하는 것 0부터 시작하니까 -1로 빼서 확인 -->
-                  <button
-                    v-if="timeBoxs === timeSet[date].timeSlots.length - 1 && timeSet[date].timeSlots.length < MAX_TIMEBOX"
-                    @click.prevent="addTimeSlot(date)" class="btn btn-sm btn-outline-primary ms-2">
-                    <i class="bi bi-plus"></i>
-                  </button>
+                    <!-- 타임피커 생성 : -1 은 마지막인지 확인하는 것 0부터 시작하니까 -1로 빼서 확인 -->
+                    <button
+                      v-if="timeBoxs === timeSet[date].timeSlots.length - 1 && timeSet[date].timeSlots.length < MAX_TIMEBOX"
+                      @click.prevent="addTimeSlot(date)" class="btn btn-sm btn-outline-primary ms-2">
+                      <i class="bi bi-plus"></i>
+                    </button>
 
-                  <!-- 타임피커 하나 지우는 버튼 : >1 은 1보다 크다는 것을 의미한다. -->
-                  <button v-if="timeSet[date].timeSlots.length > 1" @click.prevent="removeTimeSlot(date, timeBoxs)"
-                    class="btn btn-sm btn-outline-danger ms-2">
-                    <i class="bi bi-dash"></i>
-                  </button>
+                    <!-- 타임피커 하나 지우는 버튼 : >1 은 1보다 크다는 것을 의미한다. -->
+                    <button v-if="timeSet[date].timeSlots.length > 1" @click.prevent="removeTimeSlot(date, timeBoxs)"
+                      class="btn btn-sm btn-outline-danger ms-2">
+                      <i class="bi bi-dash"></i>
+                    </button>
+
+                  </div>
 
                 </div>
+                <!-- 타임피커holder -->
 
               </div>
-              <!-- 타임피커holder -->
 
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="mt-5 d-flex justify-content-center">
-      <button class="btn btn-primary me-3 px-4 py-2" style="font-size: 1.1rem;"
-        @click.prevent="saveSettings">저장하기</button>
-      <button class="btn btn-secondary ms-3 px-4 py-2" style="font-size: 1.1rem;"
-        @click.prevent="resetSettings">초기화</button>
+      <div class="mt-5 d-flex justify-content-center">
+        <button class="btn btn-primary me-3 px-4 py-2" style="font-size: 1.1rem;"
+          @click.prevent="saveSettings">저장하기</button>
+        <button class="btn btn-secondary ms-3 px-4 py-2" style="font-size: 1.1rem;"
+          @click.prevent="resetSettings">초기화</button>
+      </div>
     </div>
   </div>
 
@@ -89,7 +89,8 @@ import Header from "@/components/Header.vue";
 import VueTimepicker from 'vue3-timepicker';
 import 'vue3-timepicker/dist/VueTimepicker.css';
 
-const weekDays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+//date -> day
+const week = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
 
 //타임피커 상수 정의
 const MAX_TIMEBOX = 6;
@@ -116,15 +117,13 @@ const removeTimeSlot = (day, timeBoxs) => {
 
 
 const saveSettings = () => {
-  console.log('저장된 설정:', availableTimes.value);
-  // 여기에 설정을 저장하는 로직을 추가하세요
+  console.log('저장된 설정:', timeSet.value);
 };
 
 const resetSettings = () => {
-  availableTimes.value = weekDays.map(() => ({
-    start: '',
-    end: '',
-    isActive: false
+  timeSet.value = week.map(() => ({
+    isActive: false,
+    timeSlots: [{ start: '', end: '' }]
   }));
 };
 </script>
@@ -166,12 +165,10 @@ const resetSettings = () => {
 
 .day-setting {
   width: 100%;
-  max-width: 500px;
 }
 
 .day-label {
   width: 120px;
-  font-size: 18px;
 }
 
 .time-picker-container {
@@ -179,18 +176,6 @@ const resetSettings = () => {
 }
 
 @media (max-width: 768px) {
-  .card {
-    padding: 2rem !important;
-  }
-
-  h1 {
-    font-size: 1.5rem !important;
-  }
-
-  h2 {
-    font-size: 1.2rem !important;
-  }
-
   .day-setting {
     max-width: 100%;
   }
@@ -233,5 +218,4 @@ const resetSettings = () => {
   align-items: center;
   /* 세로 정렬 */
 }
-
 </style>

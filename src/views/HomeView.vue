@@ -205,11 +205,11 @@ onMounted(() => {
 });
 
 const goToPublicParking = () => {
-  router.replace({ path: "/publicparking", query: {} });
+  router.replace({ path: "/map", query: {} });
 };
 
-const goToReportResident = () => {
-  router.replace({ path: "/reportresident", query: {} });
+const goToResidentReport = () => {
+  router.replace({ path: "/residentReport", query: {} });
 };
 
 const goToQRcode = () => {
@@ -221,7 +221,7 @@ const goToNoticePage = () => {
 };
 
 const goToReservationHistory = () => {
-  router.replace({ path: "/rentList", query: {} });
+  router.push("/rentList");
 };
 </script>
 

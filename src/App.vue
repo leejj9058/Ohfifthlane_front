@@ -1,4 +1,3 @@
-
 <template>
 
 
@@ -7,20 +6,27 @@
     <main class="main-content">
       <router-view></router-view>
     </main>
-    
   </div>
-
 </template>
 
 <script setup>
-import { RouterView } from 'vue-router'
-import { ref, onMounted } from 'vue';
-import router from '@/router/index.js';
+import { useRoute } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
 
+const route = useRoute();
+const isMainWebView = ref(false);
+
+watch(route, () => {
+  checkIfMainWebView();
+});
+
+function checkIfMainWebView() {
+  // `MainWebView`의 경로나 이름을 확인하여 페이지 식별
+  isMainWebView.value = route.name === 'main' || route.name === 'map'; // 경로 이름이 'main'인지 확인
+}
 </script>
 
 <style scoped>
-
 .app-container {
   display: flex;
   overflow-x: hidden; /* 가로 스크롤 숨기기 */
@@ -31,6 +37,12 @@ import router from '@/router/index.js';
   margin-left: 250px; /* 데스크톱에서 헤더의 너비와 동일하게 설정 */
   margin-top: 50px;
 }
+
+.main-content-new {
+  margin-left: 0;
+  padding: 0;
+}
+
 
 @media (max-width: 768px) {
   .main-content {
@@ -58,5 +70,4 @@ h1, h2, h3, h4, h5, h6 {
 
 <style>
 /* 글로벌 스타일 */
-
 </style>
