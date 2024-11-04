@@ -22,6 +22,7 @@ import RentListView from '../views/RentListView.vue'
 import RentDetail from '../views/RentDetail.vue'
 import SearchView from '../views/SearchView.vue'
 import ParkingPayment from '../views/ParkingPayment.vue'
+import Reservation from '../views/Reservation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -167,6 +168,13 @@ const router = createRouter({
       name: 'main',
       component: () => import('../views/MainWebView.vue')
     },
+    {
+      path: '/reservation',
+      name: 'reservation',
+      component: Reservation
+    }
+    
+
     
 
   ]
