@@ -4,17 +4,19 @@
       <button @click="toggleSidebar" class="sidebar-toggle">
         <i class="bi bi-list" ></i>
       </button>
-      <h1 class="logo-text" >주 차</h1>
+      <h1 class="logo-text ps-3" @click="goToHome" >오차로</h1>
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
-      <div class="logo-container" v-if="!isMobile">
-        <img width="50" height="50" src="https://img.icons8.com/fluency/48/car--v1.png" alt="car-icon" @click="goToHome" />
-        <h1 class="logo-text">주 차</h1>
+      <div class="logo-container" v-if="!isMobile" @click="goToHome" >
+        <img width="70" height="70" src="@/assets/images/simbol.png" alt="car-icon" />
+        <h1 class="logo-text">오차로</h1>
+        <p style="font-size: 12px;">오늘의 주차장은 여기로!</p>
       </div>
-
+      
       <nav class="nav-menu text-center">
-        <button class="btn btn-primary" @click="goToLogin">로그인 / 회원가입</button>
+        <button v-if="accountId == 0" class="btn btn-primary w-100" style="background-color: #A4C8F3;" @click="goToLogin">로그인</button>
+        <button v-if="accountId != 0" class="btn btn-primary w-100" style="background-color: #A4C8F3;" @click="goToLogout">로그아웃</button>
         <hr class="my-4" />
         <ul class="nav-list" style="font-size: 20px;">
           <li><a @click="moveView('/updateRegister')">회원정보수정</a></li>
@@ -79,15 +81,17 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+
 .header-container {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   width: 200px;
-  background-color: #f8f9fa;
+  background-color: #124393;
   transition: all 0.3s ease;
   z-index: 1000;
+  color: white; /* 전체 글씨 색상을 흰색으로 설정 */
 }
 
 .mobile-header {
@@ -99,7 +103,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   padding: 10px;
-  background-color: #f8f9fa;
+  background-color: #124393;
 }
 
 .sidebar-toggle {
@@ -136,100 +140,112 @@ onUnmounted(() => {
 
 .nav-list a {
   text-decoration: none;
-  color: #333;
+  color: white; /* 메뉴 항목 글씨 색상 흰색으로 설정 */
 }
 
 .nav-list a:hover {
   cursor: pointer;
-  color: rgb(93, 93, 223);
+  color: rgb(204, 204, 204); /* 마우스를 올렸을 때 색상 변경 */
 }
 
 /* 오버레이 스타일 추가 */
 .sidebar-overlay {
   position: fixed;
   top: 50px;
-  left: 250px; /* Fixed value should be 250px, not just 250 */
+  left: -250px; /* Fixed value should be -250px for sidebar */
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
 }
 
 /* 데스크톱 */
 @media (min-width: 769px) {
-  .header-container {
-    width: 250px; /* 데스크톱에서의 너비 */
-  }
+    .header-container {
+        width:250px; /* 데스크톱에서의 너비 */
+    }
 
-  .logo-text {
-    font-size: 28px; /* 로고 텍스트 크기 증가 */
-  }
+    .logo-text {
+        font-size:28px; /* 로고 텍스트 크기 증가 */
+        color:white; /* 로고 텍스트 색상 흰색으로 설정 */
+    }
 
-  .nav-menu {
-    padding: 30px; /* 네비게이션 메뉴 패딩 증가 */
-  }
+    .nav-menu {
+        padding:30px; /* 네비게이션 메뉴 패딩 증가 */
+    }
 
-  .nav-list li {
-    margin: 15px 0; /* 메뉴 항목 간 간격 증가 */
-  }
+    .nav-list li {
+        margin:15px; /* 메뉴 항목 간 간격 증가 */
+    }
 
-  .nav-list a {
-    font-size: 18px; /* 메뉴 항목 글자 크기 증가 */
-  }
+    .nav-list a {
+        font-size:18px; /* 메뉴 항목 글자 크기 증가 */
+        color:white; /* 데스크톱에서의 메뉴 항목 글씨 색상 흰색으로 설정 */
+    }
 }
 
 /* 모바일 */
-@media (max-width: 768px) {
-  .header-container {
-    width: 100%;
-    height: auto;
-  }
+@media (max-width:768px) {
 
-  .sidebar {
-    position: fixed;
-    top: 50px; /* 모바일 상단 바 높이에 맞춰 조정 */
-    left: -250px; /* 사이드바 너비에 맞춰 조정 */
-    width: 250px;
-    height: calc(100vh - 50px);
-    background-color: #f8f9fa;
-    transition: left 0.3s ease;
+  .main-content {
+    margin-left: 0; /* 모바일에서는 왼쪽 여백 제거 */
+    width: calc(100% - 20px); /* 모바일에서는 전체 너비 사용하고 여백 고려 */
+    padding: 10px; /* 패딩 조정 */
+    box-sizing: border-box; /* 패딩을 포함하여 전체 너비 계산 */
+    margin-top: 50px; /* 헤더 높이만큼 마진 추가 */
   }
+    .header-container {
+        width:100%;
+        height:auto; 
+    }
 
-  .sidebar-open {
-    left: 0;
-  }
+    .sidebar {
+        position:fixed; 
+        top:50px; /* 모바일 상단 바 높이에 맞춰 조정 */
+        left:-250px; /* 사이드바 너비에 맞춰 조정 */
+        width:250px; 
+        height:100vh;
+        background-color: #124393;
+        transition:left .3s ease; 
+    }
 
-  .mobile-top-bar .logo-text {
-    font-size: 20px; /* 모바일 상단 바의 로고 텍스트 크기 */
-  }
+    .sidebar-open { 
+        left :0; 
+    }
 
-  .nav-list {
-    font-size: 18px; /* 모바일에서의 메뉴 항목 글자 크기 */
-  }
+    .mobile-top-bar .logo-text { 
+        font-size :20px; /* 모바일 상단 바의 로고 텍스트 크기 */ 
+        color:white; /* 로고 텍스트 색상 흰색으로 설정 */ 
+    }
 
-  .nav-list li {
-    margin: 15px 0; /* 모바일에서의 메뉴 항목 간격 */
-  }
+    .nav-list { 
+        font-size :18px; /* 모바일에서의 메뉴 항목 글자 크기 */ 
+        color:white; /* 모바일에서의 메뉴 항목 글씨 색상 흰색으로 설정 */ 
+    }
 
-  .nav-menu {
-    padding: 15px; /* 모바일에서의 네비게이션 메뉴 패딩 */
-  }
+    .nav-list li { 
+        margin :15px ; /* 모바일에서의 메뉴 항목 간격 */ 
+    }
 
-  .sidebar {
-    z-index: 1001; /* 오버레이보다 높은 z-index */
-  }
+    .nav-menu { 
+        padding :15px ; /* 모바일에서의 네비게이션 메뉴 패딩 */ 
+    }
 
-  .mobile-top-bar {
-    z-index: 1002; /* 사이드바와 오버레이보다 높은 z-index */
-  }
+    .sidebar { 
+        z-index :1001 ; /* 오버레이보다 높은 z-index */ 
+    }
 
-  .sidebar-overlay {
-    left: 250px; /* 사이드바가 열렸을 때의 너비 */
-    transition: left 0.3s ease; /* 부드러운 전환 효과 */
-  }
+    .mobile-top-bar { 
+        z-index :1002 ; /* 사이드바와 오버레이보다 높은 z-index */ 
+    }
 
-  .sidebar-open + .sidebar-overlay {
-    left: 0; /* 사이드바가 열렸을 때 오버레이를 왼쪽으로 이동 */
-  }
+    .sidebar-overlay { 
+        left :250px ; /* 사이드바가 열렸을 때의 너비 */ 
+        transition:left .3s ease ; /* 부드러운 전환 효과 */ 
+    }
+
+    .sidebar-open + .sidebar-overlay { 
+        left :0 ; /* 사이드바가 열렸을 때 오버레이를 왼쪽으로 이동 */ 
+    }
 }
+
 </style>

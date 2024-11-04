@@ -4,7 +4,7 @@
   <div class="d-flex justify-content-center align-items-center p-3" id="background">
 
     <!-- 본문 -->
-    <div class="p-4 p-md-5 w-100">
+    <div class="p-4 p-md-5 w-100 vh-100" style="background-color: white;">
 
       <h1 class="mb-4 fs-2 fw-bold">문의 게시판</h1>
 
