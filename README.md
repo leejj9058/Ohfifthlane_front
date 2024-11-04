@@ -41,6 +41,7 @@ src/assets/images
 1) 타임피커
 npm install vue3-datepicker
 npm install vue3-timepicker
+npm install @vuepic/vue-datepicker (날짜, 시간 둘 다 선택되는 피커)
 
 2) QRcode
 npm install vue-qrcode-reader

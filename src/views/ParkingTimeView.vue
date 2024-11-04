@@ -1,13 +1,13 @@
 <template>
   <Header></Header>
 
-  <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
-    <div class="d-flex justify-content-center align-items-center p-3" id="background">
-      <div class="p-4 p-md-5" style="max-width: 700px;">
-        <h1 class="mb-4 fs-2 fw-bold">내 공유주차장 설정</h1>
+  <div class="container-fluid d-flex flex-column align-items-center justify-content-center vh-100">
+    <div class="d-flex justify-content-center align-items-center p-3 card" id="background">
+      <div class="p-4" style="max-width: 700px;">
+        <h1 class=" mb-4 fs-2 fw-bold">내 공유주차장 설정</h1>
 
         <div class="mb-4">
-          <h2 class="mb-4 fs-5">주간 사용 가능 시간을 설정합니다.</h2>
+          <h2 class=" mb-4 fs-5">주간 사용 가능 시간을 설정합니다.</h2>
 
           <hr class="my-4" style="margin-bottom: 50px !important;">
 
@@ -17,7 +17,6 @@
             <div v-for="(day, date) in week" :key="index" class="mb-4 day-setting">
 
               <div class="d-flex align-items-center flex-wrap justify-content-between">
-                
                 <!-- 요일, checkbox 불러오기 -->
                 <div class="me-3 mb-3 d-flex align-items-center justify-content-between day-label">
                   {{ day }}
@@ -35,9 +34,10 @@
                 <div v-if="timeSet[date].isActive" class="d-flex flex-column align-items-start time-picker-container">
 
                   <!-- 타임피커 timeSlots => timeBoxs로 받아줌 -->
-                  <div v-for="(timeSlot, timeBoxs) in timeSet[date].timeSlots" :key="timeBoxs" class="d-flex align-items-center mb-2">
+                  <div v-for="(timeSlot, timeBoxs) in timeSet[date].timeSlots" :key="timeBoxs"
+                    class="d-flex align-items-center mb-2">
                     <VueTimepicker v-model="timeSlot.start" format="A hh:mm" minute-interval="10"
-                      class="me-2 custom-placeholder" am-text="오전" pm-text="오후" 
+                      class="me-2 custom-placeholder" am-text="오전" pm-text="오후"
                       input-class="form-control form-control-sm time-input" placeholder="시작"></VueTimepicker>
                     <span class="mx-2">~</span>
                     <VueTimepicker v-model="timeSlot.end" format="A hh:mm" minute-interval="10"
@@ -46,15 +46,14 @@
                     <!-- 타임피커 -->
 
                     <!-- 타임피커 생성 : -1 은 마지막인지 확인하는 것 0부터 시작하니까 -1로 빼서 확인 -->
-                    <button v-if="timeBoxs === timeSet[date].timeSlots.length - 1 && timeSet[date].timeSlots.length < MAX_TIMEBOX" 
-                      @click.prevent="addTimeSlot(date)" 
-                      class="btn btn-sm btn-outline-primary ms-2">
+                    <button
+                      v-if="timeBoxs === timeSet[date].timeSlots.length - 1 && timeSet[date].timeSlots.length < MAX_TIMEBOX"
+                      @click.prevent="addTimeSlot(date)" class="btn btn-sm btn-outline-primary ms-2">
                       <i class="bi bi-plus"></i>
                     </button>
 
                     <!-- 타임피커 하나 지우는 버튼 : >1 은 1보다 크다는 것을 의미한다. -->
-                    <button v-if="timeSet[date].timeSlots.length > 1" 
-                      @click.prevent="removeTimeSlot(date, timeBoxs)" 
+                    <button v-if="timeSet[date].timeSlots.length > 1" @click.prevent="removeTimeSlot(date, timeBoxs)"
                       class="btn btn-sm btn-outline-danger ms-2">
                       <i class="bi bi-dash"></i>
                     </button>
@@ -65,18 +64,23 @@
                 <!-- 타임피커holder -->
 
               </div>
-            </div>
 
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="mt-5 d-flex justify-content-center">
-          <button class="btn btn-primary me-3 px-4 py-2" style="font-size: 1.1rem;" @click.prevent="saveSettings">저장하기</button>
-          <button class="btn btn-secondary ms-3 px-4 py-2" style="font-size: 1.1rem;" @click.prevent="resetSettings">초기화</button>
-        </div>
+      <div class="mt-5 d-flex justify-content-center">
+        <button class="btn btn-primary me-3 px-4 py-2" style="font-size: 1.1rem;"
+          @click.prevent="saveSettings">저장하기</button>
+        <button class="btn btn-secondary ms-3 px-4 py-2" style="font-size: 1.1rem;"
+          @click.prevent="resetSettings">초기화</button>
       </div>
     </div>
   </div>
+
+
+
 </template>
 
 <script setup>
@@ -95,13 +99,13 @@ const MAX_TIMEBOX = 6;
 //timeSlots = 타임피커
 const timeSet = ref(week.map(() => ({
   isActive: false,
-  timeSlots: [{ start: '', end: '' }] 
+  timeSlots: [{ start: '', end: '' }]
 })));
 
 //타임피커 하나 더
 const addTimeSlot = (day) => {
-  if(timeSet.value[day].timeSlots.length < MAX_TIMEBOX) {
-  timeSet.value[day].timeSlots.push({ start: '', end: '' });
+  if (timeSet.value[day].timeSlots.length < MAX_TIMEBOX) {
+    timeSet.value[day].timeSlots.push({ start: '', end: '' });
   }
 };
 
@@ -125,6 +129,11 @@ const resetSettings = () => {
 </script>
 
 <style scoped>
+.container-fluid {
+  padding-top: 20px;
+  overflow-x: hidden;
+}
+
 .custom-placeholder input::placeholder {
   color: #999;
   opacity: 1;
@@ -168,12 +177,45 @@ const resetSettings = () => {
 
 @media (max-width: 768px) {
   .day-setting {
-    max-width: none;
-    width: auto; /* 모바일에서 가로폭 조정 */
-    margin-bottom: 10px; /* 각 요일 간의 간격 조정 */
-    flex-wrap: wrap; /* 모바일에서 줄바꿈 가능하도록 설정 */
-    justify-content: space-between; /* 공간을 균등하게 배분 */
-    align-items: center; /* 세로 정렬 */
-   }
+    max-width: 100%;
+  }
+
+  .day-label {
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .time-picker-container {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .time-input,
+  .vue__time-picker input.display-time {
+    font-size: 14px !important;
+    width: 110px !important;
+  }
+
+  .btn {
+    font-size: 1rem !important;
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+.vue__time-picker input.display-time:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  max-width: none;
+  width: auto;
+  /* 모바일에서 가로폭 조정 */
+  margin-bottom: 10px;
+  /* 각 요일 간의 간격 조정 */
+  flex-wrap: wrap;
+  /* 모바일에서 줄바꿈 가능하도록 설정 */
+  justify-content: space-between;
+  /* 공간을 균등하게 배분 */
+  align-items: center;
+  /* 세로 정렬 */
 }
 </style>

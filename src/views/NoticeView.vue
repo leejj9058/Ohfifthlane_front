@@ -4,7 +4,7 @@
   <div class="d-flex justify-content-center align-items-center p-3" id="background">
 
     <!-- 본문 -->
-    <div class="p-4 p-md-5 w-100">
+    <div class="p-4 p-md-5 w-100 vh-100" style="background-color: white;">
 
       <h1 class="mb-4 fs-2 fw-bold">공지 게시판</h1>
       
@@ -63,6 +63,22 @@ onMounted(() => {
 
 const notices = ref ([])
 
+// //공지사항 데이터 가져오는 함수
+// const getNotices = async () => {
+//   try {
+//     //controller에서 보낸 주소 연결 -> 해당 데이터 notice.value에 넣기
+//     const response = await axios.get('api/notices');
+//     notices.value = response.data;
+//   } catch (error)
+// }
+
+// const notices = ref ( [
+//   {id:1, title: "게시글 1", date: "2024.10.11"},
+//   {id:2, title: "두번째 글", date: "2024.10.15"},
+//   {id:3, title: "세번째 글입니다.", date: "2024.10.16"}
+
+// ])
+
 const gotoNoticeOne = (noticeId) => {
   router.push(`/boarddetail/${noticeId}`);
 };
@@ -72,12 +88,12 @@ const gotoNew = () => {
 }
 
 //목록에서 작성일 날짜만 나오게끔 형식을 정해준다. 
+// 날짜 형식 변환
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-  //padStart : 문자열 길이 2가 되도록 앞에 0 => 11.01
   return `${year}-${month}-${day}`;
 };
 
@@ -125,11 +141,11 @@ const getNotice = async () => {
 }
 
 .noticeTitle {
-  width: 80%
+  width: 70%
 }
 
 .noticeDate {
-  width: 15%;
+  width: 20%;
 }
 
 .noticeTitleOne {

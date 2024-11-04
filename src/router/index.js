@@ -16,7 +16,8 @@ import ResidentReportWriteView from '../views/ResidentReportWriteView.vue'
 import MapView from '../views/MapView.vue'
 
 import Search from '../views/SearchView.vue';
-import Login from '../views/Login.vue';
+//연습
+import DatePicker from '../views/DatePicker.vue'
 import PaymentComplete from '../views/PaymentComplete.vue'
 import RentListView from '../views/RentListView.vue'
 import RentDetail from '../views/RentDetail.vue'
@@ -157,6 +158,11 @@ const router = createRouter({
       path: '/parkingPay',
       name: 'parkingPay',
       component: ParkingPayment
+    },
+    {
+      path: '/datepicker',
+      name: 'datepicker',
+      component: DatePicker
     },
     {
       path: '/map',

@@ -51,15 +51,11 @@
       </div>
       <!-- 본문 -->
 
-
-
     </div>
 
 
 
   </div>
-
-
 </template>
 
 <script setup>
@@ -69,7 +65,8 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import router from '@/router';
 
-const route = useRoute(); // 현재 라우트의 정보
+const router = useRouter(); // 현재 라우트의 정보
+const route = useRoute(); //라우터 객체 생성
 
 const noticeId = route.params.noticeId;  // URL에서 noticeId 가져오기
 
@@ -136,8 +133,6 @@ const getNoticeDetail = async () => {
 };
 </script>
 
-
-
 <style scoped>
 .table {
   /* table-layout: fixed; */
@@ -195,6 +190,59 @@ const getNoticeDetail = async () => {
   .table th {
     padding: 0.5rem;
     font-size: 0.9rem;
+  }
+}
+
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 1000;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 0.25rem;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  .dropdown-menu {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 0.25rem 0.25rem 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  }
+
+  .dropdown-item {
+    padding: 0.75rem 1.5rem;
   }
 }
 </style>
