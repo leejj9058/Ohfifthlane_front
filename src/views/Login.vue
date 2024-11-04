@@ -108,9 +108,6 @@ const handleLogin = async () => {
   }
 </script>
 
-
-</script>
-
 <style scoped>
 .container-fluid {
   padding-top: 40px;
