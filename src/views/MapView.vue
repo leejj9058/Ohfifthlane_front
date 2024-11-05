@@ -1,17 +1,14 @@
 <template>
-    <Header></Header>
-
     <div class="map-container">
-        <!-- Map -->
-        <div id="map" style="width:100%; height:1000px;"></div>
-
-        <!-- Search bar -->
-        <div class="search-bar" @click="navigateToSearchView">
-            <input type="text" placeholder="목적지를 입력하세요." readonly>
-            <button class="btn-search"><i class="bi bi-search"></i></button>
+        <div id="map" style="width:100%; height:auto;"></div>
+        <div class="search-bar">
+            <button class="btn-back" @click="navigateToMainPage">
+                <i class="bi bi-arrow-left"></i> <!-- 이전 아이콘 -->
+            </button>
+            <input type="text" placeholder="목적지를 입력하세요." readonly @click="navigateToSearchView"
+                style="pointer-events: auto;">
+            <button class="btn-search" @click="navigateToSearchView"><i class="bi bi-search"></i></button>
         </div>
-
-        <!-- Filter buttons below search bar -->
         <div class="filter-buttons">
             <button class="filter-option" @click="filterResident">거주자</button>
             <button class="filter-option" @click="filterPublicParking">공영주차장</button>
@@ -19,6 +16,9 @@
             <button class="filter-option" @click="filterChargingStations">충전소</button>
         </div>
 
+        <button class="filter-button" @click="openFilter">
+            <i class="bi bi-funnel-fill"></i>
+        </button>
         <div class="button-container">
             <button class="revisitButton" @click="revisit()">
                 <i class="bi bi-arrow-clockwise"></i>현재위치에서 재탐색
@@ -27,16 +27,32 @@
                 <i class="bi bi-geo-alt-fill"></i>
             </button>
         </div>
-
-        <!-- Floating filter button -->
-        <button class="filter-button" @click="openFilter">
-            <i class="bi bi-funnel-fill"></i>
-        </button>
-
-        <!-- Bottom Sheet Modal -->
         <transition name="slide-fade">
-            <div v-if="showModal" class="bottom-sheet" @mousedown="startDrag" @mouseup="stopDrag" @mouseleave="stopDrag" @mousemove="drag">
-                <div class="modal-content">
+            <div v-if="showTimeModal" class="bottom-sheet-time" @mousedown="startDrag" @mouseup="stopDrag"
+                @mouseleave="stopDrag" @mousemove="drag">
+                <div class="modal-content-time"> <!-- 변경된 클래스 이름 -->
+                    <div class="d-flex justify-content-center align-items-center p-3" id="background">
+                        <div class="p-4 p-md-5 w-100">
+                            <h1 class="mb-4 fs-2 fw-bold">시간 설정</h1>
+                            <label for="time">시간을 선택하세요:</label>
+                            <div>
+                                <Datepicker locale="ko" style="width:300px" v-model="date" />
+                            </div>
+                            <div class="d-flex justify-content-start">
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                    <button @click="setTime(date)">확인</button>
+                    <button @click="showTimeModal = false">닫기</button>
+                </div>
+            </div>
+        </transition>
+
+        <transition name="slide-fade">
+            <div v-if="showModal" class="bottom-sheet-rpz" @mousedown="startDrag" @mouseup="stopDrag"
+                @mouseleave="stopDrag" @mousemove="drag">
+                <div class="modal-content-rpz"> <!-- 변경된 클래스 이름 -->
                     <h3>{{ selectedRPZ.manageName }}</h3>
                     <p>주소: {{ selectedRPZ.address }}</p>
                     <p>10분 요금: {{ selectedRPZ.fee }}</p>
@@ -49,26 +65,32 @@
 </template>
 
 <script setup>
-import Header from "@/components/Header.vue";
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import 'flatpickr/dist/flatpickr.css';
+
 
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
+let clusterer;
 let markers = [];
 
 const markerObject = ref([]);
 const selectedRPZ = ref({});
 const showModal = ref(false);
+const showTimeModal = ref(false);
 const isDragging = ref(false);
 const startY = ref(0);
 const router = useRouter();
+const date = ref(new Date());
 
 onMounted(() => {
     const script = document.createElement('script');
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
     document.head.appendChild(script);
 
     script.onload = () => {
@@ -80,6 +102,13 @@ onMounted(() => {
             };
 
             map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+            clusterer = new window.kakao.maps.MarkerClusterer({
+                map: map,
+                averageCenter: true,
+                minLevel: 2,
+                disableClickZoom: true,
+            });
 
             window.kakao.maps.event.addListener(map, 'center_changed', () => {
                 const center = map.getCenter();
@@ -97,6 +126,9 @@ const revisit = () => {
 const navigateToSearchView = () => {
     router.push({ path: '/search' });
 };
+const navigateToMainPage = () => {
+    router.push({ path: '/' });
+};
 
 const searchRPZList = async (lng, lat) => {
     try {
@@ -104,6 +136,8 @@ const searchRPZList = async (lng, lat) => {
             userLon: lng,
             userLat: lat
         });
+
+        console.log("API response data:", response.data); // 확인을 위해 로그 추가
 
         markerObject.value = response.data.map(item => ({
             lat: item.rpzLat,
@@ -124,10 +158,14 @@ const searchRPZList = async (lng, lat) => {
     }
 };
 
+
 const removeMarkers = () => {
     markers.forEach(marker => {
         marker.setMap(null);
     });
+    if (clusterer) {
+        clusterer.clear(); // 클러스터러 내의 모든 마커를 제거
+    }
     markers = [];
 };
 
@@ -149,11 +187,13 @@ const returnToCurrentLocation = () => {
 };
 
 const openFilter = () => {
+    showTimeModal.value = true; // 모달을 열기
     console.log("Filter button clicked");
 };
 
-const filterResident = () => {
+const filterResident = async () => {
     console.log("거주자 필터 클릭됨");
+    await searchRPZList(centerPoint.value.lng, centerPoint.value.lat, 'resident'); // 'resident'를 추가하여 필터링
 };
 
 const filterPublicParking = () => {
@@ -173,21 +213,26 @@ const moveReservation = (rpzId) => {
 };
 
 const createMarker = (rpzList) => {
+    if (!clusterer) {
+        console.error("Clusterer is not initialized.");
+        return;
+    }
     rpzList.forEach((rpz) => {
         const markerPosition = new window.kakao.maps.LatLng(rpz.lat, rpz.lng);
         const marker = new window.kakao.maps.Marker({
             position: markerPosition,
             title: rpz.num
         });
-        marker.setMap(map);
+        clusterer.addMarker(marker);
         markers.push(marker);
-
+        // Adding click event listener to the marker
         window.kakao.maps.event.addListener(marker, 'click', () => {
-            selectedRPZ.value = rpz;
-            showModal.value = true;
+            selectedRPZ.value = rpz; // Set the selected RPZ information
+            showModal.value = true; // Show the bottom sheet modal
         });
     });
 };
+
 
 // Dragging functions
 const startDrag = (event) => {
@@ -215,9 +260,14 @@ const drag = (event) => {
     // 슬라이드 내리기
     if (translateY + deltaY > 100) {
         showModal.value = false; // 아래로 내릴 때 모달 닫기
+        showTimeModal.value = false; // 아래로 내릴 때 시간 설정 모달 닫기
     }
 };
-
+const setTime = (time) => {
+    console.log("설정된 시간:", time);
+    // 여기서 시간 설정 관련 로직 추가
+    showTimeModal.value = false; // 모달 닫기
+};
 </script>
 
 <style scoped>
@@ -226,7 +276,10 @@ const drag = (event) => {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 100vh; /* 전체 높이 사용 */
+    height: 100vh;
+    max-width: 460px;
+    margin: 0 auto;
+
 }
 
 #map {
@@ -234,7 +287,6 @@ const drag = (event) => {
     height: 100%;
 }
 
-/* Search bar style */
 .search-bar {
     position: absolute;
     top: 20px;
@@ -246,26 +298,38 @@ const drag = (event) => {
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     cursor: pointer;
+    padding: 5px;
 }
 
 .search-bar input {
     flex: 1;
-    padding: 10px;
+    padding: 8px;
     border: none;
-    border-radius: 10px 0 0 10px;
+    border-top: 0;
+    border-bottom: 0;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
     pointer-events: none;
 }
 
-.search-bar button {
+.search-bar button.btn-back {
     border: none;
     background-color: #007bff;
     color: white;
-    padding: 3px;
+    padding: 6px 8px;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+}
+
+.search-bar button.btn-search {
+    border: none;
+    background-color: #007bff;
+    color: white;
+    padding: 6px 8px;
     border-radius: 0 10px 10px 0;
     cursor: pointer;
 }
 
-/* Filter buttons */
 .filter-buttons {
     position: absolute;
     top: 70px;
@@ -278,27 +342,56 @@ const drag = (event) => {
     border-radius: 10px;
     padding: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
 }
 
 .filter-option {
     flex: 1;
-    padding: 10px;
-    margin: 0 5px;
+    padding: 10px 0;
+    /* 높이만 지정해 버튼이 가로로 늘어나도록 설정 */
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
+    margin: 0 2px;
 }
 
 .button-container {
     position: absolute;
+    /* 지도 위에 위치하도록 설정 */
     bottom: 20px;
+    /* 지도의 하단에서의 거리 */
     right: 20px;
-    z-index: 1;
+    /* 왼쪽 여백 */
+    z-index: 2;
+    /* 다른 요소들보다 위에 오도록 설정 */
     display: flex;
     gap: 10px;
+    /* 버튼 간격 조정 */
+    justify-content: flex-end;
 }
+
+.filter-button {
+    position: absolute; /* 지도 위에 위치하도록 설정 */
+    bottom: 20px; /* 하단에서의 거리 */
+    left: 20px; /* 왼쪽에서의 거리 */
+    background-color: #007bff; /* 버튼 색상 */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 2; /* 다른 요소들보다 위에 오도록 설정 */
+}
+
 
 .revisitButton {
     background-color: #007bff;
@@ -325,21 +418,81 @@ const drag = (event) => {
     font-size: 0.9rem;
 }
 
-/* Bottom Sheet Modal */
-.bottom-sheet {
+.bottom-sheet-rpz,
+.bottom-sheet-time {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0; /* 항상 바닥에 고정 */
+    bottom: 50%;
     background: white;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
     transform: translateY(100%);
+    /* 기본 상태는 보이지 않도록 */
     z-index: 10;
+    height: 50%;
+    border-radius: 15px;
+    /* 둥글게 */
+    overflow: hidden;
+    /* 모서리 둥글기 유지 */
 }
 
-.modal-content {
+.modal-content-rpz,
+.modal-content-time {
     padding: 20px;
+    border-radius: 15px;
+    /* 둥글게 */
+    display: flex;
+    flex-direction: column;
+    /* 세로 정렬 */
+    align-items: center;
+    /* 중앙 정렬 */
+    justify-content: center;
+    /* 중앙 정렬 */
+}
+
+.modal-content-rpz h3,
+.modal-content-time h1 {
+    margin-bottom: 15px;
+    /* 제목과 내용 사이의 간격 */
+    color: #333;
+    /* 텍스트 색상 */
+    font-weight: bold;
+    /* 굵은 글씨 */
+}
+
+.modal-content-rpz p,
+.modal-content-time label {
+    color: #666;
+    /* 텍스트 색상 */
+    margin-bottom: 10px;
+    /* 내용과 다음 요소 사이의 간격 */
+    text-align: center;
+    /* 중앙 정렬 */
+}
+
+.modal-content-rpz button,
+.modal-content-time button {
+    background-color: #007bff;
+    /* 버튼 색상 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    /* 둥글게 */
+    padding: 10px 15px;
+    /* 패딩 */
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    /* 버튼 간격 */
+    transition: background-color 0.3s ease;
+    /* 버튼 호버 효과 */
+}
+
+.modal-content-rpz button:hover,
+.modal-content-time button:hover {
+    background-color: #0056b3;
+    /* 호버 시 버튼 색상 */
 }
 
 /* Slide fade transition */
@@ -354,25 +507,5 @@ const drag = (event) => {
 
 .slide-fade-leave-to {
     transform: translateY(100%);
-}
-
-/* Floating filter button */
-.filter-button {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    z-index: 1;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 </style>

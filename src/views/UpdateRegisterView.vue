@@ -172,7 +172,6 @@ const updateRegister = async () => {
 
 <style scoped>
 .container-fluid {
-  padding-top: 20px;
   overflow-x: hidden;
 }
 

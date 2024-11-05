@@ -10,7 +10,7 @@
       </button>
       </div>
       <form @submit.prevent="handleLogin" class="login-form">
-        <h2 class="fw-bold" style="margin-left: 90px;">로그인</h2>
+        <h2 class="fw-bold" style="margin-left: 110px;">로그인</h2>
 
         <div class="mt-5 form-group">
           <label for="userId">아이디:</label>
@@ -104,13 +104,13 @@ const handleLogin = async () => {
       // 요청 설정 중에 오류가 발생한 경우
       console.error("요청 오류:", error.message);
     }
+  };
   }
-};
 </script>
 
 <style scoped>
 .container-fluid {
-  padding-top: 40px;
+  padding-top: 20px;
   overflow-x: hidden;
 }
 

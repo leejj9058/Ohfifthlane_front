@@ -87,8 +87,28 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router'
 import Header from "@/components/Header.vue";
+import axios from 'axios';
 
+// const route = useRoute;
+// const report = ref([]);
+
+//신고내역 정보 가져오기
+// const getReport = async () => {
+//   const reportId = route.params.id;
+//   try {
+//     const response = await axios.get(`/api/reports/${reportId}`);
+
+//     if (response.status >= 200 && response.status < 300) {
+//       report.value = [response.data];
+//     }
+//   }
+// }
+
+// onMounted(() => {
+//   getReport();
+// });
 
 
 const report = ref([

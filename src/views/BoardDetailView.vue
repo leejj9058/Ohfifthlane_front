@@ -1,90 +1,114 @@
 <template>
   <Header></Header>
 
-  <div class="d-flex justify-content-center align-items-center p-3" id="background">
+  <div class="d-flex justify-content-center align-items-center p-4" id="background">
 
-    <!-- 본문 -->
+
     <div class="p-4 p-md-5 w-100">
 
-      <h1 class="mb-4 fs-2 fw-bold">{{notice.noticeTitle}}</h1>
+   <!-- 제목 카드 -->
+<div class="card p-2">
+  <div class="d-flex justify-content-between align-items-center">
+    <i class="bi bi-backspace fs-4 back" style="color: #A2A2A2;" @click="goBack"></i>
+    
+    <h1 class="mb-0 fs-4 fw-bold flex-grow-1 mx-3">
+      {{ notice.noticeTitle }}
+    </h1>
+    
+    <p class="mb-0 me-3" style="color: #A2A2A2;">{{ notice.noticeDate }}</p>
+    
+    <div class="dropdown">
+      <button class="btn btn-link p-0" type="button" aria-expanded="false" id="detailBtn"  style="color: black;" @click="toggleDropdown">
+        <i class="bi bi-three-dots-vertical"></i>
+      </button>
+      
+      <!-- 눌렀을 때 드롭다운 되는 메뉴리스트 -->
+      <ul class="dropdown-menu" :class="{ show: isDropdownOpen }" aria-labelledby="detailBtn">
+        <li>
+          <a class="dropdown-item" @click="editPost">
+            <i class="bi bi-pen"></i> 수정하기
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" @click="deletePost">
+            <i class="bi bi-trash3"></i> 삭제하기
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- 제목 카드 -->
 
-      <div class="d-flex justify-content-between align-items-center mb-0">
-        <p class="mb-0" style="color: #A2A2A2;">{{notice.noticeDate}}</p>
 
-        <div class="dropdown">
-          <button class="btn btn-link p-0" type="button" aria-expanded="false" id="detailBtn"  data-bs-toggle="dropdown">
-            <i class="bi bi-three-dots-vertical"></i>
-          </button>
-        
-          <!-- 눌렀을 때 드랍다운 되는 메뉴리스트 -->
-          <ul class="dropdown-menu" aria-labelledby="detailBtn">
-         
-            <li>
-              <a class="dropdown-item" href="#" @click="editPost">
-                <i class="bi bi-pen"></i>
-                수정하기</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#" @click="deletePost">
-                <i class="bi bi-trash3"></i>
-                삭제하기</a>
-            </li>
-
-          </ul>
-        </div>
-
-      </div>
-
-
+      <!-- 줄 -->
       <hr>
+      <!-- 줄 -->
 
+      <!-- 본문 -->
       <div class="card p-4" style="height: 800px;">
-        {{notice.noticeContent}}
+        {{ notice.noticeContent }}
       </div>
-
-
+      <!-- 본문 -->
 
     </div>
-    <!-- 본문 -->
+
 
 
   </div>
-
-
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import Header from "@/components/Header.vue";
-import { useRoute} from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+//import router from '@/router';
 
-const route = useRoute(); // 현재 라우트의 정보
+const router = useRouter(); // 현재 라우트의 정보
+const route = useRoute(); //라우터 객체 생성
 
 const noticeId = route.params.noticeId;  // URL에서 noticeId 가져오기
+
+const isDropdownOpen = ref(false); //드랍다운
+
+const dropdownRef = ref(null);
+
 
 onMounted(() => {
   console.log(noticeId);
   getNoticeDetail();
 })
 
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+//뒤로가기
+const goBack = () => {
+  router.go(-1);
+};
+
 // 수정 로직 구현
 function editPost() {
   console.log('게시물 수정');
+  router.push('/boardWrite')
 }
 
 // 삭제 로직 구현
 function deletePost() {
   console.log('게시물 삭제');
+  router.push('/notice')
 }
 
 const notice = ref({})
 
 const getNoticeDetail = async () => {
-  console.log('공지사항 요청 시작' );
+  console.log('공지사항 요청 시작');
 
   try {
-    const response = await axios.post('/api/getNoticeDetail', { noticeId});
+    const response = await axios.post('/api/getNoticeDetail', { noticeId });
     console.log('응답 데이터:', response);
     // 공지사항 불러오기 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
@@ -109,8 +133,6 @@ const getNoticeDetail = async () => {
 };
 </script>
 
-
-
 <style scoped>
 .table {
   /* table-layout: fixed; */
@@ -133,7 +155,24 @@ const getNoticeDetail = async () => {
   cursor: pointer;
 }
 
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 120px;
+  max-width: 200px;
+  z-index: 1000;
+}
 
+.dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.back {
+  cursor: pointer;
+}
 @media (max-width: 768px) {
   .noticeNo {
     width: 10%;
@@ -151,6 +190,59 @@ const getNoticeDetail = async () => {
   .table th {
     padding: 0.5rem;
     font-size: 0.9rem;
+  }
+}
+
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 1000;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 0.25rem;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  .dropdown-menu {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 0.25rem 0.25rem 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  }
+
+  .dropdown-item {
+    padding: 0.75rem 1.5rem;
   }
 }
 </style>
