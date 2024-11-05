@@ -14,8 +14,9 @@
       <div v-else class="info-box unregistered">
         <p><strong class="inputCarNum">{{ staticVehicleNumber }}</strong>차량은 신고 대상 차량입니다.</p>
         <p class="warning">*차량번호가 일치하는지 한번 더 확인해 주세요*</p>
+        
       </div>
-
+      <button class="submit-button" @click="submitReport">신고하러 가기</button>
     </div>
   </div>
 </template>

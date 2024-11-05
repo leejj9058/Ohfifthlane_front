@@ -28,39 +28,51 @@
             </button>
         </div>
         <transition name="slide-fade">
-            <div v-if="showTimeModal" class="bottom-sheet-time" @mousedown="startDrag" @mouseup="stopDrag"
-                @mouseleave="stopDrag" @mousemove="drag">
-                <div class="modal-content-time"> <!-- 변경된 클래스 이름 -->
+            <div v-if="showTimeModal || showModal" class="bottom-sheet">
+
+                <!-- 시간 선택 모달 내용 -->
+                <div v-if="showTimeModal" class="modal-content-time">
                     <div class="d-flex justify-content-center align-items-center p-3" id="background">
                         <div class="p-4 p-md-5 w-100">
-                            <h1 class="mb-4 fs-2 fw-bold">시간 설정</h1>
+                            <h1 class="mb-4 fs-2 fw-bold">예약 시간 설정</h1>
                             <label for="time">시간을 선택하세요:</label>
                             <div>
-                                <Datepicker locale="ko" style="width:300px" v-model="date" />
-                            </div>
-                            <div class="d-flex justify-content-start">
+                                <div>
+                                    <label for="start-time">시작 시간:</label>
+                                    <input id="start-time" type="text" ref="startTime" />
+
+                                    <label for="end-time">종료 시간:</label>
+                                    <input id="end-time" type="text" ref="endTime" />
+
+                                    <div>
+                                        <h2>시간 선택</h2>
+                                        <VueScrollPicker :options="options" v-model="selected" />
+                                    </div>
+
+                                </div>
                             </div>
                             <hr>
                         </div>
                     </div>
-                    <button @click="setTime(date)">확인</button>
-                    <button @click="showTimeModal = false">닫기</button>
+                    <div class="d-flex justify-content-between">
+                        <button @click="selectTimeModal" class="me-2">확인</button>
+                        <button @click="closeModal">닫기</button>
+                    </div>
+                </div>
+
+                <!-- RPZ 정보 모달 내용 -->
+                <div v-if="showModal" class="modal-content-rpz">
+                    <h3>{{ selectedRPZ.manageName }}</h3>
+                    <p>주소: {{ selectedRPZ.address }}</p>
+                    <p>10분 당 요금: {{ selectedRPZ.fee }}</p>
+                    <div class="d-flex justify-content-between">
+                        <button @click="moveReservation(selectedRPZ.id)" class="me-2">자세히 보기</button>
+                        <button @click="closeModal">닫기</button>
+                    </div>
                 </div>
             </div>
         </transition>
 
-        <transition name="slide-fade">
-            <div v-if="showModal" class="bottom-sheet-rpz" @mousedown="startDrag" @mouseup="stopDrag"
-                @mouseleave="stopDrag" @mousemove="drag">
-                <div class="modal-content-rpz"> <!-- 변경된 클래스 이름 -->
-                    <h3>{{ selectedRPZ.manageName }}</h3>
-                    <p>주소: {{ selectedRPZ.address }}</p>
-                    <p>10분 요금: {{ selectedRPZ.fee }}</p>
-                    <button @click="moveReservation(selectedRPZ.id)">자세히 보기</button>
-                    <button @click="showModal = false">닫기</button>
-                </div>
-            </div>
-        </transition>
     </div>
 </template>
 
@@ -68,10 +80,19 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-import 'flatpickr/dist/flatpickr.css';
+import flatpickr from 'flatpickr';
 
+//--------------------------------------
+import VueScrollPicker from 'vue-scroll-picker';
+
+const options = ref([
+    { label: '10:00', value: '10:00' },
+    { label: '10:10', value: '10:10' },
+    { label: '10:20', value: '10:20' },
+    // 추가 시간 옵션
+]);
+const selected = ref('10:00');
+//--------------------------------------
 
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
@@ -86,7 +107,9 @@ const showTimeModal = ref(false);
 const isDragging = ref(false);
 const startY = ref(0);
 const router = useRouter();
-const date = ref(new Date());
+const startTime = ref();  // 시작 시간 초기값
+const endTime = ref();    // 종료 시간 초기값
+
 
 onMounted(() => {
     const script = document.createElement('script');
@@ -117,6 +140,9 @@ onMounted(() => {
             });
         });
     };
+
+    searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
+
 });
 
 const revisit = () => {
@@ -169,6 +195,7 @@ const removeMarkers = () => {
     markers = [];
 };
 
+
 const returnToCurrentLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -190,6 +217,26 @@ const openFilter = () => {
     showTimeModal.value = true; // 모달을 열기
     console.log("Filter button clicked");
 };
+
+const selectTimeModal = () => {
+    flatpickr(startTime.value, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: 'H:i',
+        time_24hr: true,
+        minuteIncrement: 10, // 10분 단위 설정
+    });
+
+    flatpickr(endTime.value, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: 'H:i',
+        time_24hr: true,
+        minuteIncrement: 10, // 10분 단위 설정
+    });
+
+    searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
+}
 
 const filterResident = async () => {
     console.log("거주자 필터 클릭됨");
@@ -233,6 +280,11 @@ const createMarker = (rpzList) => {
     });
 };
 
+//모달 끄기
+const closeModal = () => {
+    showTimeModal.value = false;
+    showModal.value = false
+}
 
 // Dragging functions
 const startDrag = (event) => {
@@ -263,10 +315,17 @@ const drag = (event) => {
         showTimeModal.value = false; // 아래로 내릴 때 시간 설정 모달 닫기
     }
 };
-const setTime = (time) => {
-    console.log("설정된 시간:", time);
-    // 여기서 시간 설정 관련 로직 추가
-    showTimeModal.value = false; // 모달 닫기
+
+// 과거 날짜 비활성화 함수
+const disablePastDates = (date) => {
+    return date < new Date(); // 현재 시간보다 이전 시간 비활성화
+};
+
+// 종료 시간의 최소값을 시작 시간으로 동기화하는 함수
+const updateEndTime = () => {
+    if (endTime.value < startTime.value) {
+        endTime.value = new Date(startTime.value);
+    }
 };
 </script>
 
@@ -374,10 +433,14 @@ const setTime = (time) => {
 }
 
 .filter-button {
-    position: absolute; /* 지도 위에 위치하도록 설정 */
-    bottom: 20px; /* 하단에서의 거리 */
-    left: 20px; /* 왼쪽에서의 거리 */
-    background-color: #007bff; /* 버튼 색상 */
+    position: absolute;
+    /* 지도 위에 위치하도록 설정 */
+    bottom: 20px;
+    /* 하단에서의 거리 */
+    left: 20px;
+    /* 왼쪽에서의 거리 */
+    background-color: #007bff;
+    /* 버튼 색상 */
     color: white;
     border: none;
     border-radius: 50%;
@@ -389,7 +452,8 @@ const setTime = (time) => {
     font-size: 1.2rem;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 2; /* 다른 요소들보다 위에 오도록 설정 */
+    z-index: 2;
+    /* 다른 요소들보다 위에 오도록 설정 */
 }
 
 
@@ -420,19 +484,20 @@ const setTime = (time) => {
 
 .bottom-sheet-rpz,
 .bottom-sheet-time {
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
-    bottom: 50%;
+    bottom: 0;
+    /* 화면 아래쪽에 붙이기 */
     background: white;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.4s ease;
     transform: translateY(100%);
-    /* 기본 상태는 보이지 않도록 */
+    /* 기본 상태는 보이지 않도록 아래쪽에 숨김 */
     z-index: 10;
     height: 50%;
-    border-radius: 15px;
-    /* 둥글게 */
+    border-radius: 15px 15px 0 0;
+    /* 상단 모서리만 둥글게 */
     overflow: hidden;
     /* 모서리 둥글기 유지 */
 }
@@ -498,14 +563,26 @@ const setTime = (time) => {
 /* Slide fade transition */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
 }
 
 .slide-fade-enter {
     transform: translateY(100%);
+    /* 애니메이션 시작: 화면 아래에서 올라옴 */
+}
+
+.slide-fade-enter-to {
+    transform: translateY(0);
+    /* 애니메이션 끝: 화면 중앙에서 정지 */
+}
+
+.slide-fade-leave {
+    transform: translateY(0);
+    /* 애니메이션 시작: 화면 중앙에서 사라지기 시작 */
 }
 
 .slide-fade-leave-to {
     transform: translateY(100%);
+    /* 애니메이션 끝: 화면 아래로 사라짐 */
 }
 </style>
