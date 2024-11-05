@@ -1,3 +1,4 @@
+// 카메라 촬영 및 신고 처리 컴포넌트
 <template>
   <Header />
   <div class="report-tutorial-container" v-if="showModal">
@@ -29,55 +30,50 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeUnmount, nextTick } from 'vue';
 import Header from '@/components/Header.vue';
 import axios from 'axios';
 
-// 반응형 참조 정의
 const showModal = ref(true);
 const showPreview = ref(false);
 const capturedPhoto = ref(null);
 const videoStream = ref(null);
+const videoElement = ref(null);
 
-// 메서드 정의
 const goBack = () => {
   window.history.back();
 };
 
-const startCamera = () => {
+const startCamera = async () => {
   showModal.value = false;
-  enableCamera();
+  await nextTick();
+  await enableCamera();
 };
 
-const enableCamera = () => {
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices
-      .getUserMedia({ video: true })
-      .then((stream) => {
-        videoStream.value = stream;
-        const videoElement = document.querySelector("video");
-        if (videoElement) {
-          videoElement.srcObject = stream;
-        }
-      })
-      .catch((error) => {
-        console.error("카메라 접근 오류:", error);
-        alert("카메라에 접근할 수 없습니다.");
-      });
-  } else {
-    alert("카메라를 지원하지 않는 브라우저입니다.");
+const enableCamera = async () => {
+  videoElement.value = document.querySelector('video');
+  try {
+    videoStream.value = await navigator.mediaDevices.getUserMedia({ video: true });
+    if (videoElement.value) {
+      videoElement.value.srcObject = videoStream.value;
+    }
+  } catch (error) {
+    alert("카메라에 접근할 수 없습니다.");
   }
 };
 
 const capturePhoto = () => {
-  const video = document.querySelector("video");
   const canvas = document.createElement("canvas");
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-  capturedPhoto.value = canvas.toDataURL("image/png");
-  showPreview.value = true;
-  stopCamera();
+  const video = videoElement.value;
+
+  if (video) {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+    capturedPhoto.value = canvas.toDataURL("image/png");
+    showPreview.value = true;
+    stopCamera();
+  }
 };
 
 const stopCamera = () => {
@@ -88,18 +84,15 @@ const stopCamera = () => {
 
 const confirmPhoto = async () => {
   try {
-    const response = await axios.post('/api/uploadPhoto', {
-      photo: capturedPhoto.value,
-    });
-
-    if (response.data.success) {
-      alert("사진이 확인되었습니다.");
-      window.location.href = `/residentReportWrite?photo=${capturedPhoto.value}`;
+    const response = await axios.post('/api/uploadPhoto', { reportImage: capturedPhoto.value });
+    
+    if (response.status === 200) {
+      const photoPath = response.data.reportImage; // 서버가 반환한 이미지 경로
+      window.location.href = `/residentReportWrite?photo=${encodeURIComponent(photoPath)}`; // 이미지 경로 전달
     } else {
       alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
     }
   } catch (error) {
-    console.error("사진 전송 오류:", error);
     alert("서버에 사진을 전송할 수 없습니다.");
   }
   showPreview.value = false;
@@ -109,7 +102,12 @@ const retakePhoto = () => {
   showPreview.value = false;
   startCamera();
 };
+
+onBeforeUnmount(() => {
+  stopCamera();
+});
 </script>
+
 
 <style scoped>
 .report-tutorial-container {
