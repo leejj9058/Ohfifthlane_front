@@ -61,9 +61,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import Header from "@/components/Header.vue";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
-import router from '@/router';
+//import router from '@/router';
 
 const router = useRouter(); // 현재 라우트의 정보
 const route = useRoute(); //라우터 객체 생성

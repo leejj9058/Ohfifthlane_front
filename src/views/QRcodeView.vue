@@ -13,97 +13,107 @@
       <button class="report-safety-button" @click="goToSafetySite">안전신문고로 신고하기</button>
     </div>
   </div>
-  
+
   <div v-else class="scanner-container">
-    <qrcode-stream @decode="onDecode" @init="onInit" />
+    <!-- 간단한 QR 코드 인식 카메라 뷰 -->
+    <qrcode-stream
+      :constraints="{ facingMode: 'environment' }"
+      :formats="['qr_code']"
+      @detect="onDetect"
+      @init="onInit"
+      @error="onError"
+    />
     <button class="scanner-cancel-button" @click="stopScanning">취소</button>
-    <button class="scanner-next-button" @click="goToNextStep">다음으로</button> 
+    <button class="scanner-next-button" @click="goToNextStep">다음으로</button>
   </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import Header from '@/components/Header.vue';
 import { QrcodeStream } from 'vue-qrcode-reader';
 import qrCodeImage from '@/assets/images/qr-code.png';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+import CryptoJS from "crypto-js";
 
-export default {
-  components: {
-    Header,
-    QrcodeStream,
-  },
-  setup() {
-    const qrCodeImageRef = ref(qrCodeImage);
-    const scanning = ref(false);
-    const decodedContent = ref("");
+const router = useRouter();
+// 기본 상태값들 정의
+const qrCodeImageRef = ref(qrCodeImage);
+const scanning = ref(false);
+const result = ref('');
+// 비밀 키와 IV 설정 (Python 코드와 동일한 값 사용)
+const secretKey = CryptoJS.enc.Utf8.parse("452fc981217ab2b2");
+const iv = CryptoJS.enc.Utf8.parse("956914c27b3f7490");
 
-    const goBack = () => {
-      window.history.back();
-    };
+// 이벤트 핸들러
+function onDetect(detectedCodes) {
+  result.value = detectedCodes.map((code) => code.rawValue).join(', ');
+  const encryptedDataB64 = result.value; // 실제 QR 코드에서 얻은 데이터
+  alert(`QR 코드가 인식되었습니다: ${result.value}`);
+  //scanning.value = false;
+}
 
-    const startScanning = () => {
-      scanning.value = true;
-    };
-
-    const stopScanning = () => {
+function onInit(promise) {
+  promise
+    .then(() => {
+      console.log("카메라 접근 성공");
+    })
+    .catch((err) => {
+      console.error("카메라 접근 오류:", err);
+      alert("카메라에 접근할 수 없습니다.");
       scanning.value = false;
-    };
+    });
+}
 
-    const onDecode = (content) => {
-      decodedContent.value = content;
-      alert(`QR 코드가 인식되었습니다: ${content}`);
-      scanning.value = false;
-    };
+function onError(err) {
+  console.error("QR 코드 리더 오류:", err);
+  alert("QR 코드 리더 초기화 중 오류가 발생했습니다.");
+}
 
-    const onInit = (promise) => {
-      promise
-        .then(() => {
-          console.log("카메라 접근 성공");
-        })
-        .catch((error) => {
-          console.error("카메라 접근 오류:", error);
-          alert("카메라에 접근할 수 없습니다.");
-          scanning.value = false;
-        });
-    };
+const goBack = () => {
+  window.history.back();
+};
 
-    const goToNextStep = async () => {
-      if (confirm("다음 단계로 진행하시겠습니까?")) {
-        try {
-          const response = await axios.post("/api/qr-data", {
-            qrContent: decodedContent.value,
-          });
+const startScanning = () => {
+  scanning.value = true;
+};
 
-          if (response.status === 200) {
-            alert("QR 데이터가 서버에 전송되었습니다.");
-            window.location.href = `/qrcodereport?vehicleNumber=${decodedContent.value}`;
-          }
-        } catch (error) {
-          console.error("QR 데이터 전송 실패:", error);
-          alert("QR 데이터 전송 중 오류가 발생했습니다.");
-        }
-      }
-    };
+const stopScanning = () => {
+  scanning.value = false;
+};
 
-    const goToSafetySite = () => {
-      window.location.href = "https://www.safetyreport.go.kr"; // 안전신문고 URL
-    };
+const goToNextStep = async () => {
+  alert(result.value);
 
-    return {
-      qrCodeImage: qrCodeImageRef,
-      scanning,
-      decodedContent,
-      goBack,
-      startScanning,
-      stopScanning,
-      onDecode,
-      onInit,
-      goToNextStep,
-      goToSafetySite,
-    };
-  },
+  // QR 코드에서 읽은 데이터를 사용
+  const encryptedDataB64 = result.value; // onDetect에서 설정한 QR 데이터
+
+  try {
+    // URL-safe Base64 디코딩
+    const encryptedData = CryptoJS.enc.Base64.parse(encryptedDataB64.replace(/-/g, '+').replace(/_/g, '/'));
+
+    // AES 복호화
+    const decrypted = CryptoJS.AES.decrypt(
+      { ciphertext: encryptedData },
+      secretKey,
+      { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+    );
+
+    // 복호화된 JSON 문자열
+    const jsonData = decrypted.toString(CryptoJS.enc.Utf8);
+
+    // JSON 파싱
+    const data = JSON.parse(jsonData);
+    console.log("Decrypted Data:", data);
+    router.push({ path: "/qrcodereport", query: {
+    disabledPersonCarNum: data.disabledPersonCarNum,
+    issueDate: data.issueDate,
+  }, });
+  } catch (error) {
+    console.error("복호화 또는 JSON 파싱 중 에러 발생:", error);
+  }
 };
 </script>
 
@@ -120,6 +130,11 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width to prevent overflow */
+
 }
 
 .qr-modal {
@@ -209,6 +224,27 @@ export default {
 
 .scanner-next-button {
   background-color: green;
+  color: white;
+}
+
+.scanner-cancel-button {
+  background-color: white;
+  color: black;
+}
+
+.scanner-next-button {
+  background-color: green;
+  color: white;
+}
+
+.scanner-cancel-button {
+  background-color: white;
+  color: black;
+}
+
+.scanner-next-button {
+  margin-top: 20px;
+  background-color: green; /* Customize color */
   color: white;
 }
 </style>
