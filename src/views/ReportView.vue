@@ -92,12 +92,12 @@ const reports = ref([
 //
 const getStatusClass = (status) => {
   switch (status) {
-    case '미처리':
-      return 'status-unprocessed';
-    case '처리중':
-      return 'status-processing';
-    case '완료':
-      return 'status-completed';
+    case 0:
+      return '미처리';
+    case 1:
+      return '완료';
+    case 2:
+      return '반려';
     case '반려':
       return 'status-rejected';
   }
