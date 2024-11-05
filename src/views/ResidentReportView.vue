@@ -1,31 +1,30 @@
-// 카메라 촬영 및 신고 처리 컴포넌트
 <template>
   <Header />
   <div class="report-tutorial-container" v-if="showModal">
     <div class="report-modal">
-      <button class="report-back-button" @click="goBack()">←</button>
+      <button class="report-back-button" @click="goBack">←</button>
       <p class="report-title">번호판이 나오도록 촬영해주세요</p>
       <div class="report-container">
         <img src="@/assets/images/example-photo.png" alt="예시 이미지" class="report-example" />
       </div>
-      <button class="report-button" @click="startCamera()">촬영하기</button>
+      <button class="report-button" @click="startCamera">촬영하기</button>
     </div>
   </div>
 
-  <div v-else-if="showPreview()" class="photo-preview-modal">
+  <div v-else-if="showPreview" class="photo-preview-modal">
     <div class="photo-preview">
       <p class="preview-title">이 사진으로 하시겠습니까?</p>
       <div class="preview-container">
-        <img :src="capturedPhoto()" alt="Captured Photo" class="captured-photo" />
+        <img :src="capturedPhoto" alt="Captured Photo" class="captured-photo" />
       </div>
-      <button class="confirm-button" @click="confirmPhoto()">확인</button>
-      <button class="cancel-button" @click="retakePhoto()">다시 촬영</button>
+      <button class="confirm-button" @click="confirmPhoto">확인</button>
+      <button class="cancel-button" @click="retakePhoto">다시 촬영</button>
     </div>
   </div>
 
   <div v-else class="camera-view">
     <video ref="video" class="camera-video" autoplay></video>
-    <button class="capture-button" @click="capturePhoto()">사진 찍기</button>
+    <button class="capture-button" @click="capturePhoto">사진 찍기</button>
   </div>
 </template>
 
@@ -84,7 +83,10 @@ const stopCamera = () => {
 
 const confirmPhoto = async () => {
   try {
-    const response = await axios.post('/api/uploadPhoto', { reportImage: capturedPhoto.value });
+    const response = await axios.post('/api/uploadPhoto', {
+      reportImage: capturedPhoto.value,
+      
+    });
     
     if (response.status === 200) {
       const photoPath = response.data.reportImage; // 서버가 반환한 이미지 경로

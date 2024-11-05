@@ -3,8 +3,7 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
-import fs from 'fs';
-
+import fs from "fs";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -19,13 +18,13 @@ export default defineConfig({
   },
   server: {
     https: {
-      key: fs.readFileSync('./localhost+3-key.pem'), // 키 파일 경로
-      cert: fs.readFileSync('./localhost+3.pem'),     // 인증서 파일 경로
+      key: fs.readFileSync("../localhost+3-key.pem"), // 키 파일 경로
+      cert: fs.readFileSync("../localhost+3.pem"), // 인증서 파일 경로
     },
-    host: "172.168.10.93", // 로컬 네트워크 IP 주소로 설정
+    host: "192.168.0.43", // 로컬 네트워크 IP 주소로 설정
     port: 5173,
     proxy: {
-      "/api": "http://172.168.10.93:8080",
+      "/api": "http://192.168.0.43:8080",
     },
   },
 });

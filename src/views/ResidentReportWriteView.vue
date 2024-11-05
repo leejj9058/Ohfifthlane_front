@@ -23,7 +23,6 @@ const photo = ref(route.query.photo || null);
 const currentLat = ref(null); // 현재 위도
 const currentLon = ref(null); // 현재 경도
 
-
 const checkImage = () => {
   window.open(photo.value, '_blank', 'width=700, height=600, top=50, left=50, scrollbars=yes');
 }
@@ -52,7 +51,7 @@ const submitReport = async () => {
     const response = await axios.post("/api/report", {
       report: {
         reportCarNumber: reportCarNumber.value,
-        reportImage: photo.value.replace("http://172.168.10.73:8080/upload/", ""), // 사진 URL을 사용
+        reportImage: photo.value.replace("http://192.168.0.43:8080/upload/", ""), // 사진 URL을 사용
         reportLat: currentLat.value, // 현재 위도
         reportLon: currentLon.value, // 현재 경도
       },
@@ -80,8 +79,6 @@ onMounted(() => {
   getCurrentLocation(); // 컴포넌트가 마운트되면 현재 위치 가져오기
 });
 </script>
-
-
 
 <style scoped>
 .form-container {
