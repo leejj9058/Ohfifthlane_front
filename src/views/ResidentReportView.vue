@@ -84,12 +84,12 @@ const stopCamera = () => {
 const confirmPhoto = async () => {
   try {
     const response = await axios.post('/api/uploadPhoto', {
-      reportImage: capturedPhoto.value,
-      
+      reportImage: capturedPhoto.value, // 사진을 base64로 서버에 전송
     });
-    
+
     if (response.status === 200) {
       const photoPath = response.data.reportImage; // 서버가 반환한 이미지 경로
+      console.log("Returned photo path: ", photoPath);  // URL 확인용
       window.location.href = `/residentReportWrite?photo=${encodeURIComponent(photoPath)}`; // 이미지 경로 전달
     } else {
       alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
@@ -97,8 +97,10 @@ const confirmPhoto = async () => {
   } catch (error) {
     alert("서버에 사진을 전송할 수 없습니다.");
   }
+
   showPreview.value = false;
 };
+
 
 const retakePhoto = () => {
   showPreview.value = false;
