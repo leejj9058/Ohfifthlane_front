@@ -7,7 +7,7 @@ import InquiryBoard from '../views/InquiryBoardView.vue';
 import Notice from '../views/NoticeView.vue';
 import BoardDetail from '../views/BoardDetailView.vue';   
 import NewBoard from '../views/BoardWriteView.vue';
-import Report from '../views/ReportView.vue';
+import ReportListView from '../views/ReportListView.vue';
 import ReportDetail from '../views/ReportDetailView.vue';
 import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
@@ -64,9 +64,9 @@ const router = createRouter({
       component: NewBoard
     },
     {
-      path: '/report',
-      name: 'report',
-      component: Report
+      path: '/reportList',
+      name: 'reportList',
+      component: ReportListView
     },
     {
       path: '/reportDetail',
