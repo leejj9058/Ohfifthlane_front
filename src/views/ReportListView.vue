@@ -1,7 +1,7 @@
 <template>
   <Header></Header>
 
-  <div class="d-flex justify-content-center align-items-center p-3" id="background">
+  <div class="d-flex justify-content-center align-items-center p-3" id="background h-100">
 
     <!-- 본문 -->
     <div class="p-4 p-md-5 w-100">
@@ -20,24 +20,26 @@
       <!-- 줄 -->
 
       <!-- 게시글 테이블 -->
-      <div class="table-responsive">
+      <div class="table-responsive  vh-100">
 
-        <table class="table mb-3">
+        <table class="table mb-3 ">
           <thead>
             <tr class="text-center">
               <th class="reportNo">No</th>
               <th class="reportTitle">제목</th>
+              <th class="reportTitle">날짜</th>
               <th class="reportStatus">상태</th>
             </tr>
           </thead>
 
           <tbody>
             <tr v-for="report in reports" :key="report.id" class="reportIndex" @click="gotoReportOne(report.id)">
-              <td class="text-center">{{ report.id }}</td>
-              <td class="reportTitle text-center">{{ report.title }}</td>
+              <td class="text-center">{{ report.repoartId }}</td>
+              <td class="reportTitle text-center">{{ report.reportLat }}, {{ report.reportLon }}</td>
+              <td class="reportTitle text-center">{{ report.reportDate }}</td>
               <td class="text-center">
                 <span :class="['status-badge', getStatusClass(report.status)]">
-                  {{ report.status }}
+                  {{ getStatusText(report.status) }}
                 </span>
               </td>
             </tr>
@@ -77,29 +79,52 @@ const inputFormat = (date) => {
 // 날짜 선택 이벤트 핸들러
 const handleDateChange = (date) => {
   console.log('선택된 날짜:', inputFormat(date));
-  //날짜 선택하면 날짜에 해당하는 신고내역 가져오기
+  fetchList();
 };
 
 
-const reports = ref([
-  { id: 1, title: "2024.10.27 서초구", status: "미처리" },
-  { id: 2, title: "2024.10.27 서초구", status: "처리중" },
-  { id: 3, title: "2024.10.27 서초구", status: "완료" },
-  { id: 3, title: "2024.10.27 서초구", status: "반려" }
+const reports = ref([])
 
-])
+// const reports = ref([
+//   { id: 1, title: "2024.10.27 서초구", status: "미처리" },
+//   { id: 2, title: "2024.10.27 서초구", status: "처리중" },
+//   { id: 3, title: "2024.10.27 서초구", status: "완료" },
+//   { id: 3, title: "2024.10.27 서초구", status: "반려" }
+
+// ])
+
+
+
+const fetchList = async () => {
+  try {
+    const response = await axios.post("/api/reportList");
+    reports.value = response.data;
+  } catch (error) {
+    console.error('Error fetching report list:', error);
+  }
+};
+
+onMounted(() => {
+  fetchList(); // 컴포넌트가 마운트될 때 데이터 가져오기
+});
+
 
 //
 const getStatusClass = (status) => {
   switch (status) {
-    case 0:
-      return '미처리';
-    case 1:
-      return '완료';
-    case 2:
-      return '반려';
-    case '반려':
-      return 'status-rejected';
+    case 0: return 'status-unprocessed';
+    case 1: return 'status-completed';
+    case 2: return 'status-rejected';
+    default: return '';
+  }
+};
+
+const getStatusText = (status) => {
+  switch (status) {
+    case 0: return '미처리';
+    case 1: return '완료';
+    case 2: return '반려';
+    default: return '알 수 없음';
   }
 };
 
