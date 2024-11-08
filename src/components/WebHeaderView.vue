@@ -61,7 +61,7 @@ const goToService = () => {
   if (introSection) {
     const offsetTop = introSection.offsetTop; // 섹션의 상단 위치를 계산
     window.scrollTo({
-      top: offsetTop - 50, // 50px 정도 위쪽 여유 공간 추가
+      top: offsetTop - 70, // 50px 정도 위쪽 여유 공간 추가
       behavior: "smooth",
     });
   }
@@ -72,7 +72,7 @@ const goToMobileInfo = () => {
   if (mobileIntroSection) {
     const offsetTop = mobileIntroSection.offsetTop; // 섹션의 상단 위치를 계산
     window.scrollTo({
-      top: offsetTop - 50, // 50px 정도 위쪽 여유 공간 추가
+      top: offsetTop - 70, // 50px 정도 위쪽 여유 공간 추가
       behavior: "smooth",
     });
   }
@@ -83,7 +83,7 @@ const goToShareInfo = () => {
   if (shareInfoSection) {
     const offsetTop = shareInfoSection.offsetTop;
     window.scrollTo({
-      top: offsetTop - 50, // 50px 정도 위쪽 여유 공간 추가
+      top: offsetTop - 70, // 50px 정도 위쪽 여유 공간 추가
       behavior: "smooth",
     })
   }
@@ -112,6 +112,7 @@ const goToQRReport = () => {
   background-color: white; /* 기본 배경색을 투명으로 설정 */
   z-index: 1000; /* 다른 요소 위에 표시 */
   transition: background-color 0.3s ease; /* 배경색 변경 시 부드럽게 애니메이션 */
+  border-bottom: 1px solid blue;
 }
 
 .header.scrolled {

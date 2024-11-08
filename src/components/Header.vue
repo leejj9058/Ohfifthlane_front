@@ -8,10 +8,9 @@
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
-      <div class="logo-container" v-if="!isMobile" @click="goToHome" >
-        <img width="70" height="70" src="@/assets/images/simbol.png" alt="car-icon" />
-        <h1 class="logo-text">오차로</h1>
-        <p style="font-size: 12px;">오늘의 주차장은 여기로!</p>
+      <div class="logo-container" v-if="!isMobile">
+        <img width="100" height="100" src="@/assets/images/111.png" alt="car-icon" @click="goToHome" />
+        <h1 class="logo-text">주 차</h1>
       </div>
       
       <nav class="nav-menu text-center">

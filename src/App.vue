@@ -1,9 +1,10 @@
 <template>
-
-
   <div class="app-container" style="background-color: #F9F9F9;">
-
-    <main class="main-content">
+    <!-- v-if를 사용하여 조건에 따라 다른 요소를 렌더링 -->
+    <main v-if="isMainWebView" class="main-content main-content-new">
+      <router-view></router-view>
+    </main>
+    <main v-else class="main-content">
       <router-view></router-view>
     </main>
   </div>
@@ -11,7 +12,7 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const route = useRoute();
 const isMainWebView = ref(false);
@@ -22,7 +23,7 @@ watch(route, () => {
 
 function checkIfMainWebView() {
   // `MainWebView`의 경로나 이름을 확인하여 페이지 식별
-  isMainWebView.value = route.name === 'main' || route.name === 'map'; // 경로 이름이 'main'인지 확인
+  isMainWebView.value = route.name === 'main'; // 경로 이름이 'main'인지 확인
 }
 </script>
 
@@ -42,7 +43,6 @@ function checkIfMainWebView() {
   margin-left: 0;
   padding: 0;
 }
-
 
 @media (max-width: 768px) {
   .main-content {

@@ -5,7 +5,7 @@
   >
     <div class="card p-5 login-container">
       <div class="d-flex align-items-center ">
-      <button class="btn btn-link  mb-3" @click="goBack">
+      <button class="btn btn-link mb-3" @click="goBack">
           <i class="bi bi-arrow-left arrow-icon"></i>
       </button>
       </div>

@@ -7,7 +7,7 @@
       <!-- 회원가입 폼 -->
       <section class="signup-section my-4 text-center">
         <div class="d-flex align-items-center ">
-        <button class="btn btn-link  mb-3" @click="goBack">
+        <button class="btn btn-link  mb-3" @click="goBack" >
             <i class="bi bi-arrow-left arrow-icon"></i>
           </button>
         <h3 class="fw-bold" style="margin-left: 120px;">회원가입</h3>
@@ -257,7 +257,8 @@ const registerForm = async () => {
   border-radius: 12px;
   border: 1px solid #ddd;
   padding: 20px;
-  width: 460px;
+  max-width: 460px;
+  overflow: hidden;
 }
 
 form {
@@ -316,6 +317,7 @@ button:hover {
   background-color: #4169e1;
 }
 
+
 .error-message {
   color: red;
   font-size: 12px;
@@ -331,4 +333,23 @@ button:hover {
   margin-top: -10px;
   margin-bottom: 10px;
 }
+
+/* 뒤로가기 버튼 스타일 */
+.btn-link {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.arrow-icon {
+  font-size: 1.5rem;
+  color: #007bff; /* 기본 링크 색상 */
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
 </style>

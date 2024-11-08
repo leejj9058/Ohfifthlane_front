@@ -201,4 +201,22 @@ button:hover {
   margin-top: -10px;
   margin-bottom: 10px;
 }
+
+/* 뒤로가기 버튼 스타일 */
+.btn-link {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.arrow-icon {
+  font-size: 1.5rem;
+  color: #007bff; /* 기본 링크 색상 */
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
 </style>
