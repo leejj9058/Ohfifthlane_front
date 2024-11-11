@@ -5,6 +5,11 @@
     <div class="card d-flex justify-content-center align-items-center p-3" id="background">
 
       <div class="p-4 p-md-5 w-100 ">
+        <div class="d-flex align-items-center ">
+          <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+        </div>  
         <h1 class=" mb-4 fs-2 fw-bold"> 공유주차장 등록 </h1>
 
         <div class="d-flex mh-3 mb-4">
@@ -129,7 +134,15 @@ import { Modal } from 'bootstrap';
 import { useRouter } from 'vue-router';
 import axios from 'axios'
 
+
 const router = useRouter();
+
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
+
+
 
 //사용자 데이터
 // const users = 

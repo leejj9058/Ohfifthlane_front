@@ -65,6 +65,11 @@ const map = ref(null);
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const router = useRouter();
 
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
+
 const initializeMap = (lat, lng) => {
   nextTick(() => {
     const mapContainer = document.getElementById('map');

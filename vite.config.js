@@ -23,7 +23,14 @@ export default defineConfig({
     host: "172.168.10.73", // 로컬 네트워크 IP 주소로 설정
     port: 5173,
     proxy: {
-      "/api": "http://172.168.10.73:8080",
+      "/api": {
+        target: "http://172.168.10.73:8080",
+        changeOrigin: true,
+      },
+      "/ai/detect_plate": {
+        target: "http://172.168.10.11:8501", // 이건 수정하면 안돼요. 권수컴으로 파이썬 서버 가동했을 때 번호판 읽기 가능
+        changeOrigin: true,
+      },
     },
   },
 });

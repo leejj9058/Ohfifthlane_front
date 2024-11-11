@@ -161,6 +161,7 @@ const goToNextStep = async () => {
 .qr-title {
   font-size: 24px;
   margin-bottom: 20px;
+  margin-top: 10px;
 }
 
 .qr-code {
