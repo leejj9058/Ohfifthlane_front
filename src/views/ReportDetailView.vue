@@ -21,7 +21,6 @@
         <!-- 사진 공간 -->
         <div class="picture mb-4 mt-4 d-flex justify-content-center align-items-center"
           style="height: 50%; width: 100%">
-          <!-- 엑시오스로 연결한 이미지 불러옴 -->
           <img v-if="imageUrl" :src="imageUrl" alt="Report Image" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
           <p v-else>이미지를 불러올 수 없습니다.</p>
         </div>
@@ -62,14 +61,14 @@
 
         <!-- 버튼 -->
         <div class="d-flex justify-content-center mt-4">
-          <template v-if="report.reportStatus === '0'"> 
+          <template v-if="report.reportStatus === 0"> 
             <!--  0~2 (0 = 미처리) 일 경우 견인 반려-->
-            <button class="btn btn-primary me-4" @click="tractionBtn">견인</button>
-            <button class="btn btn-danger ms-4" @click="rejectBtn">반려</button>
+            <button class="btn btn-primary me-4" @click="updateReportStatus(1)">견인</button>
+            <button class="btn btn-danger ms-4" @click="updateReportStatus(2)">반려</button>
           </template>
 
           <template v-else>
-            <button class="btn btn-secondary" @click="okBtn">확인</button>
+            <button class="btn btn-secondary" @click="goToReportList">확인</button>
           </template>
         </div>
         <!-- 버튼 -->
@@ -90,12 +89,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Header from "@/components/Header.vue";
 import axios from 'axios';
 import { format } from 'date-fns';
 
 const route = useRoute(); // 라우터 객체 생성
+const router = useRouter();
 const reportId = route.params.reportId;  // URL에서 reportId 가져오기
 const imageUrl = ref(''); // db에서 가져올 이미지
 
@@ -104,6 +104,32 @@ const report = ref({
 });
 
 const loading = ref(true); // 로딩 상태 추가
+
+const updateReportStatus = async (reportStatus) => {
+
+  const statusText = reportStatus === 1 ? '견인' : '반려';
+  if (confirm(`${statusText}처리 하시겠습니까?`)) {
+    try {
+      const response = await axios.put(`/api/updateReportStatus/${reportId}/${reportStatus}`);
+      if (response.status == 200) {
+        report.value.reportStatus = reportStatus; //상태 업데이트
+        alert('견인처리가 완료되었습니다.');
+      } else {
+        alert('상태 변경에 실패했습니다.');
+      }
+
+    } catch (error) {
+      console.error('견인 상태 변경 실패: ', error);
+      alert('견인 상태변경에 실패했습니다.');
+    }
+  }
+}
+
+const goToReportList = () => {
+  router.push('/reportList')
+}
+
+
 
 // 날짜 포맷팅 함수
 const formatDate = (dateString) => {

@@ -33,7 +33,7 @@
           </thead>
 
           <tbody>
-            <tr v-for="report in reportList" :key="report.reportId" class="reportIndex" @click="gotoReportDetail(report.reportId)">
+            <tr v-for="report in reportList" :key="report.reportId" class="reportIndex" @click="goToReportDetail(report.reportId)">
               <td class="text-center">{{ report.reportId }}</td>
               <td class="reportTitle text-center">{{ report.reportAddress }}</td>
               <td class="reportTitle text-center">{{ formatDate(report.reportTime) }}</td>
@@ -131,7 +131,7 @@ const getStatusText = (status) => {
 };
 
 // 해당 신고 상세 페이지로 이동
-const gotoReportDetail = (reportId) => {
+const goToReportDetail = (reportId) => {
   router.push(`/reportDetail/${reportId}`);
 };
 </script>
