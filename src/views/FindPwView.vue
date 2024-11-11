@@ -12,8 +12,9 @@
         <button class="btn btn-link  mb-3" @click="goBack">
             <i class="bi bi-arrow-left arrow-icon"></i>
           </button>
-        <h3 class="fw-bold" style="margin-left: 100px;">비밀번호 찾기</h3>
-      </div>
+        </div>  
+        <h3 class="fw-bold text-center">비밀번호 찾기</h3>
+      
         <form>
 
           <label for="name">이름</label>
