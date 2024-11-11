@@ -69,7 +69,7 @@ const router = createRouter({
       component: ReportListView
     },
     {
-      path: '/reportDetail',
+      path: '/reportDetail/:reportId',
       name: 'reportDetail',
       component: ReportDetailView
     },

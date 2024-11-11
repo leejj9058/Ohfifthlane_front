@@ -132,7 +132,7 @@ const getStatusText = (status) => {
 
 // 해당 신고 상세 페이지로 이동
 const gotoReportDetail = (reportId) => {
-  router.push({ path: '/reportDetail', query: { reportId: reportId } });
+  router.push(`/reportDetail/${reportId}`);
 };
 </script>
 

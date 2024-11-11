@@ -6,10 +6,10 @@
     <!-- 본문 -->
     <div class="p-4 p-md-5 w-100">
 
-      <h1 class="mb-4 fs-2 fw-bold">{{ report.reportLat }},  {{ report.reportLon }}</h1>
+      <h1 class="mb-4 fs-2 fw-bold">{{ report.reportAddres }}</h1>
 
       <div class="d-flex justify-content-between align-items-center mb-0">
-        <p class="mb-0" style="color: #A2A2A2;">{{ report.reportTime }}</p>
+        <p class="mb-0" style="color: #A2A2A2;">{{ formatDate(report.reportTime) }}</p>
       </div>
 
 
@@ -31,7 +31,7 @@
           <thead>
             <tr>
               <th>접수시간</th>
-              <td colspan="2">{{ report.reportTime }}</td>
+              <td colspan="2">{{ formatDate(report.reportTime) }}</td>
             </tr>
           </thead>
 
@@ -90,55 +90,55 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router';
 import Header from "@/components/Header.vue";
 import axios from 'axios';
+import { format } from 'date-fns';
 
-
-const route = useRoute(); //라우터 객체 생성
-const router = useRouter();
+const route = useRoute(); // 라우터 객체 생성
 const reportId = route.params.reportId;  // URL에서 reportId 가져오기
-const imageUrl = ref(''); //db에서 가져올 이미지
+const imageUrl = ref(''); // db에서 가져올 이미지
 
-onMounted(() => {
-  console.log(reportId);
-  getReportDetail();
-})
+const report = ref({
+  
+});
 
+const loading = ref(true); // 로딩 상태 추가
 
-const report = ref([])
+// 날짜 포맷팅 함수
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  if (isNaN(date)) {
+    return '';  // 또는 'Invalid Date' time 포매팅 하고 나서 보여지게
+  }
+  return format(date, 'yyyy-MM-dd HH:mm'); // 원하는 형식으로 반환
+};
+
+onMounted(async () => {
+  try {
+    console.log(reportId);
+    await getReportDetail();
+  } catch (error) {
+    console.error('데이터 로딩 오류:', error);
+  } finally {
+    loading.value = false; // 로딩이 끝났으므로 상태를 false로 변경
+  }
+});
 
 const getReportDetail = async () => {
-  console.log('신고 요청 시작');
-
   try {
-    const response = await axios.post('/api/reportDetail', { reportId });
+    const response = await axios.get(`/api/reportDetail/${reportId}`);
     console.log('응답 데이터:', response);
-    // 신고사항 불러오기 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
-      console.log(response.data + '공지사항 success');
       report.value = response.data;
-      imageUrl.value = response.data.reportImage; //이미지 가져오기 
+      imageUrl.value = `/src/assets/images/uploads/${response.data.reportImage}`;
     } else {
-      // 예상치 못한 상태 코드
       throw new Error('Unexpected response status');
     }
   } catch (error) {
-    if (error.response) {
-      // 서버가 2xx 범위를 벗어나는 상태 코드로 응답한 경우
-      console.error('신고 요청 실패:', error.response.data.message || '알 수 없는 오류 발생');
-    } else if (error.request) {
-      // 요청이 전송되었으나 응답을 받지 못한 경우
-      console.error('서버 응답 없음');
-    } else {
-      // 요청 설정 중에 오류가 발생한 경우
-      console.error('요청 오류:', error.message);
-    }
+    console.error('신고 요청 실패:', error.message);
   }
 };
-
-
-
 </script>
 
 <style scoped>
