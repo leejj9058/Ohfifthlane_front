@@ -27,11 +27,9 @@
                 <i class="bi bi-geo-alt-fill"></i>
             </button>
         </div>
+       
         <transition name="slide-fade">
-            <div v-if="showTimeModal || showModal" class="bottom-sheet">
-
-                <!-- 시간 선택 모달 내용 -->
-                <div v-if="showTimeModal" class="modal-content-time">
+            <div v-if="showTimeModal" class="modal-content-time">
                     <div class="d-flex justify-content-center align-items-center p-3" id="background">
                         <div class="p-4 p-md-5 w-100">
                             <h1 class="mb-4 fs-2 fw-bold">예약 시간 설정</h1>
@@ -59,20 +57,19 @@
                         <button @click="closeModal">닫기</button>
                     </div>
                 </div>
-
-                <!-- RPZ 정보 모달 내용 -->
-                <div v-if="showModal" class="modal-content-rpz">
+        </transition>
+        <transition name="slide-fade">
+            <div v-if="showModal" class="modal-content-rpz" @mousedown="startDrag" @mouseup="stopDrag"
+                @mouseleave="stopDrag" @mousemove="drag">
+                <div class="modal-content">
                     <h3>{{ selectedRPZ.manageName }}</h3>
                     <p>주소: {{ selectedRPZ.address }}</p>
-                    <p>10분 당 요금: {{ selectedRPZ.fee }}</p>
-                    <div class="d-flex justify-content-between">
-                        <button @click="moveReservation(selectedRPZ.id)" class="me-2">자세히 보기</button>
-                        <button @click="closeModal">닫기</button>
-                    </div>
+                    <p>10분 요금: {{ selectedRPZ.fee }}</p>
+                    <button @click="moveReservation(selectedRPZ.id)" class="me-2">자세히 보기</button>
+                    <button @click="closeModal">닫기</button>
                 </div>
             </div>
         </transition>
-
     </div>
 </template>
 
@@ -80,11 +77,10 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import 'flatpickr/dist/flatpickr.css';
 import flatpickr from 'flatpickr';
-
 //--------------------------------------
 import VueScrollPicker from 'vue-scroll-picker';
-
 const options = ref([
     { label: '10:00', value: '10:00' },
     { label: '10:10', value: '10:10' },
@@ -93,13 +89,11 @@ const options = ref([
 ]);
 const selected = ref('10:00');
 //--------------------------------------
-
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
 let clusterer;
 let markers = [];
-
 const markerObject = ref([]);
 const selectedRPZ = ref({});
 const showModal = ref(false);
@@ -107,15 +101,13 @@ const showTimeModal = ref(false);
 const isDragging = ref(false);
 const startY = ref(0);
 const router = useRouter();
+const date = ref(new Date());
 const startTime = ref();  // 시작 시간 초기값
 const endTime = ref();    // 종료 시간 초기값
-
-
 onMounted(() => {
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
     document.head.appendChild(script);
-
     script.onload = () => {
         window.kakao.maps.load(() => {
             const mapContainer = document.getElementById('map');
@@ -123,16 +115,13 @@ onMounted(() => {
                 center: new window.kakao.maps.LatLng(centerPoint.value.lat, centerPoint.value.lng),
                 level: 5,
             };
-
             map = new window.kakao.maps.Map(mapContainer, mapOption);
-
             clusterer = new window.kakao.maps.MarkerClusterer({
                 map: map,
                 averageCenter: true,
                 minLevel: 2,
                 disableClickZoom: true,
             });
-
             window.kakao.maps.event.addListener(map, 'center_changed', () => {
                 const center = map.getCenter();
                 centerPoint.value.lat = center.getLat();
@@ -140,31 +129,24 @@ onMounted(() => {
             });
         });
     };
-
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
-
 });
-
 const revisit = () => {
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
 };
-
 const navigateToSearchView = () => {
     router.push({ path: '/search' });
 };
 const navigateToMainPage = () => {
     router.push({ path: '/' });
 };
-
 const searchRPZList = async (lng, lat) => {
     try {
         const response = await axios.post('/api/nearRPZList', {
             userLon: lng,
             userLat: lat
         });
-
         console.log("API response data:", response.data); // 확인을 위해 로그 추가
-
         markerObject.value = response.data.map(item => ({
             lat: item.rpzLat,
             lng: item.rpzLon,
@@ -176,15 +158,12 @@ const searchRPZList = async (lng, lat) => {
             num: item.rpzNum,
             userId: item.userId
         }));
-
         removeMarkers();
         createMarker(markerObject.value);
     } catch (error) {
         console.error('API 요청 실패:', error);
     }
 };
-
-
 const removeMarkers = () => {
     markers.forEach(marker => {
         marker.setMap(null);
@@ -194,8 +173,6 @@ const removeMarkers = () => {
     }
     markers = [];
 };
-
-
 const returnToCurrentLocation = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -212,12 +189,10 @@ const returnToCurrentLocation = () => {
         alert("이 브라우저는 위치 정보를 지원하지 않습니다.");
     }
 };
-
 const openFilter = () => {
     showTimeModal.value = true; // 모달을 열기
     console.log("Filter button clicked");
 };
-
 const selectTimeModal = () => {
     flatpickr(startTime.value, {
         enableTime: true,
@@ -226,7 +201,6 @@ const selectTimeModal = () => {
         time_24hr: true,
         minuteIncrement: 10, // 10분 단위 설정
     });
-
     flatpickr(endTime.value, {
         enableTime: true,
         noCalendar: true,
@@ -234,31 +208,24 @@ const selectTimeModal = () => {
         time_24hr: true,
         minuteIncrement: 10, // 10분 단위 설정
     });
-
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
 }
-
 const filterResident = async () => {
     console.log("거주자 필터 클릭됨");
     await searchRPZList(centerPoint.value.lng, centerPoint.value.lat, 'resident'); // 'resident'를 추가하여 필터링
 };
-
 const filterPublicParking = () => {
     console.log("공영주차장 필터 클릭됨");
 };
-
 const filterGasStations = () => {
     console.log("주유소 필터 클릭됨");
 };
-
 const filterChargingStations = () => {
     console.log("충전소 필터 클릭됨");
 };
-
 const moveReservation = (rpzId) => {
     router.replace({ path: '/reservation/', query: { rpzId: rpzId } });
 };
-
 const createMarker = (rpzList) => {
     if (!clusterer) {
         console.error("Clusterer is not initialized.");
@@ -279,48 +246,26 @@ const createMarker = (rpzList) => {
         });
     });
 };
-
 //모달 끄기
 const closeModal = () => {
     showTimeModal.value = false;
     showModal.value = false
-}
+};
 
 // Dragging functions
 const startDrag = (event) => {
     isDragging.value = true;
-    startY.value = event.clientY;
+    startY.value = event.clientY; // 드래그 시작 y좌표 설정
 };
-
-const stopDrag = () => {
-    isDragging.value = false;
-};
-
-const drag = (event) => {
-    if (!isDragging.value) return;
-
-    const deltaY = event.clientY - startY.value;
-    startY.value = event.clientY;
-
-    const bottomSheet = document.querySelector('.bottom-sheet');
-    const currentTransform = getComputedStyle(bottomSheet).transform;
-    const translateY = currentTransform === 'none' ? 0 : parseInt(currentTransform.split(',')[5]);
-
-    const newTransform = `translateY(${translateY + deltaY}px)`;
-    bottomSheet.style.transform = newTransform;
-
-    // 슬라이드 내리기
-    if (translateY + deltaY > 100) {
-        showModal.value = false; // 아래로 내릴 때 모달 닫기
-        showTimeModal.value = false; // 아래로 내릴 때 시간 설정 모달 닫기
-    }
-};
-
+const setTime = (time) => {
+    console.log("설정된 시간:", time);
+    // 여기서 시간 설정 관련 로직 추가
+    showTimeModal.value = false; // 모달 닫기
 // 과거 날짜 비활성화 함수
+}
 const disablePastDates = (date) => {
     return date < new Date(); // 현재 시간보다 이전 시간 비활성화
 };
-
 // 종료 시간의 최소값을 시작 시간으로 동기화하는 함수
 const updateEndTime = () => {
     if (endTime.value < startTime.value) {
@@ -434,13 +379,10 @@ const updateEndTime = () => {
 
 .filter-button {
     position: absolute;
-    /* 지도 위에 위치하도록 설정 */
     bottom: 20px;
-    /* 하단에서의 거리 */
     left: 20px;
-    /* 왼쪽에서의 거리 */
+    z-index: 1;
     background-color: #007bff;
-    /* 버튼 색상 */
     color: white;
     border: none;
     border-radius: 50%;
@@ -452,8 +394,6 @@ const updateEndTime = () => {
     font-size: 1.2rem;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 2;
-    /* 다른 요소들보다 위에 오도록 설정 */
 }
 
 
@@ -482,82 +422,69 @@ const updateEndTime = () => {
     font-size: 0.9rem;
 }
 
-.bottom-sheet-rpz,
-.bottom-sheet-time {
-    position: fixed;
+.bottom-sheet {
+    position: absolute;
     left: 0;
-    right: 0;
-    bottom: 0;
-    /* 화면 아래쪽에 붙이기 */
+    bottom: 0;  /* 화면 하단에 고정 */
+    width: 100vw;  /* 화면의 가로를 채움 */
+    height: 50vh;  /* 화면의 세로 반을 차지 */
     background: white;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-    transition: transform 0.4s ease;
-    transform: translateY(100%);
-    /* 기본 상태는 보이지 않도록 아래쪽에 숨김 */
+    transition: transform 0.3s ease;
+    transform: translateY(100%); /* 초기 위치는 화면 바깥 */
     z-index: 10;
-    height: 50%;
-    border-radius: 15px 15px 0 0;
-    /* 상단 모서리만 둥글게 */
-    overflow: hidden;
-    /* 모서리 둥글기 유지 */
 }
 
 .modal-content-rpz,
 .modal-content-time {
+    position: fixed; /* 화면 고정 */
+    bottom: 0;       /* 화면 하단에 위치 */
+    width: 100vw;    /* 가로로 화면 전체 채움 */
+    max-width: 460px;
+    height: 50vh;    /* 세로 높이 설정 */
+    margin: 0 auto;
     padding: 20px;
-    border-radius: 15px;
-    /* 둥글게 */
+    background-color: white;
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    /* 세로 정렬 */
     align-items: center;
-    /* 중앙 정렬 */
     justify-content: center;
-    /* 중앙 정렬 */
+    overflow-y: auto;
+    z-index: 10;
 }
 
 .modal-content-rpz h3,
 .modal-content-time h1 {
     margin-bottom: 15px;
-    /* 제목과 내용 사이의 간격 */
     color: #333;
-    /* 텍스트 색상 */
     font-weight: bold;
-    /* 굵은 글씨 */
+    text-align: center;
 }
 
 .modal-content-rpz p,
 .modal-content-time label {
     color: #666;
-    /* 텍스트 색상 */
     margin-bottom: 10px;
-    /* 내용과 다음 요소 사이의 간격 */
     text-align: center;
-    /* 중앙 정렬 */
 }
 
 .modal-content-rpz button,
 .modal-content-time button {
     background-color: #007bff;
-    /* 버튼 색상 */
     color: white;
     border: none;
     border-radius: 5px;
-    /* 둥글게 */
     padding: 10px 15px;
-    /* 패딩 */
     cursor: pointer;
     font-size: 1rem;
     margin-top: 10px;
-    /* 버튼 간격 */
-    transition: background-color 0.3s ease;
-    /* 버튼 호버 효과 */
 }
 
 .modal-content-rpz button:hover,
 .modal-content-time button:hover {
     background-color: #0056b3;
-    /* 호버 시 버튼 색상 */
 }
 
 /* Slide fade transition */
@@ -568,21 +495,21 @@ const updateEndTime = () => {
 
 .slide-fade-enter {
     transform: translateY(100%);
-    /* 애니메이션 시작: 화면 아래에서 올라옴 */
+    /* 화면 아래에서 올라오는 애니메이션 시작 */
 }
 
 .slide-fade-enter-to {
     transform: translateY(0);
-    /* 애니메이션 끝: 화면 중앙에서 정지 */
+    /* 화면 중앙에서 정지하는 애니메이션 끝 */
 }
 
 .slide-fade-leave {
     transform: translateY(0);
-    /* 애니메이션 시작: 화면 중앙에서 사라지기 시작 */
+    /* 화면 중앙에서 사라지기 시작 */
 }
 
 .slide-fade-leave-to {
     transform: translateY(100%);
-    /* 애니메이션 끝: 화면 아래로 사라짐 */
+    /* 화면 아래로 사라짐 */
 }
 </style>
