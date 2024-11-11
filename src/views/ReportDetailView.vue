@@ -36,12 +36,12 @@
           <tbody>
             <tr>
               <th>위치</th>
-              <td colspan="2">{{ report[0].location }}</td>
+              <td colspan="2">{{ report.reportAddress }}</td>
 
             </tr>
             <tr>
               <th>구획번호</th>
-              <td colspan="2">{{ report[0].parkinglotNo }}</td>
+              <td colspan="2">{{ report.rpzNum }}</td>
 
             </tr>
             <tr>
@@ -51,8 +51,8 @@
             </tr>
             <tr>
               <th>신고자이름 / 번호</th>
-              <td>{{ report[0].reporterName }}</td>
-              <td>{{ report[0].reporterPhone }}</td>
+              <td>{{ report.userName }}</td>
+              <td>{{ report.userTel }}</td>
 
             </tr>
           </tbody>

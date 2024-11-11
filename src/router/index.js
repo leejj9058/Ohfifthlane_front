@@ -8,7 +8,7 @@ import Notice from '../views/NoticeView.vue';
 import BoardDetail from '../views/BoardDetailView.vue';   
 import NewBoard from '../views/BoardWriteView.vue';
 import ReportListView from '../views/ReportListView.vue';
-import ReportDetail from '../views/ReportDetailView.vue';
+import ReportDetailView from '../views/ReportDetailView.vue';
 import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
 import ResidentReportView from '../views/ResidentReportView.vue' 
@@ -71,7 +71,7 @@ const router = createRouter({
     {
       path: '/reportDetail',
       name: 'reportDetail',
-      component: ReportDetail
+      component: ReportDetailView
     },
     {
       path: '/qrcode',
