@@ -35,7 +35,6 @@ import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // useRouter 추가
 import axios from 'axios';
 
-
 const route = useRoute();
 const router = useRouter(); // useRouter 초기화
 const data = reactive({
@@ -75,7 +74,9 @@ onMounted(() => {
 
 // 길 찾기 버튼 클릭 시 동작할 함수
 const navigateToDirections = () => {
-  // 길 찾기 로직 추가 (예: 지도 API 호출)
+  const rpzAddress = encodeURIComponent(data.rpzAddress); // 주소를 URL 인코딩
+  const kakaoMapUrl = `https://map.kakao.com/link/to/${rpzAddress}`;
+  window.open(kakaoMapUrl, '_blank'); // 새 탭에서 카카오 지도 링크 열기
   console.log("길 찾기 버튼 클릭됨");
 };
 
@@ -83,7 +84,6 @@ const navigateToDirections = () => {
 const goHome = () => {
   router.push('/'); // 홈으로 이동
 };
-
 </script>
 
 <style scoped>
@@ -96,42 +96,56 @@ const goHome = () => {
 
 .app-card {
   width: 100%;
-  max-width: 450px; /* 최대 너비를 조정하여 정렬 맞춤 */
+  max-width: 450px;
+  /* 최대 너비를 조정하여 정렬 맞춤 */
 }
 
 .fw-bold {
-  font-weight: bold; /* 진하게 표시하기 위한 클래스 */
+  font-weight: bold;
+  /* 진하게 표시하기 위한 클래스 */
 }
 
 .text-center {
-  text-align: center; /* 중앙 정렬 */
+  text-align: center;
+  /* 중앙 정렬 */
 }
 
 .mt-3 {
-  margin-top: 1rem; /* 간격 조정 */
+  margin-top: 1rem;
+  /* 간격 조정 */
 }
 
 .logo {
-  width: 150px; /* 로고 크기 조절 */
-  height: auto; /* 비율 유지 */
+  width: 150px;
+  /* 로고 크기 조절 */
+  height: auto;
+  /* 비율 유지 */
 }
 
 .reservation-image {
-  width: 360px; /* 주차 이미지 크기 조절 */
-  height: 180px; /* 주차 이미지 높이 조절 */
-  object-fit: cover; /* 비율 유지 */
-  border: 1px solid #ddd; /* 테두리 추가 */
+  width: 360px;
+  /* 주차 이미지 크기 조절 */
+  height: 180px;
+  /* 주차 이미지 높이 조절 */
+  object-fit: cover;
+  /* 비율 유지 */
+  border: 1px solid #ddd;
+  /* 테두리 추가 */
 }
 
 .thick-line {
   border: none;
-  border-top: 2px solid #000; /* 굵은 줄 색상과 두께 조정 */
-  margin: 1rem 0; /* 상하 여백 조정 */
+  border-top: 2px solid #000;
+  /* 굵은 줄 색상과 두께 조정 */
+  margin: 1rem 0;
+  /* 상하 여백 조정 */
 }
 
 /* 줄 간격 조정 */
 .info {
-  line-height: 1.5; /* 줄 간격을 줄이기 */
-  margin-bottom: 0.5rem; /* 요소 간격 조정 */
+  line-height: 1.5;
+  /* 줄 간격을 줄이기 */
+  margin-bottom: 0.5rem;
+  /* 요소 간격 조정 */
 }
 </style>

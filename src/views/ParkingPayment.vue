@@ -193,6 +193,8 @@ onMounted(() => {
 
 .thick-line {
   border: none;
+
+  
   border-top: 3px solid #000;
   margin: 1rem 0;
 }
