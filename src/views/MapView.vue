@@ -120,6 +120,7 @@ const selectedEndTime = ref("");
 const selectedDate = ref("");
 
 
+
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
@@ -176,6 +177,27 @@ onMounted(() => {
 
 // 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
 const daysWithDates = computed(() => {
+  const dates = [];
+  const today = new Date();
+
+  for (let i = 0; i < 3; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() + i);
+    
+    const dayIndex = date.getDay();
+    const dayName = dayNames[dayIndex];
+    
+    // 날짜와 요일을 형식에 맞춰 문자열로 생성
+    const dateStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${dayName})`;
+    dates.push(dateStr);
+  }
+  
+  return dates;
+});
+
+
+// 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
+const daysWithDates = computed(() => {
     const dates = [];
     const today = new Date();
 
@@ -198,6 +220,7 @@ const daysWithDates = computed(() => {
 const handleDateClick = (index) => {
     selectedDate = daysWithDates.value[index].fullDate;
     console.log("선택한 날짜:", selectedDate); // 원하는 날짜 정보를 사용
+
 };
 
 // 선택 가능한 시간 표시
@@ -235,14 +258,17 @@ const recentTimePlusFortyMinutes = () => {
     const laterHours = thirtyMinutesLater.getHours().toString().padStart(2, '0');
     const laterMinutes = thirtyMinutesLater.getMinutes().toString().padStart(2, '0');
     const laterTime = `${laterHours}:${laterMinutes}`;
+
     return laterTime;
 }
 
 
 // 예약 시간 초기화
 const resetTime = () => {
+
     selectedStartTime.value = null;
     selectedEndTime.value = null;
+
     reservationDateTimeModal.value = false;
 }
 
@@ -262,11 +288,13 @@ const navigateToMainPage = () => {
 const searchRPZList = async (lng, lat) => {
     try {
         console.log(recentTime());
+
         const response = await axios.post('/api/getRPZListByTime', {
             userLocationVo: {
                 userLon: lng,
                 userLat: lat,
             },
+
             // reservationVo: {
             //     reservationStartTime: recentTime(),
             //     reservationEndTime: recentTimePlusFortyMinutes(),
@@ -299,7 +327,6 @@ const searchRPZList = async (lng, lat) => {
         console.error('API 요청 실패:', error);
     }
 };
-
 
 // //거주자 우선 주차 리스트 가져오기
 // const searchRPZList = async ( lng, lat ) => {
@@ -628,7 +655,6 @@ const closeModal = () => {
     flex-direction: column;
     height: auto; /* 내용에 맞게 크기 조정 */
     border-radius: 30px 30px 0 0;
-  
 }
 
 /* 모달이 열릴 때 애니메이션 적용 (위로 올라옴) */

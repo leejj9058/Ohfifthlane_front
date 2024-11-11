@@ -15,7 +15,7 @@
       <div>
         <button v-if="!isLoggedIn" class="btn btn-primary" style="margin-right: 50px;" @click="goToLogin">로그인 / 회원가입</button>
         <div v-else>
-          <button class="btn btn-danger" style="margin-right: 20px;" @click="goToReport">신고내역</button>
+          <button class="btn btn-danger" style="margin-right: 20px;" @click="goToReportList">신고내역</button>
           <button class="btn btn-primary" style="margin-right: 50px;" @click="goToLogout">로그아웃</button>
         </div>
       </div>
@@ -34,8 +34,8 @@ const goToLogin = () => {
   router.push('/login');
 };
 
-const goToReport = () => {
-  router.push('/report'); // 신고내역 페이지로 이동
+const goToReportList = () => {
+  router.push('/reportList'); // 신고내역 페이지로 이동
 };
 
 const goToLogout = () => {

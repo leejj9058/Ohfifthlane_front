@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+  <div class="container-fluid d-flex flex-column align-items-center">
     <div class="app-outer d-flex align-items-start justify-content-center">
       <div class="app-container p-3 shadow rounded">
         <button class="btn btn-link text-danger mb-2" @click="goBack">
@@ -35,7 +35,7 @@ const router = useRouter();
 const data = reactive({
   rpzNum: route.query.rpzNum || '서초45-1234',
   rpzAddress: route.query.rpzAddress || '서울 서초구 12345',
-  reservationDay: route.query.reservationDay ||'2024.10.24', // 예약일
+  reservationDay: route.query.reservationDay || '2024.10.24', // 예약일
   reservationStartTime: route.query.reservationStartTime || '10:00', // 예약 시작 시간
   reservationEndTime: route.query.reservationEndTime || '10:00', // 예약 종료 시간
   paymentDate: new Date().toLocaleString() // 현재 날짜와 시간 표시
@@ -60,29 +60,35 @@ const refund = () => {
 
 <style scoped>
 .container-fluid {
-  padding-top: 20px;
+  padding-top: 0; /* 상단 여백 없애기 */
   overflow-x: hidden;
   width: 460px;
   border-radius: 12px;
+  height: 100vh; /* 전체 화면을 채우도록 높이 설정 */
 }
 
 .app-outer {
   width: 100%;
   display: flex;
-  align-items: flex-start; /* 상단으로 정렬 */
+  align-items: flex-start; /* 상단 정렬 */
   justify-content: center;
+  height: 100%; /* 부모 컨테이너에 맞게 높이 설정 */
 }
 
 .app-container {
   width: 100%;
-  max-width: 460px; /* 최대 너비를 container-fluid에 맞춤 */
-  padding: 1rem; /* 패딩 줄임 */
+  max-width: 460px;
+  padding: 1rem;
   margin: 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  height: 100%; /* 부모 요소의 height를 채움 */
 }
 
 .app-card {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 내용들이 위아래로 배치되도록 설정 */
 }
 
 .bg-light {

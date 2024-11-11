@@ -10,8 +10,9 @@
         <button class="btn btn-link  mb-3" @click="goBack" >
             <i class="bi bi-arrow-left arrow-icon"></i>
           </button>
-        <h3 class="fw-bold" style="margin-left: 120px;">회원가입</h3>
-        </div>
+        </div>  
+        <h3 class="fw-bold text-center">회원가입</h3>
+        
         <form>
           <label for="name">이름</label>
           <input type="text" id="name" v-model="userName" />
