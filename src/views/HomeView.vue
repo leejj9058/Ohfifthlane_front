@@ -73,7 +73,7 @@
               </div>
 
               <div class="card-content" style="width: 100%; padding: 10px;">
-                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 19px;">장애인 주차구역 신고</h6>
+                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 18px;">장애인 주차구역 신고</h6>
                 <p class="mt-0 mb-0 text-end w-100" style="font-size: 12px;">불법주차 QR신고</p>
 
                 <div class="text-start mt-3">

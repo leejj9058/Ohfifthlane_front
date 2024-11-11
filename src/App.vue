@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container vh-100" style="background-color: #F9F9F9;">
     <!-- v-if를 사용하여 조건에 따라 다른 요소를 렌더링 -->
     <main v-if="isMainWebView" class="main-content main-content-new">
       <router-view></router-view>
