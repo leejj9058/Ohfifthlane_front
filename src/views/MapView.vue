@@ -99,6 +99,7 @@
     </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -110,13 +111,14 @@ import 'vue3-timepicker/dist/VueTimepicker.css'
 //-------------------------------------------변수-------------------------------------------------
 
 // 선택한 예약 시작 시간
-const selectedStartTime = ref(null);
+const selectedStartTime = ref("");
 
 // 선택한 예약 종료 시간
-const selectedEndTime = ref(null);
+const selectedEndTime = ref("");
 
 // 선택한 예약 날짜
-const selectedDate = ref(null); // 아직 구현 x
+const selectedDate = ref("");
+
 
 
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
@@ -124,7 +126,6 @@ const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
 let clusterer;
 let markers = [];
-
 const markerObject = ref([]);
 const selectedRPZ = ref({});
 const showRPZDetailModal = ref(false); //RPZ상세정보 모달 온/오프
@@ -147,7 +148,6 @@ onMounted(() => {
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
     document.head.appendChild(script);
-
     script.onload = () => {
         window.kakao.maps.load(() => {
             const mapContainer = document.getElementById('map');
@@ -155,16 +155,13 @@ onMounted(() => {
                 center: new window.kakao.maps.LatLng(centerPoint.value.lat, centerPoint.value.lng),
                 level: 5,
             };
-
             map = new window.kakao.maps.Map(mapContainer, mapOption);
-
             clusterer = new window.kakao.maps.MarkerClusterer({
                 map: map,
                 averageCenter: true,
                 minLevel: 2,
                 disableClickZoom: true,
             });
-
             window.kakao.maps.event.addListener(map, 'center_changed', () => {
                 const center = map.getCenter();
                 centerPoint.value.lat = center.getLat();
@@ -172,7 +169,7 @@ onMounted(() => {
             });
         });
     };
-
+    resetTime();
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
     console.log(centerPoint.value.lng, centerPoint.value.lat);
 
@@ -198,10 +195,32 @@ const daysWithDates = computed(() => {
   return dates;
 });
 
+
+// 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
+const daysWithDates = computed(() => {
+    const dates = [];
+    const today = new Date();
+
+    for (let i = 0; i < 3; i++) {
+        const date = new Date();
+        date.setDate(today.getDate() + i);
+
+        const dayIndex = date.getDay();
+        const dayName = dayNames[dayIndex];
+
+        // 날짜와 요일을 형식에 맞춰 문자열로 생성
+        const dateStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${dayName})`;
+        dates.push(dateStr);
+    }
+
+    return dates;
+});
+
 // 날짜 버튼 클릭 이벤트 핸들러
 const handleDateClick = (index) => {
-  selectedDate = daysWithDates.value[index].fullDate;
-  console.log("선택한 날짜:", selectedDate); // 원하는 날짜 정보를 사용
+    selectedDate = daysWithDates.value[index].fullDate;
+    console.log("선택한 날짜:", selectedDate); // 원하는 날짜 정보를 사용
+
 };
 
 // 선택 가능한 시간 표시
@@ -238,15 +257,18 @@ const recentTimePlusFortyMinutes = () => {
     const thirtyMinutesLater = new Date(now.getTime() + 40 * 60000); // 40분 후
     const laterHours = thirtyMinutesLater.getHours().toString().padStart(2, '0');
     const laterMinutes = thirtyMinutesLater.getMinutes().toString().padStart(2, '0');
-    const laterTime = `${laterHours}${laterMinutes}`;
+    const laterTime = `${laterHours}:${laterMinutes}`;
+
     return laterTime;
 }
 
 
 // 예약 시간 초기화
 const resetTime = () => {
-    selectedStartTime = null;
-    selectedEndTime = null;
+
+    selectedStartTime.value = null;
+    selectedEndTime.value = null;
+
     reservationDateTimeModal.value = false;
 }
 
@@ -254,7 +276,6 @@ const resetTime = () => {
 const revisit = () => {
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
 };
-
 const navigateToSearchView = () => {
     router.push({ path: '/search' });
 };
@@ -266,20 +287,26 @@ const navigateToMainPage = () => {
 //거주자 우선 주차 리스트 가져오기
 const searchRPZList = async (lng, lat) => {
     try {
+        console.log(recentTime());
+
         const response = await axios.post('/api/getRPZListByTime', {
             userLocationVo: {
                 userLon: lng,
                 userLat: lat,
             },
+
+            // reservationVo: {
+            //     reservationStartTime: recentTime(),
+            //     reservationEndTime: recentTimePlusFortyMinutes(),
+            //     reservationDay: recentDate(),
+            // },
             reservationVo: {
-                reservationStartTime: selectedStartTime || recentTime,
-                reservationEndTime: selectedEndTime || recentTimePlusFortyMinutes,
-                reservationDay: selectedDate || recentDate,
+                reservationStartTime: selectedStartTime.value || recentTime(),
+                reservationEndTime: selectedEndTime.value || recentTimePlusFortyMinutes(),
+                reservationDay: selectedDate.value || recentDate(),
             },
         });
-
         console.log("API response data:", response.data); // 확인을 위해 로그 추가
-
         markerObject.value = response.data.map(item => ({
             lat: item.rpzLat,
             lng: item.rpzLon,
@@ -296,6 +323,7 @@ const searchRPZList = async (lng, lat) => {
         // 새로운 마커 생성
         createMarker(markerObject.value);
     } catch (error) {
+
         console.error('API 요청 실패:', error);
     }
 };
@@ -362,15 +390,12 @@ const filterResident = async () => {
     console.log("거주자 필터 클릭됨");
     await searchRPZList(centerPoint.value.lng, centerPoint.value.lat, 'resident'); // 'resident'를 추가하여 필터링
 };
-
 const filterPublicParking = () => {
     console.log("공영주차장 필터 클릭됨");
 };
-
 const filterGasStations = () => {
     console.log("주유소 필터 클릭됨");
 };
-
 const filterChargingStations = () => {
     console.log("충전소 필터 클릭됨");
 };
@@ -630,7 +655,6 @@ const closeModal = () => {
     flex-direction: column;
     height: auto; /* 내용에 맞게 크기 조정 */
     border-radius: 30px 30px 0 0;
-  
 }
 
 /* 모달이 열릴 때 애니메이션 적용 (위로 올라옴) */
