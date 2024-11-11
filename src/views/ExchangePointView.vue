@@ -12,9 +12,10 @@
           <button class="btn btn-link" @click="goBack">
             <i class="bi bi-arrow-left arrow-icon"></i>
           </button>
+          </div>
           <!-- 교환소 제목 -->
-          <h4 class="fw-bold mb-0" style="margin-right: 170px;">교환소</h4>
-        </div>
+          <h4 class="fw-bold text-center">교환소</h4>
+        
         <div class="point-info d-flex align-items-center justify-content-between">
           <span>{{ userName }}님</span>
           <div class="d-flex align-items-center">

@@ -4,6 +4,12 @@
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center vh-100">
     <div class="d-flex justify-content-center align-items-center p-3 card" id="background">
       <div class="p-4" style="max-width: 700px;">
+        <div class="d-flex align-items-center ">
+          <button class="btn btn-link  mb-3" @click="goBack">
+            <i class="bi bi-arrow-left arrow-icon"></i>
+          </button>
+        </div>  
+        
         <h1 class=" mb-4 fs-2 fw-bold">내 공유주차장 설정</h1>
 
         <div class="mb-4">
@@ -88,6 +94,14 @@ import { ref } from 'vue';
 import Header from "@/components/Header.vue";
 import VueTimepicker from 'vue3-timepicker';
 import 'vue3-timepicker/dist/VueTimepicker.css';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+//goBack 함수
+const goBack = () => {
+  router.go(-1);
+};
 
 //date -> day
 const week = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];

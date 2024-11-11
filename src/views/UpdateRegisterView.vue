@@ -12,8 +12,9 @@
         <button class="btn btn-link  mb-3" @click="goBack">
             <i class="bi bi-arrow-left arrow-icon"></i>
           </button>
-        <h3 class="fw-bold" style="margin-left: 100px;">회원정보수정</h3>
-        </div>
+        </div>  
+        <h3 class="fw-bold text-center" >회원정보수정</h3>
+        
         <form>
           <!-- 이름 입력 -->
           <label for="name">이름</label>
@@ -251,5 +252,23 @@ button:hover {
   text-align: left;
   margin-top: -10px;
   margin-bottom: 10px;
+}
+
+/* 뒤로가기 버튼 스타일 */
+.btn-link {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.arrow-icon {
+  font-size: 1.5rem;
+  color: #007bff; /* 기본 링크 색상 */
+}
+
+.btn-link:hover {
+  text-decoration: underline;
 }
 </style>
