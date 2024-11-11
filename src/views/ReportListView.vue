@@ -33,13 +33,13 @@
           </thead>
 
           <tbody>
-            <tr v-for="report in reports" :key="report.id" class="reportIndex" @click="gotoReportOne(report.id)">
-              <td class="text-center">{{ report.repoartId }}</td>
-              <td class="reportTitle text-center">{{ report.reportLat }}, {{ report.reportLon }}</td>
-              <td class="reportTitle text-center">{{ report.reportDate }}</td>
+            <tr v-for="report in reportList" :key="report.reportId" class="reportIndex" @click="gotoReportDetail(report.reportId)">
+              <td class="text-center">{{ report.reportId }}</td>
+              <td class="reportTitle text-center">{{ report.reportAddress }}</td>
+              <td class="reportTitle text-center">{{ formatDate(report.reportTime) }}</td>
               <td class="text-center">
-                <span :class="['status-badge', getStatusClass(report.status)]">
-                  {{ getStatusText(report.status) }}
+                <span :class="['status-badge', getStatusClass(report.reportStatus)]">
+                  {{ getStatusText(report.reportStatus) }}
                 </span>
               </td>
             </tr>
@@ -62,8 +62,12 @@
 import Header from "@/components/Header.vue";
 import Datepicker from 'vue3-datepicker';
 import { ko } from 'date-fns/locale';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import axios from 'axios';
+import { format } from 'date-fns'; // date-fns에서 format 함수 가져오기
+import { useRouter } from 'vue-router'; // router 추가
 
+const router = useRouter();
 
 // Datepicker 관련 설정
 const picked = ref(new Date()); // 오늘 날짜
@@ -76,29 +80,29 @@ const inputFormat = (date) => {
   return `${year}-${month}-${day}`; // YYYY-MM-DD 형식으로 처리
 };
 
+// reportTime 포맷팅 함수
+const formatDate = (dateString) => {
+  const date = new Date(dateString); // ISO 8601 형식의 문자열을 Date 객체로 변환
+  return format(date, 'yyyy-MM-dd HH:mm'); // 원하는 형식으로 반환
+};
+
 // 날짜 선택 이벤트 핸들러
 const handleDateChange = (date) => {
   console.log('선택된 날짜:', inputFormat(date));
-  fetchList();
+  fetchList(); // 날짜 변경 후 목록 다시 가져오기
 };
 
+const reportList = ref([]); // 신고 내역 리스트
 
-const reports = ref([])
-
-// const reports = ref([
-//   { id: 1, title: "2024.10.27 서초구", status: "미처리" },
-//   { id: 2, title: "2024.10.27 서초구", status: "처리중" },
-//   { id: 3, title: "2024.10.27 서초구", status: "완료" },
-//   { id: 3, title: "2024.10.27 서초구", status: "반려" }
-
-// ])
-
-
-
+// 신고 목록 가져오기
 const fetchList = async () => {
   try {
-    const response = await axios.post("/api/reportList");
-    reports.value = response.data;
+    const response = await axios.post('/api/reportList', {
+      date: inputFormat(picked.value) // 날짜 서버에 전달
+    });
+    reportList.value = response.data; // 응답 데이터에서 reportList를 받음
+    console.log(`response:`, response.data);
+
   } catch (error) {
     console.error('Error fetching report list:', error);
   }
@@ -108,8 +112,6 @@ onMounted(() => {
   fetchList(); // 컴포넌트가 마운트될 때 데이터 가져오기
 });
 
-
-//
 const getStatusClass = (status) => {
   switch (status) {
     case 0: return 'status-unprocessed';
@@ -128,14 +130,13 @@ const getStatusText = (status) => {
   }
 };
 
-
-
-// 해당 게시글 누르면 넘어가는 거
-const gotoReportOne = (id) => {
-  router.push(`/report/${id}`);
+// 해당 신고 상세 페이지로 이동
+const gotoReportDetail = (reportId) => {
+  router.push(`/reportDetail/${reportId}`);
 };
-
 </script>
+
+
 
 
 
