@@ -1,6 +1,6 @@
 
 <template>
-    <footer style="background-color: #f8f9fa; padding: 20px; text-align: center; margin-top: 20px;">
+    <footer style="background-color: #f1f3f5; padding: 20px; text-align: center; margin-top: 30px;">
 
         <div style="margin-bottom: 10px;">
             <p>(06053)서울특별시 강남구 언주로 703(논현동 90-2) 4층</p>
