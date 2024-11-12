@@ -30,7 +30,7 @@ const sendImageUrl = async () => {
     // Flask 서버에 GET 요청 보내기
     const response = await axios.get("/ai/detect_plate", {
       params: {
-        image_url: `https://172.168.10.11:5173/src/assets/images/uploads/${photo.value}`,
+        image_url: `https://172.168.10.73:5173/src/assets/images/uploads/${photo.value}`,
       },
     });
     console.log(response.data);
