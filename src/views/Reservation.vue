@@ -1,6 +1,12 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
     <div class="card outer-card">
+<!-- Material Icons CDN 포함 -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="map-icon-container">
+  <span class="material-icons"  @click="goToMap">map</span> <!-- 지도 모양 아이콘 -->
+</div>
       <img src="@/assets/images/parkingarea.png" class="card-img-top" alt="Parking" />
 
       <div class="content-card">
@@ -118,6 +124,10 @@ import axios from 'axios';
 
 const router = useRouter(); 
 
+// 지도 페이지로 이동하는 함수
+const goToMap = () => {
+  router.push('/map');
+};
 
 // 상태 변수 설정
 const selectedDate = ref(null); 
@@ -358,6 +368,29 @@ const confirmPayment = () => {
   padding-top: 20px;
   overflow-x: hidden;
 }
+/* 사진 위에 동그란 원 배치 */
+
+.map-icon-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 48px;
+  height: 48px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.map-icon-container i, .map-icon-container svg, .map-icon-container .material-icons {
+  font-size: 24px;
+  color: rgb(128, 128, 128); /* 아이콘 색상 */
+}
+
+
 /* 추가된 오전/오후 버튼 스타일 */
 .period-buttons .btn-light-period {
   background-color: white;
@@ -417,9 +450,14 @@ const confirmPayment = () => {
 }
 
 .btn-pay {
-  background-color: rgb(171, 171, 171);
+  background-color: rgb(112, 112, 112); /* 기본 배경색 */
   color: white;
   margin: 5px;
+  transition: background-color 0.3s ease; /* 색상 변화에 부드러운 전환 효과 추가 */
+}
+
+.btn-pay:hover {
+  background-color: rgb(0, 0, 0); /* 마우스를 올렸을 때 배경색 진회색으로 변경 */
 }
 
 .date-buttons {

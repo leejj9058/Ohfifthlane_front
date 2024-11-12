@@ -1,4 +1,5 @@
 <template>
+  <Header></Header>
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
     <div class="card app-card p-4 shadow rounded">
       <h4 class="text-center fw-bold p-3">📢 결제가 완료되었습니다!</h4>
@@ -34,6 +35,7 @@
 import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // useRouter 추가
 import axios from 'axios';
+import Header from "@/components/Header.vue";
 
 const route = useRoute();
 const router = useRouter(); // useRouter 초기화

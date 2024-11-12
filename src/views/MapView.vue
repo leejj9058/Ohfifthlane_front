@@ -2,32 +2,57 @@
     <div class="map-container">
         <div id="map" style="width:100%; height:auto;"></div>
         <!-- 어두워지는 오버레이 -->
-        <div v-if="reservationDateTimeModal || showRPZDetailModal" class="map-overlay"></div>
-        <div class="search-bar">
-            <button class="btn-back" @click="navigateToMainPage">
-                <i class="bi bi-arrow-left"></i> <!-- 이전 아이콘 -->
-            </button>
-            <input type="text" placeholder="목적지를 입력하세요." readonly @click="navigateToSearchView"
-                style="pointer-events: auto;">
-            <button class="btn-search" @click="navigateToSearchView"><i class="bi bi-search"></i></button>
-        </div>
-        <div class="filter-buttons">
-            <button class="filter-option" @click="filterResident">거주자</button>
-            <button class="filter-option" @click="filterPublicParking">공영주차장</button>
-            <button class="filter-option" @click="filterGasStations">주유소</button>
-            <button class="filter-option" @click="filterChargingStations">충전소</button>
-        </div>
+        
+<div v-if="reservationDateTimeModal || showRPZDetailModal" class="map-overlay" @click="closeModal"></div>
 
-        <button class="filter-button" @click="openSelectReservationTimeModal">
-            <i class="bi bi-funnel-fill"></i>
-        </button>
+        <div class="search-bar">
+            
+            <span class="position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%);" @click="navigateToMainPage">
+    <i class="bi bi-chevron-left" style="color: #333;"></i> <!-- 이전 아이콘 -->
+</span>
+
+<input type="text" class="form-control" placeholder="목적지 또는 주소 검색" readonly @click="navigateToSearchView"
+    style="pointer-events: auto; border: none; padding-left: 25px; color: #333;"> <!-- 텍스트 색상 지정 -->
+
+<span class="position-absolute search-icon" @click="navigateToSearchView" style="color: #333;">
+    <i class="bi bi-search"></i> <!-- 검색 아이콘 -->
+</span>
+
+            </div>
+
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+            <div class="filter-buttons">
+    <button class="filter-option" @click="filterResident">
+        <i class="fas fa-home icon-resident"></i> 거주자
+    </button>
+    <button class="filter-option" @click="filterPublicParking">
+        <i class="fas fa-warehouse icon-parking"></i> 공영주차장
+    </button>
+    <button class="filter-option" @click="filterGasStations">
+        <i class="fas fa-gas-pump icon-gas"></i> 주유소
+    </button>
+    <button class="filter-option" @click="filterChargingStations">
+        <i class="fas fa-charging-station icon-charging"></i> 충전소
+    </button>
+</div>
+
+
+
+
+
+<button class="filter-button" @click="openSelectReservationTimeModal">
+    <i class="bi bi-sliders"></i> <!-- 필터 아이콘 -->
+    <span class="filter-text">필터</span> <!-- 필터 텍스트 -->
+</button>
         <div class="button-container">
             <button class="revisitButton" @click="revisit">
-                <i class="bi bi-arrow-clockwise"></i>현재위치에서 재탐색
+                <i class="bi bi-arrow-clockwise"></i>이 지역 주차장 검색
             </button>
             <button class="return-location-button" @click="returnToCurrentLocation">
-                <i class="bi bi-geo-alt-fill"></i>
-            </button>
+    <i class="fas fa-crosshairs"></i> <!-- 현재 위치 아이콘 -->
+</button>
+
         </div>
 
         <transition name="slide-fade">
@@ -83,15 +108,29 @@
     </div>            
         </div>
   
-                <!-- RPZ 정보 모달 내용 -->
-                <div v-if="showRPZDetailModal" class="modal-content-rpz">
-                    <h3>{{ selectedRPZ.manageName }}</h3>
-                    <p>주소: {{ selectedRPZ.address }}</p>
-                    <p>10분 당 요금: {{ selectedRPZ.fee }}</p>
-                    <div class="d-flex justify-content-between">
-                        <button @click="moveReservation(selectedRPZ.id)" class="me-2">자세히 보기</button>
-                        <button @click="closeModal">닫기</button>
-                    </div>
+    
+<!-- RPZ 정보 모달 내용 -->
+<div v-if="showRPZDetailModal" class="modal-content-rpz" @click="moveReservation(selectedRPZ.id)">
+    <h3 style="display: flex; justify-content: center; align-items: center;" >{{ selectedRPZ.num }}</h3>
+
+  
+  <!-- 주소 -->
+<p style="margin: 0; padding: 0; line-height: 2; text-align: left; color: #6c757d;">
+  <i class="bi bi-geo-alt-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
+  {{ selectedRPZ.address }}
+</p>
+
+<!-- 요금 -->
+<p style="margin: 0; padding: 0; line-height: 1; text-align: left; margin-top: 5px; color: #6c757d;">
+  <i class="bi bi-wallet-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
+  10분 당 : {{ selectedRPZ.fee }}원
+</p>
+
+
+
+                      <!-- 버튼들 -->
+ 
+
                 </div>
             </div>
         </transition>
@@ -127,7 +166,7 @@ let map;
 let clusterer;
 let markers = [];
 const markerObject = ref([]);
-const selectedRPZ = ref({});
+const selectedRPZ = ref([]);
 const showRPZDetailModal = ref(false); //RPZ상세정보 모달 온/오프
 const reservationDateTimeModal = ref(false); //예약 날짜 시간 설정 온/오프
 const router = useRouter();
@@ -173,26 +212,6 @@ onMounted(() => {
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
     console.log(centerPoint.value.lng, centerPoint.value.lat);
 
-});
-
-// 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
-const daysWithDates = computed(() => {
-  const dates = [];
-  const today = new Date();
-
-  for (let i = 0; i < 3; i++) {
-    const date = new Date();
-    date.setDate(today.getDate() + i);
-    
-    const dayIndex = date.getDay();
-    const dayName = dayNames[dayIndex];
-    
-    // 날짜와 요일을 형식에 맞춰 문자열로 생성
-    const dateStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${dayName})`;
-    dates.push(dateStr);
-  }
-  
-  return dates;
 });
 
 
@@ -400,6 +419,13 @@ const filterChargingStations = () => {
     console.log("충전소 필터 클릭됨");
 };
 
+// 모달 끄기
+const closeModal = () => {
+    reservationDateTimeModal.value = false;
+    showRPZDetailModal.value = false;
+};
+
+
 // 거주자 우선 주차면 상세페이지로 이동
 const moveReservation = (rpzId) => {
     router.replace({ path: '/reservation/', query: { rpzId: rpzId } });
@@ -438,11 +464,7 @@ const removeMarkers = () => {
     markers = [];
 };
 
-//모달 끄기
-const closeModal = () => {
-    reservationDateTimeModal.value = false;
-    showRPZDetailModal.value = false
-}
+
 
 // // Dragging functions
 // const startDrag = (event) => {
@@ -518,33 +540,12 @@ const closeModal = () => {
     padding: 5px;
 }
 
-.search-bar input {
-    flex: 1;
-    padding: 8px;
-    border: none;
-    border-top: 0;
-    border-bottom: 0;
-    border-right: 1px solid #ddd;
-    border-left: 1px solid #ddd;
-    pointer-events: none;
-}
 
-.search-bar button.btn-back {
-    border: none;
-    background-color: #007bff;
-    color: white;
-    padding: 6px 8px;
-    border-radius: 10px 0 0 10px;
-    cursor: pointer;
-}
-
-.search-bar button.btn-search {
-    border: none;
-    background-color: #007bff;
-    color: white;
-    padding: 6px 8px;
-    border-radius: 0 10px 10px 0;
-    cursor: pointer;
+.search-icon {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .filter-buttons {
@@ -555,23 +556,59 @@ const closeModal = () => {
     z-index: 1;
     display: flex;
     justify-content: space-between;
-    background-color: white;
-    border-radius: 10px;
-    padding: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    gap: 10px;
+    background-color: transparent; /* 배경색을 투명으로 설정하여 전체 테두리 제거 */
+    padding: 0; /* 전체 패딩 제거 */
     margin-top: 10px;
 }
 
 .filter-option {
-    flex: 1;
-    padding: 10px 0;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #ddd; /* 테두리 두께를 얇게 설정 */
+    border-radius: 20px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #333;
     cursor: pointer;
-    text-align: center;
-    margin: 0 2px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15), -2px 2px 6px rgba(0, 0, 0, 0.15); /* 그림자를 양옆과 아래쪽에만 줌 */
+}
+
+
+
+.filter-option i {
+    margin-right: 5px;
+}
+
+/* 작은 화면에서의 반응형 설정 */
+@media (max-width: 768px) {
+    .filter-option {
+        font-size: 12px; /* 작은 화면에서 글씨 크기 줄임 */
+        padding: 4px 8px; /* 작은 화면에서 패딩 조절 */
+        height: 36px; /* 높이도 줄여서 뚱뚱해지지 않게 조정 */
+    }
+}
+/* 아이콘 색상 스타일 */
+.icon-resident {
+    color: #ff4500; 
+}
+.icon-parking {
+    color: #ffb400; /* 노란색 */
+}
+
+.icon-gas {
+    color: #28a745; /* 초록색 */
+}
+
+.icon-charging {
+    
+    color: #007bff; 
+}
+
+/* 마우스 오버 효과 */
+.filter-option:hover {
+    background-color: #e6e6e6;
 }
 
 .button-container {
@@ -588,45 +625,85 @@ const closeModal = () => {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    background-color: #007bff;
-    color: white;
+    background-color: white;
+    color: black; /* 글자 색을 검정으로 변경 */
     border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
+    border-radius: 25px; /* 둥근 테두리 */
+    padding: 6px 12px; /* 버튼 내부 여백을 줄여서 상하 너비 감소 */
+    display: flex; /* 아이콘과 텍스트를 가로로 배치 */
+    align-items: center; /* 수직 정렬 */
+    justify-content: center; /* 가로 정렬 */
+    font-size: 0.9rem; /* 글자 크기 줄이기 */
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     z-index: 2;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 */
+}
+
+/* 아이콘 스타일 */
+.filter-button i {
+    font-size: 1.1rem; /* 아이콘 크기 줄이기 */
+    margin-right: 6px; /* 아이콘과 텍스트 간의 간격 줄이기 */
+}
+
+/* 텍스트 스타일 */
+.filter-button .filter-text {
+    font-size: 0.9rem; /* 텍스트 크기 줄이기 */
+    font-weight: 500; /* 텍스트 두께 유지 */
+}
+
+/* hover 상태에서 버튼 효과 */
+.filter-button:hover {
+    background-color: #007bff; /* hover 시 배경색 변경 */
+    color: white; /* hover 시 글자색 흰색으로 변경 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* hover 시 그림자 강조 */
 }
 
 .revisitButton {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
+    background-color: white; /* 흰색 배경 */
+    color: #007bff; /* 파란색 글자 */
+    border: 2px solid #ffffff; /* 파란색 테두리 */
+    border-radius: 25px; /* 둥근 테두리 */
+    padding: 8px 12px; /* 버튼 안쪽 여백 줄이기 */
     display: flex;
     align-items: center;
+    justify-content: center; /* 중앙 정렬 */
     gap: 5px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.9rem; /* 글자 크기 */
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease; /* 배경 및 글자색 변화 애니메이션 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* x, y, blur, 색상 */
 }
 
 .return-location-button {
-    background-color: #007bff;
-    color: white;
+    width: 40px; /* 버튼 가로 크기 줄이기 */
+    height: 40px; /* 버튼 세로 크기 줄이기 */
+    border-radius: 50%; /* 원형 버튼 */
+    background-color: white; /* 버튼 배경은 항상 하얀색 */
     border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
     cursor: pointer;
-    font-size: 0.9rem;
+    transition: transform 0.2s ease; /* 버튼 크기 변화 애니메이션 */
 }
+
+.return-location-button:active {
+    transform: scale(0.95); /* 클릭 시 버튼이 약간 축소되는 효과 */
+}
+
+.return-location-button i {
+    color: rgba(176, 176, 176, 0.6); /* 기본 아이콘 색상: 불투명 파랑 */
+    font-size: 20px; /* 아이콘 크기 줄이기 */
+    transition: color 0.2s ease; /* 아이콘 색상 변경 애니메이션 */
+}
+
+.return-location-button:active i {
+    color: #313131; /* 클릭 시 아이콘 색상: 또렷한 파랑으로 변경 */
+}
+
 
 .bottom-sheet-rpz,
 .bottom-sheet-time {
@@ -673,13 +750,15 @@ const closeModal = () => {
     width: 100%;
     max-width: 460px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px;
     background-color: white;
     border-radius: 30px 30px 0 0;
-    display: flex;
+    
+    
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 43vh; /* 모달 최소 높이 설정 */
+    justify-content: flex-start;  /* 컨텐츠 상단 정렬 */
+    align-items: flex-start;  /* 좌측 정렬 */
+    overflow: auto;  /* 내용이 넘칠 경우 스크롤 가능 */
 }
 
 .modal-content-rpz h3,
@@ -824,6 +903,7 @@ const closeModal = () => {
     margin: 8px auto 0;
     border-radius: 2px; /* 바의 끝을 둥글게 */
 }
+
 
 
 </style>
