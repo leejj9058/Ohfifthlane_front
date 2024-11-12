@@ -1,11 +1,13 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
     <div class="d-flex justify-content-start w-100 p-1">
-      <button class="btn btn-link text-danger" @click="goBack">
+      
+    </div>
+    
+    <div class="card app-card p-4 shadow rounded">
+      <button class="btn btn-link text-danger" @click="goBack" style="text-align: left;">
         <i class="bi bi-arrow-left fs-4"></i>
       </button>
-    </div>
-    <div class="card app-card p-4 shadow rounded">
       <h4 class="text-center fw-bold">결제 정보</h4>
 
       <div class="bordered-info p-2 mt-3 d-flex justify-content-between align-items-center">
