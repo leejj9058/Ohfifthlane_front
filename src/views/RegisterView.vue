@@ -29,7 +29,7 @@
 
           <label for="email">이메일(ID)</label>
           <div style="display: flex; align-items: baseline; width: 100%">
-            <input type="email" id="email" v-model="accountEmail" style="width: 320px; margin-right: 5px" />
+            <input type="email" id="email" v-model.trim="accountEmail" style="width: 320px; margin-right: 5px" />
             <button type="button" class="btn btn-secondary check-btn" @click="checkEmail"
               style="width: 100px; height: 44px; background-color: gray">
               중복확인
@@ -39,7 +39,23 @@
             {{ errors.accountEmail }}
           </p>
           <p v-if="emailStatus" class="status-message">{{ emailStatus }}</p>
-
+          <div v-if="emailStatus == '사용 가능한 이메일입니다.'" style="display: flex; align-items: baseline; width: 100%">
+            <p id="sendEmailAddr" style="width: 320px; margin-right: 5px">{{ sendEmailAddr }}</p>
+            <button type="button" class="btn btn-secondary check-btn" @click="sendEmail"
+              style="width: 100px; height: 44px; background-color: gray">
+              메일인증
+            </button>
+          </div>
+          <div v-if="emailStatus == '사용 가능한 이메일입니다.'" style="display: flex; align-items: baseline; width: 100%">
+            <input id="key" v-model="inputKey" class="text-center" style="width: 320px; margin-right: 5px" />
+            <button type="button" class="btn btn-secondary check-btn" @click="sendEmailCheck"
+              style="width: 100px; height: 44px; background-color: gray">
+              확인
+            </button>
+          </div>
+          <p v-if="errors.sendEmailCheck" class="error-message">
+            {{ errors.sendEmailCheck }}
+          </p>
           <label for="password">비밀번호</label>
           <input type="password" id="password" v-model="password" />
           <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
@@ -93,6 +109,10 @@ const userTelPart2 = ref(""); // 전화번호 두 번째 부분
 const userTelPart3 = ref(""); // 전화번호 세 번째 부분
 const userAddress = ref("");
 
+const sendEmailAddr = ref(""); // 인증 메세지 보낼 이메일
+const emailKey = ref(""); // 서버로 받은 이메일 인증 키(찐)
+const inputKey = ref(""); // 입력받은 이메일 인증 키
+
 //goBack 함수
 const goBack = () => {
   router.go(-1);
@@ -139,7 +159,8 @@ const checkEmail = async () => {
     const response = await axios.post("/api/checkEmail", { accountEmail: accountEmail.value });
     if (response.data) {
       emailStatus.value = "사용 가능한 이메일입니다.";
-      checkedEmail = true;
+      sendEmailAddr.value = accountEmail.value;
+      console.log(sendEmailAddr);
     } else {
       emailStatus.value = "이미 사용 중인 이메일입니다.";
     }
@@ -153,7 +174,34 @@ const checkEmail = async () => {
   }
 };
 
+// 이메일 인증번호 보내기
+const sendEmail = async () => {
+  
+  try {
+    const response = await axios.post("/api/sendEmail", { accountEmail: sendEmailAddr.value });
+    emailKey.value = response.data;
+    console.log(emailKey.value);
+  } catch (error) {
+    console.error(error);
+    if (error.response) {
+      emailStatus.value = `오류: ${error.response.data.message}`;
+    } else {
+      emailStatus.value = "이메일 전송 중 오류가 발생했습니다.";
+    }
+  }
+};
 
+//인증키 확인하기
+const sendEmailCheck = async () => {
+  errors.value.sendEmailCheck = "";
+
+  if (emailKey.value != inputKey.value) {
+    errors.value.sendEmailCheck = "인증번호가 같지 않습니다.";
+    return;
+  }
+  emailStatus.value = "인증이 완료되었습니다.";
+  checkedEmail = true;
+};
 
 // 회원가입 폼 유효성 검사 및 제출
 const registerForm = async () => {

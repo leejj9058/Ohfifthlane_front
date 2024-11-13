@@ -29,7 +29,7 @@ export default defineConfig({
 
         changeOrigin: true,
       },
-      "/ai/detect_plate": {
+      "/ai": {
         target: "http://172.168.10.11:8501", // 이건 수정하면 안돼요. 권수컴으로 파이썬 서버 가동했을 때 번호판 읽기 가능
         changeOrigin: true,
       },
