@@ -55,4 +55,6 @@ npm install @vuepic/vue-datepicker (날짜, 시간 둘 다 선택되는 피커)
    npm install boostrap
 
 npm install @vuepic/vue-datepicker
-npm install flatpickr
+
+4. toast
+   npm i vue3-toastify
