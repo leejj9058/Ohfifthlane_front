@@ -107,7 +107,7 @@
       <!-- 공지사항 섹션 -->
       <section class="board-section my-1 text-center">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="fw-bold">놓치면 안 되는 소식</h3>
+          <h3 class="fw-bold">놓치면 안 될 소식</h3>
           <button class="btn btn-primary animated-button" style="background-color: rgb(99, 157, 224); border: none"
             @click="goToNoticePage">더보기</button>
         </div>
@@ -354,6 +354,7 @@ const goToReservationHistory = () => {
   border: 1px solid #ddd;
   padding: 20px;
   width: 460px;
+  box-shadow: 0 6px 20px rgba(114, 114, 114, 0.1);
 }
 
 .list-unstyled li {
@@ -419,18 +420,43 @@ const goToReservationHistory = () => {
   transition: transform 0.2s ease; /* 부드러운 전환 효과 */
 }
 
-/* bounce 애니메이션 정의 */
-@keyframes bounce {
 
-  0%,
-  100% {
-    transform: translateY(0);
+@media (max-width: 460px) {
+
+  .container-fluid {
+    padding: 20 5px; /* 모바일에서 전체 화면에 10px 패딩 추가 */
   }
 
-  50% {
-    transform: translateY(-10px);
+  .search-container {
+    width: 100%;
+    max-width: 320px;
   }
+
+  .custom-card {
+    max-width: 320px;
+  }
+
+  .big-card {
+    max-width: 174px;
+  }
+
+  .small-card {
+    max-width: 150px;
+  }
+
+  .board-section,
+  .video-section {
+    max-width: 320px;
+  }
+
+  .video-section video {
+    max-width: 100%;
+    height: auto;
+  }
+
 }
+
+
 
 
 </style>

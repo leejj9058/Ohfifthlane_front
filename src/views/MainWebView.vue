@@ -1,6 +1,6 @@
 <template>
   <WebHeaderView />
-
+  
   <section class="centered-section" style="text-align: left; padding-left: 10px; ">
   <div class="container">
     <div class="row">
@@ -30,7 +30,7 @@
           <h3 class="subheading text-primary">거주자 우선주차 쉐어링 | 거주자 우선주차 신고 | 장애인QR신고</h3>
         <h2 class="main-heading fw-bold">한번에 해결하는 ALL IN ONE 플랫폼<br>(OH!)차로</h2>
         <p>웹 과 모바일에 최적화된 화면을 제공합니다.</p>
-          <button class="btn btn-primary mt-3 px-4 py-3" @click="goToHome">
+          <button class="btn btn-primary mt-3 px-5 py-3" @click="goToHome">
             오차로 사용하기
           </button>
         </div>
@@ -38,7 +38,7 @@
         <!-- 오른쪽 열: 왼쪽에서 날아오는 애니메이션 -->
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
-          <img src="@/assets/images/maincapture.png" class="animated-icon fade-in-down scroll-animate" style="height: 400px;"/>
+          <img src="@/assets/images/Omaincapture.png" class="animated-icon fade-in-down scroll-animate" style="height: 400px;"/>
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
         <!-- 오른쪽 열: 위에서 아래로 날아오는 애니메이션 -->
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
-          <img src="@/assets/images/tabletimage.png" class="animated-icon fade-in-right scroll-animate" style="height: 400px;" />
+          <img src="@/assets/images/tablet.png" class="animated-icon fade-in-right scroll-animate" style="height: 400px;" />
         </div>
       </div>
     </div>
@@ -94,6 +94,7 @@
         <!-- 왼쪽 열 -->
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
+          <h3 class="subheading text-primary">장애인QR신고</h3>
           <h1 class="fw-bold">장애인 주차구역에서</h1>
           <h2 class="fw-bold">불법주정차가 의심된다면</h2>
           <p>장애인차량에 표지가 없거나,<br>장애인 차량인지 의심된다면.<br>장애인 주차 표지의 QR을 찍어서 확인하세요!</p>

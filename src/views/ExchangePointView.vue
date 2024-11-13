@@ -45,8 +45,8 @@
               class="product-image me-3"
             />
             <div class="d-flex flex-column align-items-start" style="margin-left: 20px">
-              <span>문화상품권 5000원</span>
-              <span> 교환가 : 5000p</span>
+              <span style="font-weight: bold;">5000원권</span>
+              <span class="product-price"> 교환가 : 5000p</span>
             </div>
           </div>
           <div class="count-controls d-flex align-items-center">
@@ -69,8 +69,8 @@
               class="product-image me-3"
             />
             <div class="d-flex flex-column align-items-start" style="margin-left: 20px">
-              <span>문화상품권 10000원</span>
-              <span> 교환가 : 10000p</span>
+              <span style="font-weight: bold;">10000원권</span>
+              <span class="product-price"> 교환가 : 10000p</span>
             </div>
           </div>
           <div class="count-controls d-flex align-items-center">
@@ -93,8 +93,8 @@
               class="product-image me-3"
             />
             <div class="d-flex flex-column align-items-start" style="margin-left: 20px">
-              <span>문화상품권 50000원</span>
-              <span> 교환가 : 50000p</span>
+              <span style="font-weight: bold;">50000원권</span>
+              <span class="product-price"> 교환가 : 50000p</span>
             </div>
           </div>
           <div class="count-controls d-flex align-items-center">
@@ -269,4 +269,78 @@ onMounted(async () => {
   justify-content: center;
   font-size: 20px; /* 버튼 글자 크기 조정 */
 }
+
+/* 모바일 화면 (최대 460px)에서 반응형 스타일 */
+@media (max-width: 460px) {
+  .point-balance-section,
+  .point-exchange-section,
+  .point-checkout-section {
+    width: 100%;
+    max-width: 340px; /* 최대 너비 제한 */
+    padding: 10px;
+  }
+
+  .point-info {
+    padding: 10px;
+  }
+
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .product-image {
+    width: 100px;
+    height: 40px;
+  }
+
+  .product-item-text {
+    margin-bottom: 5px; /* 텍스트 아래 간격 5px 추가 */
+  }
+
+  .product-price {
+    white-space: nowrap;
+    margin-top: 5px; /* 위쪽 간격 5px 추가 */
+  }
+
+  .count-controls button {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .coin-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .point-summary {
+    width: 100%;
+    max-width: 320px;
+    gap: 5px;
+  }
+
+  .point-summary div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px; /* 좌우 여백 추가 */
+    font-size: 14px;
+  }
+
+  .product-price {
+    font-size: 15px; /* 작은 화면에서는 글자 크기 줄이기 */
+    white-space: nowrap;
+  }
+
+  
+
+  .btn-primary {
+    width: 80px;
+    font-size: 14px;
+  }
+}
+
 </style>

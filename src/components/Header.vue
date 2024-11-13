@@ -29,6 +29,9 @@
         </ul>
       </nav>
 
+      <button class="btn btn-outline-light mt-3 go-web-button" @click="goToWebPage" style="margin-left: 50px;" >웹으로 이동하기</button>
+
+
       <!-- 오버레이 추가 : 사이드바가 생겼을 때 뒤에 반투명 오버레이 -->
       <div v-if="isMobile && sidebarOpen" class="sidebar-overlay" @click="closeSidebar"></div>
     </div>
@@ -51,6 +54,10 @@ const goToLogin = () => {
 const goToHome = () => {
   router.push('/');
 };
+
+const goToWebPage = () => {
+  router.push('/main');
+}
 
 const checkMobile = () => {
   isMobile.value = window.innerWidth <= 768; // 768px 이하를 모바일로 간주
@@ -116,7 +123,7 @@ const goToLogout = async () => {
     // 로그인 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
         accountId.value = response.data;
-        console.log("로그아웃" + accountId.value)
+        console.log("로그아웃")
     } else {
       // 예상치 못한 상태 코드
       throw new Error("Unexpected response status");
@@ -234,6 +241,10 @@ const goToLogout = async () => {
   transform: scale(0.95);
 }
 
+.go-web-button {
+  position: absolute;
+  bottom: 20px;
+}
 /* 데스크톱 */
 @media (min-width: 769px) {
     .header-container {
@@ -321,6 +332,10 @@ const goToLogout = async () => {
 
     .sidebar-open + .sidebar-overlay { 
         left :0 ; /* 사이드바가 열렸을 때 오버레이를 왼쪽으로 이동 */ 
+    }
+    .go-web-button {
+     position: absolute;
+     bottom: 80px;
     }
 }
 

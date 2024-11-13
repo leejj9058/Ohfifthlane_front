@@ -34,7 +34,7 @@ const goToLogin = () => {
   router.push('/login');
 };
 
-const goToReportList = () => {
+const goToReport = () => {
   router.push('/reportList'); // 신고내역 페이지로 이동
 };
 
@@ -61,7 +61,7 @@ const goToService = () => {
   if (introSection) {
     const offsetTop = introSection.offsetTop; // 섹션의 상단 위치를 계산
     window.scrollTo({
-      top: offsetTop - 70, // 50px 정도 위쪽 여유 공간 추가
+      top: offsetTop - 100, // 50px 정도 위쪽 여유 공간 추가
       behavior: "smooth",
     });
   }
@@ -72,7 +72,7 @@ const goToMobileInfo = () => {
   if (mobileIntroSection) {
     const offsetTop = mobileIntroSection.offsetTop; // 섹션의 상단 위치를 계산
     window.scrollTo({
-      top: offsetTop - 70, // 50px 정도 위쪽 여유 공간 추가
+      top: offsetTop - 100, // 50px 정도 위쪽 여유 공간 추가
       behavior: "smooth",
     });
   }
@@ -83,7 +83,7 @@ const goToShareInfo = () => {
   if (shareInfoSection) {
     const offsetTop = shareInfoSection.offsetTop;
     window.scrollTo({
-      top: offsetTop - 70, // 50px 정도 위쪽 여유 공간 추가
+      top: offsetTop - 100, // 50px 정도 위쪽 여유 공간 추가
       behavior: "smooth",
     })
   }
@@ -156,5 +156,8 @@ const goToQRReport = () => {
 
 .nav ul li a:hover {
   text-decoration: underline;
+  color: #007bff;
+  text-decoration: none;
+  
 }
 </style>
