@@ -80,10 +80,6 @@ const handleLogin = async () => {
     // 로그인 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
       console.log(response.data.accountLevel + '로그인');
-// 로그인 후 세션에 userId와 accountLevel 저장
-sessionStorage.setItem('userId', userId.value);  // 로그인한 유저 ID 저장
-      sessionStorage.setItem('accountLevel', response.data.accountLevel);  // 계정 레벨 저장
-
       const accountLevel = response.data.accountLevel;
       if(accountLevel == 1) {
         router.push("/main");

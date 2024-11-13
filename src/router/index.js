@@ -11,18 +11,19 @@ import ReportListView from '../views/ReportListView.vue';
 import ReportDetailView from '../views/ReportDetailView.vue';
 import QRcodeView from '../views/QRcodeView.vue';
 import QRcodeReportView from '../views/QRcodeReportView.vue';
-import ResidentReportView from '../views/ResidentReportView.vue';
-import ResidentReportWriteView from '../views/ResidentReportWriteView.vue';
-import MapView from '../views/MapView.vue';
+import ResidentReportView from '../views/ResidentReportView.vue' 
+import ResidentReportWriteView from '../views/ResidentReportWriteView.vue'
+import MapView from '../views/MapView.vue'
 
 import Search from '../views/SearchView.vue';
-import DatePicker from '../views/DatePicker.vue';
-import PaymentComplete from '../views/PaymentComplete.vue';
-import RentListView from '../views/RentListView.vue';
-import RentDetail from '../views/RentDetail.vue';
-import SearchView from '../views/SearchView.vue';
-import ParkingPayment from '../views/ParkingPayment.vue';
-import Reservation from '../views/Reservation.vue';
+//연습
+import DatePicker from '../views/DatePicker.vue'
+import PaymentComplete from '../views/PaymentComplete.vue'
+import RentListView from '../views/RentListView.vue'
+import RentDetail from '../views/RentDetail.vue'
+import SearchView from '../views/SearchView.vue'
+import ParkingPayment from '../views/ParkingPayment.vue'
+import Reservation from '../views/Reservation.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,202 +31,165 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: HomeView
     },
     {
       path: '/setParking',
       name: 'setParking',
-      component: SetParking,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: SetParking
     },
     {
       path: '/timeSet',
       name: 'timeSet',
-      component: ParkingTime,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: ParkingTime
     },
     {
       path: '/notice',
       name: 'notice',
-      component: Notice,
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: Notice
     },
     {
       path: '/board',
       name: 'board',
-      component: InquiryBoard,
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: InquiryBoard
     },
     {
-      path: '/boardDetail/:noticeId',
+      path: '/boardDetail/:noticeId',  // 동적 라우트 경로
       name: 'boardDetail',
-      component: BoardDetail,
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: BoardDetail
     },
     {
       path: '/newBoard',
       name: 'newBoard',
-      component: NewBoard,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: NewBoard
     },
     {
       path: '/reportList',
       name: 'reportList',
-      component: ReportListView,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: ReportListView
     },
     {
       path: '/reportDetail/:reportId',
       name: 'reportDetail',
-      component: ReportDetailView,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: ReportDetailView
     },
     {
       path: '/qrcode',
       name: 'qrcode',
-      component: QRcodeView,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: QRcodeView
     },
     {
       path: '/qrcodereport',
       name: 'qrcodereport',
-      component: QRcodeReportView,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: QRcodeReportView
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/RegisterView.vue'),
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: () => import('../views/RegisterView.vue')
     },
     {
       path: '/updateRegister',
       name: 'updateRegister',
-      component: () => import('../views/UpdateRegisterView.vue'),
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: () => import('../views/UpdateRegisterView.vue')
     },
     {
       path: '/findId',
       name: 'findId',
-      component: () => import('../views/FindIdView.vue'),
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: () => import('../views/FindIdView.vue')
     },
     {
       path: '/findPassword',
       name: 'findPassword',
-      component: () => import('../views/FindPwView.vue'),
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: () => import('../views/FindPwView.vue')
     },
     {
       path: '/updatePw',
       name: 'updatePw',
-      component: () => import('../views/UpdatePwView.vue'),
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: () => import('../views/UpdatePwView.vue')
     },
     {
       path: '/exchange',
       name: 'exchange',
-      component: () => import('../views/ExchangePointView.vue'),
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: () => import('../views/ExchangePointView.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/Login.vue'),
-      meta: { requiresAuth: false }  // 로그인 페이지
+      component: () => import('../views/Login.vue')
     },
     {
       path: '/residentReport',
       name: 'residentReport',
-      component: ResidentReportView,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: ResidentReportView
     },
     {
       path: '/residentReportWrite',
       name: 'residentReportWrite',
       component: ResidentReportWriteView,
-      meta: { requiresAuth: true },  // 로그인 필요
+      props: true,
     },
     {
       path: '/paymentComplete',
       name: 'paymentComplete',
-      component: PaymentComplete,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: PaymentComplete
     },
     {
       path: '/rentList',
       name: 'rentList',
-      component: RentListView,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: RentListView
     },
     {
       path: '/rentDetail',
       name: 'rentDetail',
-      component: RentDetail,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: RentDetail
     },
     {
       path: '/search/:destination',
       name: 'searchDestination',
-      component: SearchView,
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: SearchView
     },
     {
       path: '/search',
       name: 'search',
-      component: SearchView,
-      meta: { requiresAuth: false }  // 로그인 필요 없음
+      component: SearchView
     },
     {
       path: '/parkingPay',
       name: 'parkingPay',
-      component: ParkingPayment,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: ParkingPayment
     },
     {
       path: '/datepicker',
       name: 'datepicker',
-      component: DatePicker,
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: DatePicker
     },
     {
       path: '/map',
       name: 'map',
       component: MapView,
-      meta: { requiresAuth: false }  // 로그인 필요 없음
     },
     {
       path: '/main',
       name: 'main',
-      component: () => import('../views/MainWebView.vue'),
-      meta: { requiresAuth: true }  // 로그인 필요
+      component: () => import('../views/MainWebView.vue')
     },
     {
       path: '/reservation',
       name: 'reservation',
-      component: Reservation,
-      meta: { requiresAuth: true }  // 로그인 필요
-    },
+      component: Reservation
+    }
+    ,
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/AboutView.vue'),
-      meta: { requiresAuth: false }  // 로그인 필요 없음
-    }
+      component: () => import('../views/AboutView.vue')
+    },
+
+    
+
   ]
-});
-
-// 로그인 체크를 위한 전역 라우터 가드
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = sessionStorage.getItem('userId');  // 세션에서 로그인 여부 확인
-
-  if (to.meta.requiresAuth && !isLoggedIn) {
-    // 로그인 필요 페이지에 로그인하지 않은 상태로 접근하면 로그인 페이지로 리디렉션
-    next('/login');
-  } else {
-    next();  // 로그인된 상태이거나 로그인 필요 없는 페이지일 경우 정상 처리
-  }
+  
 });
 
 export default router;
