@@ -21,11 +21,11 @@ export default defineConfig({
       cert: fs.readFileSync("../localhost+4.pem"), // 인증서 파일 경로
     },
 
-    host: "172.168.10.27", // 로컬 네트워크 IP 주소로 설정
+    host: "172.168.10.93", // 로컬 네트워크 IP 주소로 설정
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://172.168.10.27:8080",
+        target: "http://172.168.10.93:8080",
 
         changeOrigin: true,
       },

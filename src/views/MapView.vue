@@ -12,10 +12,15 @@
                 <i class="bi bi-chevron-left" style="color: #333;"></i> <!-- 이전 아이콘 -->
             </span>
 
-            <input type="text" class="form-control" placeholder="목적지 또는 주소 검색" readonly @click="navigateToSearchView"
+            <input type="text" class="form-control" :placeholder="destination" readonly @click="navigateToSearchView"
                 style="pointer-events: auto; border: none; padding-left: 25px; color: #333;"> <!-- 텍스트 색상 지정 -->
 
-            <span class="position-absolute search-icon" @click="navigateToSearchView" style="color: #333;">
+            <i v-if="selectedDestination" class="bi bi-backspace" @click="deselectDestination"
+                style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); color: #333;"></i>
+            <!-- backspace 아이콘 위치 수정 -->
+
+            <span class="position-absolute search-icon" @click="navigateToSearchView"
+                style="right: 10px; top: 50%; transform: translateY(-50%); color: #333;">
                 <i class="bi bi-search"></i> <!-- 검색 아이콘 -->
             </span>
 
@@ -128,11 +133,6 @@
                         10분 당 : {{ selectedRPZ.fee }}원
                     </p>
 
-
-
-                    <!-- 버튼들 -->
-
-
                 </div>
             </div>
         </transition>
@@ -143,13 +143,18 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
-
 import TimePicker from 'vue3-timepicker'
 import 'vue3-timepicker/dist/VueTimepicker.css'
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 //-------------------------------------------변수-------------------------------------------------
+
+const defaultLat = 37.515815; // 초기 lat
+const defaultLng = 127.035772; // 초기 lng
+
 
 // 선택한 예약 시작 시간
 const selectedStartTime = ref("");
@@ -160,32 +165,52 @@ const selectedEndTime = ref("");
 // 선택한 예약 날짜
 const selectedDate = ref("");
 
-
+const route = useRoute();
+const centerPoint = ref({ lat: defaultLat, lng: defaultLng });
+const destination = ref("목적지를 검색해보세요.");
 
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
-const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
 let map;
 let clusterer;
 let markers = [];
 const markerObject = ref([]);
 const selectedRPZ = ref([]);
-const showRPZDetailModal = ref(false); //RPZ상세정보 모달 온/오프
-const reservationDateTimeModal = ref(false); //예약 날짜 시간 설정 온/오프
+const showRPZDetailModal = ref(false); // RPZ상세정보 모달 온/오프
+const reservationDateTimeModal = ref(false); // 예약 날짜 시간 설정 온/오프
 const router = useRouter();
+const selectedDestination = ref(false); // 목적지 설정 여부
 
 const startHours = ref([]); // 시작 가능한 시 표시
 const startMinutes = ref([]); // 시작 가능한 분 표시
 const endHours = ref([]); // 종료 가능한 시 표시
-const endMinutes = ref([]); // 종료 가능한 분 표시 
+const endMinutes = ref([]); // 종료 가능한 분 표시
 
 const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
-const isDragging = ref(false);
-const startY = ref(0);
+//-----------------------------------------------함수-----------------------------------------------------
 
-//-----------------------------------------------함수-----------------------------------------------------------
 
 onMounted(() => {
+    console.log(route.query.item)
+    const item = JSON.parse(route.query.item || '{}'); // 쿼리에서 item이 없으면 빈 객체로 처리
+    const lat = parseFloat(route.query.lat) || centerPoint.value.lat;
+    const lng = parseFloat(route.query.lng) || centerPoint.value.lng;
+    let text = "";
+
+    // 목적지 선택 여부 변경
+    if (Object.keys(item).length > 0) {
+        selectedDestination.value = true;
+        text = item.title.replace(/<\/?b>/g, "");
+        console.log(text);
+    }
+
+    destination.value = text || '목적지를 검색해보세요'; // item의 title을 사용하거나 기본 텍스트 설정
+    centerPoint.value = { lat, lng };
+
+    console.log('Destination:', destination.value);
+    console.log('Latitude:', lat);
+    console.log('Longitude:', lng);
+
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
     document.head.appendChild(script);
@@ -213,8 +238,14 @@ onMounted(() => {
     resetTime();
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
     console.log(centerPoint.value.lng, centerPoint.value.lat);
-
 });
+
+// 목적지 선택 해제
+const deselectDestination = () => {
+    selectedDestination.value = false;
+    destination.value = "목적지를 검색해주세요.";
+    centerPoint = { defaultLat, defaultLng };
+}
 
 // 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
 const daysWithDates = computed(() => {
@@ -337,8 +368,8 @@ const searchRPZList = async (lng, lat) => {
         // 새로운 마커 생성
         createMarker(markerObject.value);
     } catch (error) {
-
-        console.error('API 요청 실패:', error);
+        noParkingLotToast();
+        console.error('주차장 리스트를 찾을 수 없습니다:', error);
     }
 };
 
@@ -426,49 +457,13 @@ const removeMarkers = () => {
     markers = [];
 };
 
+const noParkingLotToast = () => {
+    toast("예약가능한 주차장이 없습니다.(╥﹏╥)", {
+        autoClose: 3000,
+    });
+};
 
 
-// // Dragging functions
-// const startDrag = (event) => {
-//     isDragging.value = true;
-//     startY.value = event.clientY;
-// };
-
-// const stopDrag = () => {
-//     isDragging.value = false;
-// };
-
-// const drag = (event) => {
-//     if (!isDragging.value) return;
-
-//     const deltaY = event.clientY - startY.value;
-//     startY.value = event.clientY;
-
-//     const bottomSheet = document.querySelector('.bottom-sheet');
-//     const currentTransform = getComputedStyle(bottomSheet).transform;
-//     const translateY = currentTransform === 'none' ? 0 : parseInt(currentTransform.split(',')[5]);
-
-//     const newTransform = `translateY(${translateY + deltaY}px)`;
-//     bottomSheet.style.transform = newTransform;
-
-//     // 슬라이드 내리기
-//     if (translateY + deltaY > 100) {
-//         showRPZDetailModal.value = false; // 아래로 내릴 때 모달 닫기
-//         reservationDateTimeModal.value = false; // 아래로 내릴 때 시간 설정 모달 닫기
-//     }
-// };
-
-// // 과거 날짜 비활성화 함수
-// const disablePastDates = (date) => {
-//     return date < new Date(); // 현재 시간보다 이전 시간 비활성화
-// };
-
-// // 종료 시간의 최소값을 시작 시간으로 동기화하는 함수
-// const updateEndTime = () => {
-//     if (endTime.value < startTime.value) {
-//         endTime.value = new Date(startTime.value);
-//     }
-// };
 </script>
 
 <style src="vue-scroll-picker/lib/style.css"></style>

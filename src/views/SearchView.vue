@@ -58,7 +58,7 @@
   <!-- 목적지 선택 확인 모달 -->
   <div v-if="showConfirmModal" class="modal-overlay">
     <div class="modal-content">
-      <p>정말 선택하시겠습니까?</p>
+      <p>목적지를 선택하시겠습니까?</p>
       <button @click="moveToMap(selectedItem)">확인</button>
       <button @click="showConfirmModal = false">취소</button>
     </div>
@@ -201,7 +201,7 @@ const moveToMap = (item) => {
   router.push({
     name: 'map',
     query: {
-      item: JSON.stringify(item),
+      item: JSON.stringify({ title: item.title }), // title 속성 사용
       lat: lat,
       lng: lng,
     }
