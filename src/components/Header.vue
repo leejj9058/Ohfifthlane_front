@@ -123,7 +123,7 @@ const goToLogout = async () => {
     // 로그인 성공 (상태 코드 200-299)
     if (response.status >= 200 && response.status < 300) {
         accountId.value = response.data;
-        console.log("로그아웃" + accountId.value)
+        console.log("로그아웃")
     } else {
       // 예상치 못한 상태 코드
       throw new Error("Unexpected response status");
