@@ -81,6 +81,13 @@ const router = createRouter({
       component: ReportDetailView,
       meta: { requiresAuth: true }  // 로그인 필요
     },
+
+    {
+      path: '/disabledReport',
+      name: 'disabledReport',
+      component: () => import('../views/disabledReportView.vue'),
+      meta: { requiresAuth: true }  // 로그인 필요
+    },
     {
       path: '/qrcode',
       name: 'qrcode',

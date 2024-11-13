@@ -425,6 +425,7 @@ const goToReservationHistory = () => {
 
   .container-fluid {
     padding: 20 5px; /* 모바일에서 전체 화면에 10px 패딩 추가 */
+    overflow: hidden;
   }
 
   .search-container {
