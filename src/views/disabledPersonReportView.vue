@@ -4,7 +4,7 @@
   <div class="d-flex justify-content-center align-items-center p-3" id="background h-100">
     <!-- 본문 -->
     <div class="p-4 p-md-5 w-100">
-      <h1 class="mb-4 fs-2 fw-bold">신고 내역</h1>
+      <h1 class="mb-4 fs-2 fw-bold">장애인 신고 내역</h1>
 
       <div class="d-flex justify-content-start">
         <Datepicker
@@ -26,26 +26,41 @@
         <table class="table mb-3">
           <thead>
             <tr class="text-center">
-              <th class="reportNo">No</th>
-              <th class="reportTitle">제목</th>
-              <th class="reportTitle">날짜</th>
-              <th class="reportStatus">상태</th>
+              <th class="disabledPersonReportNo">No</th>
+              <th class="disabledPersonReportTitle">제목</th>
+              <th class="disabledPersonReportTitle">날짜</th>
+              <th class="disabledPersonReportStatus">상태</th>
             </tr>
           </thead>
 
           <tbody>
             <tr
-              v-for="report in reportList"
-              :key="report.reportId"
-              class="reportIndex"
-              @click="goToReportDetail(report.reportId)"
+              v-for="disabledPersonReport in disabledPersonReportList"
+              :key="disabledPersonReport.disabledPersonReportId"
+              class="disabledPersonReportIndex"
+              @click="
+                goTodisabledPersonReportDetail(
+                  disabledPersonReport.disabledPersonReportId
+                )
+              "
             >
-              <td class="text-center">{{ report.reportId }}</td>
-              <td class="reportTitle text-center">{{ report.reportAddress }}</td>
-              <td class="reportTitle text-center">{{ formatDate(report.reportTime) }}</td>
               <td class="text-center">
-                <span :class="['status-badge', getStatusClass(report.reportStatus)]">
-                  {{ getStatusText(report.reportStatus) }}
+                {{ disabledPersonReport.disabledPersonReportId }}
+              </td>
+              <td class="disabledPersonReportTitle text-center">
+                {{ disabledPersonReport.disabledPersonReportAddress }}
+              </td>
+              <td class="disabledPersonReportTitle text-center">
+                {{ formatDate(disabledPersonReport.disabledPersonReportTime) }}
+              </td>
+              <td class="text-center">
+                <span
+                  :class="[
+                    'status-badge',
+                    getStatusClass(disabledPersonReport.disabledPersonReportStatus),
+                  ]"
+                >
+                  {{ getStatusText(disabledPersonReport.disabledPersonReportStatus) }}
                 </span>
               </td>
             </tr>
@@ -79,7 +94,7 @@ const inputFormat = (date) => {
   return `${year}-${month}-${day}`; // YYYY-MM-DD 형식으로 처리
 };
 
-// reportTime 포맷팅 함수
+// disabledPersonReportTime 포맷팅 함수
 const formatDate = (dateString) => {
   const date = new Date(dateString); // ISO 8601 형식의 문자열을 Date 객체로 변환
   return format(date, "yyyy-MM-dd HH:mm"); // 원하는 형식으로 반환
@@ -91,18 +106,18 @@ const handleDateChange = (date) => {
   fetchList(); // 날짜 변경 후 목록 다시 가져오기
 };
 
-const reportList = ref([]); // 신고 내역 리스트
+const disabledPersonReportList = ref([]); // 신고 내역 리스트
 
 // 신고 목록 가져오기
 const fetchList = async () => {
   try {
-    const response = await axios.post("/api/reportList", {
+    const response = await axios.post("/api/disabledPersonReportList", {
       date: inputFormat(picked.value), // 날짜 서버에 전달
     });
-    reportList.value = response.data; // 응답 데이터에서 reportList를 받음
+    disabledPersonReportList.value = response.data; // 응답 데이터에서 disabledPersonReportList를 받음
     console.log(`response:`, response.data);
   } catch (error) {
-    console.error("Error fetching report list:", error);
+    console.error("Error fetching disabledPersonReport list:", error);
   }
 };
 
@@ -137,8 +152,8 @@ const getStatusText = (status) => {
 };
 
 // 해당 신고 상세 페이지로 이동
-const goToReportDetail = (reportId) => {
-  router.push(`/reportDetail/${reportId}`);
+const goTodisabledPersonReportDetail = (disabledPersonReportId) => {
+  router.push(`/disabledPersonReportDetail/${disabledPersonReportId}`);
 };
 </script>
 
@@ -209,17 +224,28 @@ const goToReportDetail = (reportId) => {
   width: 100%;
 }
 
-.reportNo {
+/* 테이블 셀에서 줄 바꿈 방지 */
+.table td,
+.table th {
+  white-space: nowrap; /* 줄 바꿈 방지 */
+}
+
+.disabledPersonReportNo {
   width: 10%;
 }
 
-.reportTitle {
+.disabledPersonReportTitle {
   width: 70%;
   cursor: pointer;
 }
 
-.reportDate {
+.disabledPersonReportDate {
   width: 20%;
+}
+
+/* 상태 열 너비 조정 */
+.disabledPersonReportStatus {
+  width: 15%; /* 너비 조정 */
 }
 
 /* 반응형 디자인을 위한 미디어 쿼리 */
@@ -253,15 +279,15 @@ const goToReportDetail = (reportId) => {
     font-size: 0.8rem;
   }
 
-  .reportNo {
+  .disabledPersonReportNo {
     width: 15%;
   }
 
-  .reportTitle {
+  .disabledPersonReportTitle {
     width: 55%;
   }
 
-  .reportDate {
+  .disabledPersonReportDate {
     width: 30%;
   }
 }

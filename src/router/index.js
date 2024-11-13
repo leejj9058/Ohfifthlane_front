@@ -83,9 +83,16 @@ const router = createRouter({
     },
 
     {
-      path: '/disabledReport',
-      name: 'disabledReport',
-      component: () => import('../views/disabledReportView.vue'),
+      path: '/disabledPersonReportList',
+      name: 'disabledPersonReportList',
+      component: () => import('../views/disabledPersonReportView.vue'),
+      meta: { requiresAuth: true }  // 로그인 필요
+    },
+
+    {
+      path: '/disabledPersonReportDetail/:disabledPersonReportId',
+      name: 'disabledPersonReportDetail',
+      component: () => import('../views/disabledPersonReportDetailView.vue'),
       meta: { requiresAuth: true }  // 로그인 필요
     },
     {
