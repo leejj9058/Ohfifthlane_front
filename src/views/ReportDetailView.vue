@@ -15,13 +15,13 @@
 
       <hr>
 
-      <div class="card d-flex flex-column justify-content-center p-4" style="height: 800px;">
+      <div class="card d-flex flex-column justify-content-center p-4" style="height: 1000px;">
 
 
         <!-- 사진 공간 -->
         <div class="picture mb-4 mt-4 d-flex justify-content-center align-items-center"
           style="height: 50%; width: 100%">
-          <img v-if="imageUrl" :src="imageUrl" alt="Report Image" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+          <img v-if="imageUrl" :src="imageUrl" alt="Report Image" class="img-fluid" style="max-height: 300px; max-width: 100%; object-fit: contain;">
           <p v-else>이미지를 불러올 수 없습니다.</p>
         </div>
 
@@ -59,6 +59,12 @@
           </tbody>
         </table>
 
+        <div class="map-container">
+          <div class="overlay-text">신고위치확인</div>
+          <div id="map" style="width: 100%; height: 250px;">
+        </div>
+
+          </div>
         <!-- 버튼 -->
         <div class="d-flex justify-content-center mt-4">
           <template v-if="report.reportStatus === 0"> 
@@ -72,17 +78,9 @@
           </template>
         </div>
         <!-- 버튼 -->
-
       </div>
-
-
     </div>
-    <!-- 본문 -->
-
-
   </div>
-
-
 </template>
 
 
@@ -102,6 +100,15 @@ const imageUrl = ref(''); // db에서 가져올 이미지
 const report = ref({
   
 });
+
+const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
+const centerPoint = ref({
+
+});
+let map;
+let clusterer;
+let markers = [];
+const markerObject = ref([]);
 
 const loading = ref(true); // 로딩 상태 추가
 
@@ -149,6 +156,9 @@ onMounted(async () => {
   } finally {
     loading.value = false; // 로딩이 끝났으므로 상태를 false로 변경
   }
+
+  // Kakao 지도 로딩
+  loadKakaoMap();
 });
 
 const getReportDetail = async () => {
@@ -158,6 +168,15 @@ const getReportDetail = async () => {
     if (response.status >= 200 && response.status < 300) {
       report.value = response.data;
       imageUrl.value = `/src/assets/images/uploads/${response.data.reportImage}`;
+
+      console.log(report.value)
+      if (report.value.reportLat && report.value.reportLon) {
+        centerPoint.value = {
+          lat: report.value.reportLat,
+          lng: report.value.reportLon
+        }
+      }
+      
     } else {
       throw new Error('Unexpected response status');
     }
@@ -165,6 +184,65 @@ const getReportDetail = async () => {
     console.error('신고 요청 실패:', error.message);
   }
 };
+
+const loadKakaoMap = () => {
+  const script = document.createElement('script');
+  script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
+  document.head.appendChild(script);
+  script.onload = () => {
+    window.kakao.maps.load(() => {
+      const mapContainer = document.getElementById('map');
+      if (mapContainer) {
+        const mapOption = {
+          center: new window.kakao.maps.LatLng(centerPoint.value.lat, centerPoint.value.lng),
+          level: 5,
+        };
+        map = new window.kakao.maps.Map(mapContainer, mapOption);
+        clusterer = new window.kakao.maps.MarkerClusterer({
+          map: map,
+          averageCenter: true,
+          minLevel: 2,
+          disableClickZoom: true,
+        });
+
+        // 신고 위치 마커 추가
+        const reportLocation = report.value;
+        if (reportLocation.reportLat && reportLocation.reportLon) {  // reportLat와 reportLon 사용
+          const markerPosition = new window.kakao.maps.LatLng(reportLocation.reportLat, reportLocation.reportLon);
+          const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+            title: '신고 위치',
+          });
+          marker.setMap(map);  // 마커를 지도에 표시
+          // 마커에 팝업 텍스트 추가 예시
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: `<div style="padding:5px;">신고된 위치입니다.</div>`,
+        });
+
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          infowindow.open(map, marker);
+        });
+
+        }
+
+        window.kakao.maps.event.addListener(map, 'center_changed', () => {
+          const center = map.getCenter();
+          centerPoint.value.lat = center.getLat();
+          centerPoint.value.lng = center.getLng();
+        });
+
+
+        
+      } else {
+        console.error("Map container not found.");
+      }
+    });
+  };
+};
+
+
+
+
 </script>
 
 <style scoped>
@@ -220,5 +298,18 @@ const getReportDetail = async () => {
     padding: 0.5rem;
     font-size: 0.9rem;
   }
+}
+
+.overlay-text {
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  text-align: center;
 }
 </style>

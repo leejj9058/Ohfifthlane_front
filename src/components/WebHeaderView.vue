@@ -34,7 +34,7 @@ const goToLogin = () => {
   router.push('/login');
 };
 
-const goToReport = () => {
+const goToReportList = () => {
   router.push('/reportList'); // 신고내역 페이지로 이동
 };
 
