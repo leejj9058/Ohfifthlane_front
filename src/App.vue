@@ -23,7 +23,7 @@ watch(route, () => {
 
 function checkIfMainWebView() {
   // `MainWebView`의 경로나 이름을 확인하여 페이지 식별
-  isMainWebView.value = route.name === 'main' || route.name === 'search' || route.name === 'map' ; // 경로 이름이 'main'인지 확인
+  isMainWebView.value = route.name === 'main' || route.name === 'search' || route.name === 'map' || route.name === 'reservationList' || route.name === 'reservationDetail' || route.name === 'reservation' || route.name === 'parkingPay' || route.name === 'paymentComplete'; // 경로 이름이 'main'인지 확인
 }
 </script>
 

@@ -13,9 +13,8 @@
           {{ formatDate(disabledPersonReport.disabledPersonReportTime) }}
         </p>
       </div>
-
       <hr />
-
+      
       <div
         class="card d-flex flex-column justify-content-center p-4"
         style="height: 800px"

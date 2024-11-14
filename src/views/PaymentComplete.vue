@@ -1,5 +1,4 @@
 <template>
-  <Header></Header>
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
     <div class="card app-card p-4 shadow rounded">
       <h4 class="text-center fw-bold p-3">📢 결제가 완료되었습니다!</h4>
@@ -35,7 +34,6 @@
 import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // useRouter 추가
 import axios from 'axios';
-import Header from "@/components/Header.vue";
 
 const route = useRoute();
 const router = useRouter(); // useRouter 초기화
@@ -150,4 +148,22 @@ const goHome = () => {
   margin-bottom: 0.5rem;
   /* 요소 간격 조정 */
 }
+
+@media (max-width: 460px) {
+  .container-fluid {
+    padding: 20px 5px; /* 모바일에서 전체 화면에 여백 추가 */
+    overflow-x: hidden;
+    max-width: 360px /* 화면의 최대 너비에 맞춤 */
+  }
+
+  .reservation-image {
+    width: 100%; /* 이미지가 가로로 꽉 차도록 설정 */
+    max-width: 100%; /* 최대 너비 제한 제거 */
+    height: auto; /* 비율 유지 */
+    object-fit: cover; /* 비율을 유지하면서 이미지가 잘리지 않도록 */
+    border: 1px solid #ddd; /* 테두리 추가 */
+    border-radius: 8px; /* 둥근 모서리 추가 (옵션) */
+  }
+}
+
 </style>

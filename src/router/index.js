@@ -19,8 +19,8 @@ import Search from '../views/SearchView.vue';
 //연습
 import DatePicker from '../views/DatePicker.vue'
 import PaymentComplete from '../views/PaymentComplete.vue'
-import RentListView from '../views/RentListView.vue'
-import RentDetail from '../views/RentDetail.vue'
+import ReservationListView from '../views/ReservationListView.vue'
+import ReservationDetail from '../views/ReservationDetail.vue'
 import SearchView from '../views/SearchView.vue'
 import ParkingPayment from '../views/ParkingPayment.vue'
 import Reservation from '../views/Reservation.vue'
@@ -78,14 +78,12 @@ const router = createRouter({
       path: '/disabledPersonReportList',
       name: 'disabledPersonReportList',
       component: () => import('../views/disabledPersonReportView.vue'),
-      meta: { requiresAuth: true }  // 로그인 필요
     },
 
     {
       path: '/disabledPersonReportDetail/:disabledPersonReportId',
       name: 'disabledPersonReportDetail',
       component: () => import('../views/disabledPersonReportDetailView.vue'),
-      meta: { requiresAuth: true }  // 로그인 필요
     },
     {
       path: '/qrcode',
@@ -149,14 +147,14 @@ const router = createRouter({
       component: PaymentComplete
     },
     {
-      path: '/rentList',
-      name: 'rentList',
-      component: RentListView
+      path: '/reservationList',
+      name: 'reservationList',
+      component: ReservationListView
     },
     {
-      path: '/rentDetail',
-      name: 'rentDetail',
-      component: RentDetail
+      path: '/reservationDetail',
+      name: 'reservationDetail',
+      component: ReservationDetail
     },
     {
       path: '/search/:destination',
