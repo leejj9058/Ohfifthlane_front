@@ -126,12 +126,16 @@
                         {{ selectedRPZ.address }}
                     </p>
 
-                    <!-- 요금 -->
-                    <p
-                        style="margin: 0; padding: 0; line-height: 1; text-align: left; margin-top: 5px; color: #6c757d;">
-                        <i class="bi bi-wallet-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
-                        10분 당 : {{ selectedRPZ.fee }}원
-                    </p>
+<!-- 요금 -->
+<p style="margin: 0; padding: 0; line-height: 1; text-align: left; margin-top: 5px; color: #6c757d;">
+  <i class="bi bi-wallet-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
+  10분 당 : {{ selectedRPZ.fee }}원
+</p>
+
+
+
+                      <!-- 버튼들 -->
+ 
 
                 </div>
             </div>
@@ -237,6 +241,7 @@ onMounted(() => {
     };
     resetTime();
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
+
     console.log(centerPoint.value.lng, centerPoint.value.lat);
 });
 
@@ -398,18 +403,22 @@ const openSelectReservationTimeModal = () => {
     console.log("Filter button clicked");
 };
 
-const filterResident = async () => {
-    console.log("거주자 필터 클릭됨");
-    await searchRPZList(centerPoint.value.lng, centerPoint.value.lat, 'resident'); // 'resident'를 추가하여 필터링
+const filterResident = () => {
+    selectedFilter.value = 'resident';
+    showMarkers(residentMarkers.value);
 };
 const filterPublicParking = () => {
-    console.log("공영주차장 필터 클릭됨");
+    selectedFilter.value = 'publicParking';
+    showMarkers(publicParkingMarkers.value);
 };
 const filterGasStations = () => {
-    console.log("주유소 필터 클릭됨");
+    selectedFilter.value = 'gasStation';
+    showMarkers(gasStationMarkers.value);
 };
 const filterChargingStations = () => {
-    console.log("충전소 필터 클릭됨");
+    chargingStationInfo();
+    selectedFilter.value = 'chargingStation';
+    showMarkers(chargingStationMarkers.value);
 };
 
 // 모달 끄기
