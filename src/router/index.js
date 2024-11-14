@@ -25,6 +25,7 @@ import SearchView from '../views/SearchView.vue'
 import ParkingPayment from '../views/ParkingPayment.vue'
 import Reservation from '../views/Reservation.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -72,6 +73,11 @@ const router = createRouter({
       path: '/reportDetail/:reportId',
       name: 'reportDetail',
       component: ReportDetailView
+    },
+    {
+      path: '/disabledPersonReport',
+      name: 'disabledPersonReport',
+      component: () => import('../views/disabledPersonReport.vue'),
     },
 
     {
