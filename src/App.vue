@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container vh-100" style="background-color: #F9F9F9;">
+  <div class="app-container ">
     <!-- v-if를 사용하여 조건에 따라 다른 요소를 렌더링 -->
     <main v-if="isMainWebView" class="main-content main-content-new">
       <router-view></router-view>
@@ -23,7 +23,7 @@ watch(route, () => {
 
 function checkIfMainWebView() {
   // `MainWebView`의 경로나 이름을 확인하여 페이지 식별
-  isMainWebView.value = route.name === 'main'; // 경로 이름이 'main'인지 확인
+  isMainWebView.value = route.name === 'main' || route.name === 'search' || route.name === 'map' || route.name === 'reservationList' || route.name === 'reservationDetail' || route.name === 'reservation' || route.name === 'parkingPay' || route.name === 'paymentComplete'; // 경로 이름이 'main'인지 확인
 }
 </script>
 

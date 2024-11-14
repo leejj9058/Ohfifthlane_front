@@ -128,7 +128,7 @@ const loadMore = () => {
 const goToDetail = (item) => {
   console.log('Navigating to detail for:', item);
   router.push({
-    name: 'rentDetail', // 예약 상세 페이지로 이동
+    name: 'reservationDetail', // 예약 상세 페이지로 이동
     query: {
       rpzNum: item.rpzNum,
       rpzAddress: item.rpzAddress,
@@ -144,7 +144,7 @@ onMounted(fetchReservations); // 컴포넌트가 마운트 될 때 예약 정보
 
 <style scoped>
 .container-fluid {
-  padding-top: 20px;
+  padding-top: 40px;
   overflow-x: hidden;
   width: 460px;
   border-radius: 12px;
@@ -184,5 +184,53 @@ button.btn-danger {
 .arrow-icon {
   font-size: 1.5rem;
   font-weight: bold;
+
+  
 }
+
+@media (max-width: 480px) {
+
+  .container-fluid {
+    width: 100%; /* 모바일 화면에서 너비를 100%로 설정 */
+    max-width: 100%; /* 최대 너비를 제한하지 않음 */
+    padding: 10px 0; /* 좌우 padding 제거 */
+    overflow-x: hidden; /* 가로 스크롤 숨김 */
+  }
+
+  .app-container {
+    width: 100%; /* 너비를 100%로 설정 */
+    max-width: 100%; /* 최대 너비 제한 없음 */
+    padding: 0 10px; /* 좌우 padding 최소화 */
+    box-sizing: border-box; /* padding 포함 너비 계산 */
+    overflow-x: hidden;
+  }
+
+  .card {
+    flex-direction: column; /* 세로 배치로 변경 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    max-width: 340px;
+  }
+
+  .card > div {
+    width: 100%; /* 텍스트 부분이 전체 너비를 사용 */
+    margin-bottom: 10px; /* 텍스트와 버튼 사이 간격 */
+  }
+
+  button.btn-danger {
+    margin-top: 50px; /* 텍스트 아래 간격 추가 */
+    align-self: flex-start; /* 버튼을 왼쪽 정렬 */
+  }
+
+  /* 더보기 버튼 스타일 */
+  .btn-secondary {
+    width: 340px; /* 모바일 화면에서 너비를 340px로 고정 */
+    max-width: 100%; /* 화면보다 더 커지지 않도록 */
+    margin: 0 auto; /* 가운데 정렬 */
+    display: block; /* 가운데 정렬 보장을 위해 block 설정 */
+  }
+}
+
+
+
+
 </style>

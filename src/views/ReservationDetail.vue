@@ -106,4 +106,39 @@ const refund = () => {
 .arrow-icon {
   font-size: 1.2rem; /* 화살표 아이콘 크기 조정 */
 }
+
+.container-fluid {
+  padding-top: 0;
+  overflow-x: hidden;
+  width: 460px;
+  border-radius: 12px;
+  height: 100vh;
+}
+
+/* 모바일 환경에서 반응형 스타일 적용 */
+@media (max-width: 480px) {
+  .container-fluid {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 10px; /* 좌우 padding 최소화 */
+    border-radius: 0; /* 둥근 모서리 제거 */
+    overflow-x: hidden;
+  }
+
+  .app-outer {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    height: auto; /* 높이를 자동으로 설정 */
+    align-items: flex-start;
+  }
+
+  .app-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px; /* padding 조정 */
+  }
+
+}
+
 </style>

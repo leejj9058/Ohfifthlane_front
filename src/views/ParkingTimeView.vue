@@ -51,6 +51,25 @@
                       <VueTimepicker v-model="timeSlot.end" format="A hh:mm" minute-interval="10"
                         class="me-2 custom-placeholder" am-text="오전" pm-text="오후"
                         input-class="form-control form-control-sm time-input" placeholder="종료"></VueTimepicker>
+
+                        <button
+                      v-if="
+                        timeBoxs === timeSet[date].timeSlots.length - 1 &&
+                        timeSet[date].timeSlots.length < MAX_TIMEBOX
+                      "
+                      @click.prevent="addTimeSlot(date)"
+                      class="btn btn-sm btn-outline-primary ms-2"
+                    >
+                      <i class="bi bi-plus"></i>
+                    </button>
+
+                    <button
+                      v-if="timeSet[date].timeSlots.length > 1"
+                      @click.prevent="removeTimeSlot(date, timeBoxs)"
+                      class="btn btn-sm btn-outline-danger ms-2"
+                    >
+                      <i class="bi bi-dash"></i>
+                    </button>  
                     </div>
                   </div>
                 </div>
@@ -84,6 +103,24 @@
                     <VueTimepicker v-model="timeSlot.end" format="A hh:mm" minute-interval="10"
                       class="me-2 custom-placeholder" am-text="오전" pm-text="오후"
                       input-class="form-control form-control-sm time-input" placeholder="종료"></VueTimepicker>
+                      <button
+                      v-if="
+                        timeBoxs === timeSet[date].timeSlots.length - 1 &&
+                        timeSet[date].timeSlots.length < MAX_TIMEBOX
+                      "
+                      @click.prevent="addTimeSlot(date)"
+                      class="btn btn-sm btn-outline-primary ms-2"
+                    >
+                      <i class="bi bi-plus"></i>
+                    </button>
+
+                    <button
+                      v-if="timeSet[date].timeSlots.length > 1"
+                      @click.prevent="removeTimeSlot(date, timeBoxs)"
+                      class="btn btn-sm btn-outline-danger ms-2"
+                    >
+                      <i class="bi bi-dash"></i>
+                    </button>  
                   </div>
                 </div>
               </div>
@@ -133,6 +170,19 @@ const toggleDay = (date) => {
   activeDay.value = activeDay.value === date ? null : date;
 };
 
+//타임피커 하나 더
+const addTimeSlot = (day) => {
+  if (timeSet.value[day].timeSlots.length < MAX_TIMEBOX) {
+    timeSet.value[day].timeSlots.push({ start: '', end: '' });
+  }
+};
+
+//타임피커 빼기
+const removeTimeSlot = (day, timeBoxs) => {
+  timeSet.value[day].timeSlots.splice(timeBoxs, 1);
+};
+
+
 const onToggleClick = (date) => {
   if (isMobile.value) {
     // 토글이 켜졌을 때 아코디언 열기
@@ -157,12 +207,65 @@ const resetSettings = () => {
     timeSlots: [{ start: '', end: '' }]
   }));
   activeDay.value = null;
+
+
+// `isMobile` 상태를 초기화
+isMobile.value = window.innerWidth <= 768;
 };
 
 
 </script>
 
 <style scoped>
+
+.container-fluid {
+  padding-top: 20px;
+  overflow-x: hidden;
+}
+
+.custom-placeholder input::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+.time-input {
+  width: 110px !important;
+  font-size: 14px !important;
+}
+
+.vue__time-picker {
+  width: auto !important;
+}
+
+.vue__time-picker input.display-time {
+  font-size: 14px !important;
+}
+
+.form-check-input {
+  width: 2.5rem;
+  height: 1.25rem;
+}
+
+.time-settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.day-setting {
+  width: 100%;
+  max-width: 500px;
+}
+
+.day-label {
+  width: 120px;
+  font-size: 18px;
+}
+
+.time-picker-container {
+  flex-grow: 1;
+}
+
 
 @media (max-width: 768px) {
   .time-slot {
