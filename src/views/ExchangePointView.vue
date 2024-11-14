@@ -3,10 +3,10 @@
     <Header />
 
     <!-- 전체 페이지 컨테이너 -->
-    <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center   vh-100">
       
       <!-- 잔여 포인트 섹션 -->
-      <section class="point-balance-section text-center">
+      <section class="point-balance-section text-center mt-0">
         <div class="d-flex align-items-center justify-content-between w-100 mb-3">
           <!-- 뒤로가기 버튼 -->
           <button class="btn btn-link" @click="goBack">
