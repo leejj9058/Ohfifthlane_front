@@ -5,7 +5,7 @@ import ParkingTime from '../views/ParkingTimeView.vue';
 import NoticeBoard from '../views/NoticeView.vue';
 import InquiryBoard from '../views/InquiryBoardView.vue';
 import Notice from '../views/NoticeView.vue';
-import BoardDetail from '../views/BoardDetailView.vue';   
+import BoardDetail from '../views/BoardDetailNoticeView.vue';   
 import NewBoard from '../views/BoardWriteView.vue';
 import ReportListView from '../views/ReportListView.vue';
 import ReportDetailView from '../views/ReportDetailView.vue';
@@ -14,6 +14,8 @@ import QRcodeReportView from '../views/QRcodeReportView.vue';
 import ResidentReportView from '../views/ResidentReportView.vue' 
 import ResidentReportWriteView from '../views/ResidentReportWriteView.vue'
 import MapView from '../views/MapView.vue'
+
+
 
 import Search from '../views/SearchView.vue';
 //연습
@@ -24,6 +26,8 @@ import ReservationDetail from '../views/ReservationDetail.vue'
 import SearchView from '../views/SearchView.vue'
 import ParkingPayment from '../views/ParkingPayment.vue'
 import Reservation from '../views/Reservation.vue'
+import BoardDetailInquiryView from '@/views/BoardDetailInquiryView.vue';
+import BoardDetailNoticeView from '../views/BoardDetailNoticeView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,17 +53,22 @@ const router = createRouter({
       component: Notice
     },
     {
-      path: '/board',
-      name: 'board',
+      path: '/inquiry',
+      name: 'inquiry',
       component: InquiryBoard
     },
     {
-      path: '/boardDetail/:noticeId',  // 동적 라우트 경로
-      name: 'boardDetail',
-      component: BoardDetail
+      path: '/notice/:noticeId',  // 동적 라우트 경로
+      name: 'boardDetailNotice',
+      component: BoardDetailNoticeView
     },
     {
-      path: '/newBoard',
+      path: '/inquiry/:inquiryId',  
+      name: 'boardDetailInquiry',
+      component: BoardDetailInquiryView, //문의사항 상세
+    },
+    {
+      path: '/newBoard/:boardType',
       name: 'newBoard',
       component: NewBoard
     },

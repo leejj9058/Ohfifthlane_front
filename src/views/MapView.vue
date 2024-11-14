@@ -310,26 +310,6 @@ const deselectDestination = () => {
     centerPoint = { defaultLat, defaultLng };
 }
 
-// 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
-const daysWithDates = computed(() => {
-    const dates = [];
-    const today = new Date();
-
-    for (let i = 0; i < 3; i++) {
-        const date = new Date();
-        date.setDate(today.getDate() + i);
-
-        const dayIndex = date.getDay();
-        const dayName = dayNames[dayIndex];
-
-        // 날짜와 요일을 형식에 맞춰 문자열로 생성
-        const dateStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${dayName})`;
-        dates.push(dateStr);
-    }
-
-    return dates;
-});
-
 // 날짜 버튼 클릭 이벤트 핸들러
 const handleDateClick = (index) => {
     selectedDate = daysWithDates.value[index].fullDate;
