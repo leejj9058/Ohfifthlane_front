@@ -6,7 +6,8 @@
           <span class="position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%);" @click="goBack">
             <i class="bi bi-chevron-left"></i>
           </span>
-          <input type="text" class="form-control" placeholder="목적지 또는 주소 검색" v-model="searchQuery" style="padding-right: 40px; padding-left: 30px;" />
+          <input type="text" class="form-control" placeholder="목적지 또는 주소 검색" v-model="searchQuery"
+            style="padding-right: 40px; padding-left: 30px;" />
           <span class="position-absolute search-icon" @click="sendSearchQuery">
             <i class="bi bi-search"></i>
           </span>
@@ -46,10 +47,20 @@
               <strong v-html="item.title"></strong><br>
               <span>{{ item.address }}</span>
             </div>
-            <i class="bi bi-geo-alt text-primary" style="font-size: 1.5rem; cursor: pointer;" @click.stop="moveToMap(item)"></i>
+            <i class="bi bi-geo-alt text-primary" style="font-size: 1.5rem; cursor: pointer;"
+              @click.stop="openConfirmModal(item)"></i> <!-- 목적지 선택 확인 모달 켜기 -->
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- 목적지 선택 확인 모달 -->
+  <div v-if="showConfirmModal" class="modal-overlay">
+    <div class="modal-content">
+      <p>목적지를 선택하시겠습니까?</p>
+      <button @click="moveToMap(selectedItem)">확인</button>
+      <button @click="showConfirmModal = false">취소</button>
     </div>
   </div>
 </template>
@@ -64,6 +75,8 @@ const searchStarted = ref(false);
 const map = ref(null);
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
 const router = useRouter();
+const showConfirmModal = ref(false);
+const selectedItem = ref(null); // 선택된 항목을 저장할 변수 추가
 
 //goBack 함수
 const goBack = () => {
@@ -154,6 +167,7 @@ onMounted(() => {
   };
 });
 
+// 리스트 객체의 위치를 마커로 띄우기
 const goToMap = (item) => {
   if (!item || (!item.latitude && !item.lat) || (!item.longitude && !item.lng)) {
     console.warn('유효한 좌표가 없습니다:', item);
@@ -167,7 +181,15 @@ const goToMap = (item) => {
   addMarker(lat, lng);
 };
 
+// 모달 열기 함수 (아이템 설정 포함)
+const openConfirmModal = (item) => {
+  selectedItem.value = item; // 선택된 아이템을 설정
+  showConfirmModal.value = true; // 모달 열기
+};
+
+// 목적지로 설정
 const moveToMap = (item) => {
+
   if (!item || (!item.latitude && !item.lat) || (!item.longitude && !item.lng)) {
     console.warn('유효한 좌표가 없습니다:', item);
     return;
@@ -176,8 +198,15 @@ const moveToMap = (item) => {
   const lat = item.latitude || item.lat;
   const lng = item.longitude || item.lng;
 
-  alert(`위도: ${lat}, 경도: ${lng}`); // 위도, 경도를 alert로 확인
-  router.push({ name: 'map', query: { item: JSON.stringify(item) } });
+  router.push({
+    name: 'map',
+    query: {
+      item: JSON.stringify({ title: item.title }), // title 속성 사용
+      lat: lat,
+      lng: lng,
+    }
+  });
+  showConfirmModal.value = false;
 };
 
 // 지도 업데이트 함수
@@ -306,5 +335,28 @@ input:focus {
 .no-history p {
   margin: 0.5rem 0;
   font-weight: bold;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 80%;
+  max-width: 400px;
 }
 </style>

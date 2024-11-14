@@ -209,4 +209,19 @@ onMounted(() => {
   flex: 1;
   margin: 0 3px;
 }
+
+@media (max-width: 460px) {
+
+  .container-fluid {
+    padding: 20 5px; /* 모바일에서 전체 화면에 10px 패딩 추가 */
+    overflow-x: hidden;
+    max-width: 360px;
+  }
+
+  .payment-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+}
 </style>

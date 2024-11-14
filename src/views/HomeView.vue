@@ -3,7 +3,7 @@
     <Header />
 
     <!-- 컨테이너 중앙 정렬 -->
-    <div class="container-fluid d-flex flex-column align-items-center justify-content-center ">
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center" >
 
 
 
@@ -221,7 +221,7 @@ const goToNoticePage = () => {
 };
 
 const goToReservationHistory = () => {
-  router.push("/rentList");
+  router.push("/reservationList");
 };
 </script>
 
@@ -322,13 +322,14 @@ const goToReservationHistory = () => {
 .container-fluid {
   padding-top: 20px;
   overflow-x: hidden;
+  box-shadow: 0 6px 20px rgba(114, 114, 114, 0.1);
 }
 
 .card {
   border: none;
   border-radius: 12px;
   transition: transform 0.2s, box-shadow 0.2s;
-
+  box-shadow: 0 6px 20px rgba(114, 114, 114, 0.1);
 }
 
 .custom-card:hover {
@@ -351,7 +352,6 @@ const goToReservationHistory = () => {
 .video-section {
   background-color: #fff;
   border-radius: 12px;
-  border: 1px solid #ddd;
   padding: 20px;
   width: 460px;
   box-shadow: 0 6px 20px rgba(114, 114, 114, 0.1);
@@ -424,7 +424,9 @@ const goToReservationHistory = () => {
 @media (max-width: 460px) {
 
   .container-fluid {
-    padding: 20 5px; /* 모바일에서 전체 화면에 10px 패딩 추가 */
+    padding: 20px 5px; /* 모바일에서 전체 화면에 여백 추가 */
+    overflow-x: hidden;
+    max-width: 320px /* 화면의 최대 너비에 맞춤 */
   }
 
   .search-container {
@@ -455,8 +457,4 @@ const goToReservationHistory = () => {
   }
 
 }
-
-
-
-
 </style>

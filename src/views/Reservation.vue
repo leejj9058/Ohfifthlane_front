@@ -110,8 +110,6 @@
           <p class="mb-1"><strong>{{ reservationFee }}원</strong></p>
         </div>
         <button class="btn btn-pay w-100 mt-3" @click="confirmPayment">예약하기</button>
-        
-
       </div>
     </div>
   </div>
