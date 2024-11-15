@@ -20,11 +20,6 @@
           <textarea class="form-control" id="postContent" rows="13" v-model="postContent" required></textarea>
         </div>
 
-        <div class="mb-3">
-          <label for="fileInput" class="form-label">파일 첨부</label>
-          <input type="file" class="form-control" id="fileInput" @change="handleFileUpload" ref="fileInput">
-        </div>
-
         <div class="d-flex justify-content-end">
           <button type="submit" class="btn btn-primary me-2">저장</button>
           <button type="button" class="btn btn-secondary" @click="cancelPost">취소</button>
@@ -42,19 +37,83 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Header from "@/components/Header.vue";
-import router from '@/router';
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute();
+const router = useRouter();
 
 const postTitle = ref('');
 const postContent = ref('');
 const file = ref(null);
+const boardType = ref('');
+const accountId = ref(null); //로그인한 아이디
 
-function submitPost() {
 
-  console.log('제목:', postTitle.value);
-  console.log('내용:', postContent.value);
+onMounted(async () => {
+  boardType.value = route.params.boardType;
+
+  // 페이지 들어가자마자 세션에 저장된 id 값 가져오기 
+  try {
+    const response = await axios.get('/api/getAccountId');
+    accountId.value = response.data;
+    console.log('현재 아이디', accountId.value)
+  } catch (error) {
+    console.error('세션 아이디 가져오기 실패', error);
+  }
+});
+
+
+async function submitPost() {
+
+  if(!accountId.value) {
+   alert("로그인이 필요합니다.");
+   router.push('/login');
+   return;
+  }
+
+  try {
+    //엔드포인트 설정 : inquiry 면 api/writeInquiry : 아니면
+    let endpoint = boardType.value === 'inquiry' ? '/api/writeInquiry' : '/api/writeNotice';
+
+    let postData;
+
+    if (boardType.value === 'inquiry') {
+
+      postData = {
+        inquiryTitle: postTitle.value,
+        inquiryContent: postContent.value,
+        userId: accountId.value //세션에서 가져온 아이디
+
+      };
+
+    } else {
+      postData = {
+        noticeTitle: postTitle.value,
+        noticeContent: postContent.value,
+        userId: accountId.value //세션에서 가져온 아이디
+
+      }
+    }
+
+    const response = await axios.post(endpoint, postData);
+
+    if (response.data > 0) {
+      console.log('글 작성 성공');
+      // boardType에 따라 리다이렉트 경로 설정
+      if (boardType.value === 'inquiry') {
+        router.push('/inquiry'); // 문의게시판으로 이동
+      } else {
+        router.push('/notice'); // 공지사항으로 이동
+      }
+    } else {
+      console.error('작성 실패');
+    }
+  } catch (error) {
+    console.error('글 작성 오류', error);
+  }
 }
 
 //취소하면 뒤로가기
@@ -111,7 +170,8 @@ function cancelPost() {
   }
 
   textarea.form-control {
-    height: 200px; /* 모바일에서 텍스트 영역 높이 조정 */
+    height: 200px;
+    /* 모바일에서 텍스트 영역 높이 조정 */
   }
 
   .btn {

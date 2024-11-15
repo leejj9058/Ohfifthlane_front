@@ -14,8 +14,8 @@
       </div>
       
       <nav class="nav-menu text-center">
-        <button v-if="accountId == 0" class="btn btn-primary w-100" style="background-color: #A4C8F3;" @click="goToLogin">로그인</button>
-        <button v-if="accountId != 0" class="btn btn-primary w-100" style="background-color: #A4C8F3;" @click="goToLogout">로그아웃</button>
+        <button v-if="accountId == 0" class="btn btn-primary w-100" style="background-color: #A4C8F3; color: black;" @click="goToLogin">로그인</button>
+        <button v-if="accountId != 0" class="btn btn-primary w-100" style="background-color: #A4C8F3; color: black;" @click="goToLogout">로그아웃</button>
         <hr class="my-4" />
         <ul class="nav-list" style="font-size: 20px;">
           <li><a @click="moveView('/updateRegister')">회원정보수정</a></li>
@@ -24,7 +24,7 @@
 
           <hr class="my-4" />
           <li><a @click="moveView('/notice')">공지사항</a></li>
-          <li><a @click="moveView('/board')">문의사항</a></li>
+          <li><a @click="moveView('/inquiry')">문의사항</a></li>
           <li><a @click="moveView('/exchange')">교환소</a></li>
         </ul>
       </nav>

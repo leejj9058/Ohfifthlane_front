@@ -9,7 +9,7 @@
       <div class="mb-4">
         <h2 class=" mb-4 fs-5">주간 사용 가능 시간을 설정합니다.</h2>
 
-        <hr class="my-4" style="margin-bottom: 50px !important;">
+        <hr class="" style="margin-bottom: 50px !important;">
 
         <!-- 제목 밑에 큰 디브 -->
         <div class="time-settings-container">

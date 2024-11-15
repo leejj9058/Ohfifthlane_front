@@ -190,6 +190,69 @@ const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 //-----------------------------------------------함수-----------------------------------------------------
 
 
+const chargingStationList = ref([]);
+
+//-----------------------------------------------함수-----------------------------------------------------------
+
+
+const chargingStationInfo = async () => {
+    try {
+        const response = await axios.post('/api/chargingStationList', {
+            
+        });
+        chargingStationList.value = response.data;
+        console.log('충전소 정보', response.data);
+
+        createChargingStationMarkers(chargingStationList.value);
+    } catch (error) {
+        console.error("충전소 정보를 가져오는 중 오류 발생:", error);
+    }
+};
+
+
+        //충전소 마커생성
+        const createChargingStationMarkers = (stations) => {
+    if (!clusterer) {
+        console.error("Clusterer is not initialized.");
+        return;
+    }
+
+    stations.forEach((station) => {
+        const lat = station.chargingStationLat; // 위도
+        const lng = station.chargingStationLon; // 경도
+        const markerPosition = new window.kakao.maps.LatLng(lat, lng);
+        
+        const color = 'green';
+        const svgMarker = `
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="20" cy="20" r="15" fill="${color}" stroke="white" stroke-width="2"/>
+            </svg>
+        `;
+        
+        // SVG 이미지를 URL로 인코딩하여 전달
+        const encodedSvg = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker);
+        const markerImage = new window.kakao.maps.MarkerImage(encodedSvg, new window.kakao.maps.Size(40, 40));
+
+        // 마커 객체 생성
+        const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+            image: markerImage,
+            title: station.chargingStationName, // 충전소 이름을 마커의 제목으로 설정
+        });
+
+        // 클러스터러에 마커 추가
+        clusterer.addMarker(marker);
+        markers.push(marker); // markers 배열에 마커 추가
+
+        // 마커 클릭 이벤트 (예: 충전소 정보 표시)
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+            console.log("충전소 클릭됨:", station);
+            // 여기서 충전소에 대한 상세 정보 표시 가능
+        });
+    });
+};
+
+
 onMounted(() => {
     console.log(route.query.item)
     const item = JSON.parse(route.query.item || '{}'); // 쿼리에서 item이 없으면 빈 객체로 처리
@@ -246,26 +309,6 @@ const deselectDestination = () => {
     destination.value = "목적지를 검색해주세요.";
     centerPoint = { defaultLat, defaultLng };
 }
-
-// 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
-const daysWithDates = computed(() => {
-    const dates = [];
-    const today = new Date();
-
-    for (let i = 0; i < 3; i++) {
-        const date = new Date();
-        date.setDate(today.getDate() + i);
-
-        const dayIndex = date.getDay();
-        const dayName = dayNames[dayIndex];
-
-        // 날짜와 요일을 형식에 맞춰 문자열로 생성
-        const dateStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${dayName})`;
-        dates.push(dateStr);
-    }
-
-    return dates;
-});
 
 // 날짜 버튼 클릭 이벤트 핸들러
 const handleDateClick = (index) => {
@@ -409,6 +452,7 @@ const filterGasStations = () => {
     console.log("주유소 필터 클릭됨");
 };
 const filterChargingStations = () => {
+    chargingStationInfo();
     console.log("충전소 필터 클릭됨");
 };
 
