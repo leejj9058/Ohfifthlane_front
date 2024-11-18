@@ -95,6 +95,7 @@ const getAccountId = async () => {
     if (response.status >= 200 && response.status < 300) {
       accountId.value = response.data;
       console.log(accountId.value);
+      
     } else {
       // 예상치 못한 상태 코드
       throw new Error("Unexpected response status");
