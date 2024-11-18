@@ -122,7 +122,7 @@
       </section>
 
       <!-- 영상 섹션 -->
-      <section class="video-section mt-4 text-center" style=" border: none; " >
+      <section class="video-section mt-4 text-center" style=" border: none;" >
         <h3 class="fw-bold">우리 앱이 처음이신가요?</h3>
         <p class="mb-0">오차로를 소개합니다~</p>
         <!-- autoplay, loop, muted 속성 추가 -->
@@ -426,7 +426,7 @@ const goToReservationHistory = () => {
   .container-fluid {
     padding: 20px 5px; /* 모바일에서 전체 화면에 여백 추가 */
     overflow-x: hidden;
-    max-width: 320px /* 화면의 최대 너비에 맞춤 */
+    max-width: 460px
   }
 
   .search-container {
@@ -443,7 +443,7 @@ const goToReservationHistory = () => {
   }
 
   .small-card {
-    max-width: 150px;
+    max-width: 160px;
   }
 
   .board-section,
