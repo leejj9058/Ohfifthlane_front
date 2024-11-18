@@ -64,10 +64,6 @@
               <td>{{ disabledPersonReport.userName }}</td>
               <td>{{ disabledPersonReport.userTel }}</td>
             </tr>
-            <tr>
-              <th>신고 내용</th>
-              <td colspan="2">{{ disabledPersonReport.disabledPersonReportContent }}</td>
-            </tr>
           </tbody>
         </table>
 
