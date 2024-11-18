@@ -35,7 +35,6 @@ function checkIfMainWebView() {
 .main-content {
   flex-grow: 1;
   margin-left: 250px; 
-  padding: 20px;
 }
 
 .main-content-new {
@@ -46,7 +45,16 @@ function checkIfMainWebView() {
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
-    margin-top: 50px; /* 모바일 상단 바 높이에 맞춰 조정 */
+    margin-top: 0; /* 기본적으로 상단 여백 제거 */
+  }
+
+  .main-content.with-margin {
+    margin-top: 50px; /* 헤더가 있는 경우에만 여백 추가 */
+  }
+
+  .main-content-new {
+    margin-left: 0;
+    padding: 0;
   }
 }
 </style>
