@@ -191,10 +191,65 @@ const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
 
 const chargingStationList = ref([]);
+const publicParkingList = ref([]);
 
 //-----------------------------------------------함수-----------------------------------------------------------
+const publicParkingInfo = async () => {
+    try {
+        const response = await axios.post('/api/publicParkingList', {
 
+        });
 
+        publicParkingList.value = response.data;
+        console.log('공영주차장 정보 : ', response.data);
+        createPublicParkingMarkers(publicParkingList.value);
+    } catch (error) {
+        console.error("공영주차장 정보를 가져오는 중 오류 발생:", error);
+    }
+};
+
+//공유주차장 마커생성
+const createPublicParkingMarkers = (parkings) => {
+    if (!clusterer) {
+        console.error("Clusterer is not initialized.");
+        return;
+    }
+
+    parkings.forEach((parking) => {
+        const lat = parking.publicParkingLat; // 위도
+        const lng = parking.publicParkingLon; // 경도
+        const markerPosition = new window.kakao.maps.LatLng(lat, lng);
+        
+        const color = 'skyblue';
+        const svgMarker = `
+            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="20" cy="20" r="15" fill="${color}" stroke="white" stroke-width="2"/>
+            </svg>
+        `;
+        
+        // SVG 이미지를 URL로 인코딩하여 전달
+        const encodedSvg = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker);
+        const markerImage = new window.kakao.maps.MarkerImage(encodedSvg, new window.kakao.maps.Size(40, 40));
+
+        // 마커 객체 생성
+        const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+            image: markerImage,
+            title: parking.publicParkingName, 
+        });
+
+        // 클러스터러에 마커 추가
+        clusterer.addMarker(marker);
+        markers.push(marker); // markers 배열에 마커 추가
+
+        // 마커 클릭 이벤트 
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+            console.log("공영주차장 클릭됨:", parking);
+            // 여기서 공영주차장에 대한 상세 정보 표시 가능
+        });
+    });
+};
+//------------------------------------------------------------------------
 const chargingStationInfo = async () => {
     try {
         const response = await axios.post('/api/chargingStationList', {
@@ -446,11 +501,10 @@ const filterResident = async () => {
     await searchRPZList(centerPoint.value.lng, centerPoint.value.lat, 'resident'); // 'resident'를 추가하여 필터링
 };
 const filterPublicParking = () => {
+    publicParkingInfo();
     console.log("공영주차장 필터 클릭됨");
 };
-const filterGasStations = () => {
-    console.log("주유소 필터 클릭됨");
-};
+
 const filterChargingStations = () => {
     chargingStationInfo();
     console.log("충전소 필터 클릭됨");
@@ -502,7 +556,7 @@ const removeMarkers = () => {
 };
 
 const noParkingLotToast = () => {
-    toast("예약가능한 주차장이 없습니다.(╥﹏╥)", {
+    toast("주차장이 없습니다. (╥﹏╥)", {
         autoClose: 3000,
     });
 };

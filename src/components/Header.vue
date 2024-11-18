@@ -4,7 +4,7 @@
       <button @click="toggleSidebar" class="sidebar-toggle">
         <i class="bi bi-list" ></i>
       </button>
-      <h1 class="logo-text ps-3" @click="goToHome" >오차로</h1>
+      <h1 class="logo-text ps-3" @click="goToHome" >주차로</h1>
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
@@ -95,6 +95,7 @@ const getAccountId = async () => {
     if (response.status >= 200 && response.status < 300) {
       accountId.value = response.data;
       console.log(accountId.value);
+      
     } else {
       // 예상치 못한 상태 코드
       throw new Error("Unexpected response status");
