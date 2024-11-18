@@ -209,11 +209,11 @@ const goToPublicParking = () => {
 };
 
 const goToResidentReport = () => {
-  router.replace({ path: "/residentReport", query: {} });
+  router.push({ path: "/residentReport", query: {} });
 };
 
 const goToQRcode = () => {
-  router.replace({ path: "/qrcode", query: {} });
+  router.push({ path: "/qrcode", query: {} });
 };
 
 const goToNoticePage = () => {
