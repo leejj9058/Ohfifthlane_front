@@ -70,20 +70,7 @@
           placeholder="차량 번호를 입력하세요. 예: 12가 3456"
         />
   
-        <!-- 신고 내용 입력 -->
-        <div class="mb-3">
-          <!-- 신고 내용 아이콘 -->
-          <i class="bi bi-pencil-fill me-2 text-primary"></i>
-          <label for="disabledPersonReportContent" class="form-label">신고 내용</label>
-          <textarea
-            id="disabledPersonReportContent"
-            class="form-control"
-            v-model="disabledPersonReportContent"
-            rows="4"
-            required
-            placeholder="장애인 전용구역 불법주차 신고입니다."
-          ></textarea>
-        </div>
+        
   
         <!-- 추가 입력칸 (예: 신고자 연락처) -->
         <div class="d-flex flex-column mb-3">
