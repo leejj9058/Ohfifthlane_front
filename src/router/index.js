@@ -182,8 +182,8 @@ const router = createRouter({
       component: SearchView
     },
     {
-      path: '/parkingPay',
-      name: 'parkingPay',
+      path: '/parkingPayment',
+      name: 'parkingPayment',
       component: ParkingPayment
     },
     {
