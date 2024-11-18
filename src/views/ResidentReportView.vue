@@ -68,14 +68,21 @@ const startCamera = async () => {
 const enableCamera = async () => {
   videoElement.value = document.querySelector('video');
   try {
-    videoStream.value = await navigator.mediaDevices.getUserMedia({ video: true });
+    // 후면 카메라 사용 설정
+    videoStream.value = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { exact: "environment" }
+      }
+    });
     if (videoElement.value) {
       videoElement.value.srcObject = videoStream.value;
     }
   } catch (error) {
-    alert("카메라에 접근할 수 없습니다.");
+    alert("카메라에 접근할 수 없습니다. 후면 카메라를 사용할 수 없습니다.");
+    console.error("Camera error: ", error);
   }
 };
+
 
 const capturePhoto = () => {
   const canvas = document.createElement("canvas");
@@ -272,5 +279,9 @@ onBeforeUnmount(() => {
 
 .qr-blue-text {
   color: #fe5950; /* 파란색 텍스트 */
+}
+
+.cancel-button {
+  background-color: gray;
 }
 </style>

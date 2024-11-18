@@ -561,7 +561,7 @@ const removeMarkers = () => {
 };
 
 const noParkingLotToast = () => {
-    toast("예약가능한 주차장이 없습니다.(╥﹏╥)", {
+    toast("주차장이 없습니다. (╥﹏╥)", {
         autoClose: 3000,
     });
 };
