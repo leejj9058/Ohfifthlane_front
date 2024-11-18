@@ -1,9 +1,22 @@
 <template>
   <Header />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  
+  <!-- 첫 번째 모달: 촬영 전 안내 -->
   <div class="report-tutorial-container" v-if="showModal">
     <div class="report-modal">
-      <button class="report-back-button" @click="goBack">←</button>
-      <p class="report-title">번호판이 나오도록 촬영해주세요</p>
+      
+      <!-- 뒤로가기 버튼과 텍스트를 한 줄로 배치 -->
+      <div class="header-container">
+  <button class="report-back-button mt-1" @click="goBack">
+    <i class="fas fa-arrow-left"></i> <!-- 뒤로가기 아이콘 -->
+  </button>
+  <p class="report-title">
+  신고할 차량을 <span class="qr-blue-text">번호판이 나오도록</span> 촬영해주세요.
+</p>
+</div>
+
+
       <div class="report-container">
         <img src="@/assets/images/example-photo.png" alt="예시 이미지" class="report-example" />
       </div>
@@ -11,6 +24,7 @@
     </div>
   </div>
 
+  <!-- 두 번째 모달: 사진 미리보기 -->
   <div v-else-if="showPreview" class="photo-preview-modal">
     <div class="photo-preview">
       <p class="preview-title">이 사진으로 하시겠습니까?</p>
@@ -22,11 +36,13 @@
     </div>
   </div>
 
+  <!-- 카메라 뷰 (사진 촬영) -->
   <div v-else class="camera-view">
     <video ref="video" class="camera-video" autoplay></video>
     <button class="capture-button" @click="capturePhoto">사진 찍기</button>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onBeforeUnmount, nextTick } from 'vue';
@@ -112,8 +128,8 @@ onBeforeUnmount(() => {
 });
 </script>
 
-
 <style scoped>
+/* 모달 스타일 */
 .report-tutorial-container {
   display: flex;
   justify-content: center;
@@ -123,28 +139,36 @@ onBeforeUnmount(() => {
 
 .report-modal {
   background-color: white;
-  width: 400px; /* 모달의 너비 확장 */
+  width: 400px;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
+  position: relative;
 }
 
+/* 뒤로가기 버튼 */
 .report-back-button {
   position: absolute;
-  top: 15px;
-  left: 15px;
+  top: 10px;
+  left: 10px;
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 22px;
+  color: #555;
   cursor: pointer;
+  transition: color 0.3s;
 }
 
+/* 텍스트 스타일 */
 .report-title {
-  font-size: 20px;
-  margin-bottom: 25px;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0; /* 텍스트 마진 제거 */
+  color: #333;
 }
 
+/* 예시 이미지 스타일 */
 .report-container {
   display: flex;
   justify-content: center;
@@ -154,18 +178,43 @@ onBeforeUnmount(() => {
 .report-example {
   width: 250px;
   height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
+/* 버튼 스타일 */
 .report-button {
-  background-color: red;
+  background: linear-gradient(135deg, #007bff, #0056b3); /* 파란색 계열 */
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 50px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin: 0;
+}
+.capture-button,
+.confirm-button,
+.cancel-button {
+  background-color: #ff6347;
   color: white;
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
   font-size: 18px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
+.report-button:hover,
+.capture-button:hover,
+.confirm-button:hover,
+.cancel-button:hover {
+  background-color: #e94e34;
+}
+
+/* 카메라 화면 스타일 */
 .camera-view {
   display: flex;
   flex-direction: column;
@@ -179,19 +228,14 @@ onBeforeUnmount(() => {
   width: 100%;
   max-width: 600px;
   height: auto;
+  border-radius: 8px;
 }
 
 .capture-button {
-  background-color: red;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  cursor: pointer;
   margin-top: 20px;
 }
 
+/* 사진 미리보기 모달 */
 .photo-preview-modal {
   display: flex;
   justify-content: center;
@@ -210,7 +254,7 @@ onBeforeUnmount(() => {
 }
 
 .preview-title {
-  font-size: 20px;
+  font-size: 22px;
   margin-bottom: 20px;
 }
 
@@ -226,19 +270,7 @@ onBeforeUnmount(() => {
   border-radius: 10px;
 }
 
-.confirm-button,
-.cancel-button {
-  background-color: red;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  margin: 5px;
-}
-
-.cancel-button {
-  background-color: gray;
+.qr-blue-text {
+  color: #fe5950; /* 파란색 텍스트 */
 }
 </style>

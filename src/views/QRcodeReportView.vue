@@ -1,8 +1,7 @@
 <template>
   <Header></Header>
   <div class="form-container">
-    <img :src="qrCodeImage" alt="Captured Photo" class="form-photo" />
-    <p class="form-title">차량번호</p>
+    <p class="form-title">신고할 차량의 차량번호를 조회하기</p>
     <div class="input-row">
       <input type="text" class="form-input" placeholder="차량번호 입력" v-model="vehicleNumber" />
       <button class="lookup-button" @click="checkVehicleRegistration">조회</button>

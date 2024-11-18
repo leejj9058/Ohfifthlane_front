@@ -31,7 +31,7 @@
                   <img src="@/assets/images/main11.png" alt="거주자 우선주차" class="card-image" />
                 </div>
                 <div class="card-content">
-                  <h6 class="mt-3" style="font-weight: bold; font-size: 25px; color:white;">공유 주차장 찾기</h6>
+                  <h6 class="mt-3 text-start" style="font-weight: bold; font-size: 24px; color:white;">공유 주차장 찾기</h6>
                   <div style="color: white;">
                     <p class="mt-0 mb-0 text-start" style="font-size: 12px;">내 근처 공유된 </p>
                     <p class="text-start" style="font-size: 12px;">주차장을 찾을 수 있어요 </p>
@@ -51,8 +51,8 @@
               </div>
 
               <div class="card-content " style="width: 100%; padding: 10px;">
-                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 19px;">거주자</h6>
-                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 19px;">우선주차 구역 신고</h6>
+                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 18px;">거주자</h6>
+                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 18px;">우선주차 구역 신고</h6>
                 <p class="mt-0 mb-0 text-end" style="font-size: 12px;">부정주차 신고</p>
 
                 <div class="text-start">
@@ -209,11 +209,11 @@ const goToPublicParking = () => {
 };
 
 const goToResidentReport = () => {
-  router.replace({ path: "/residentReport", query: {} });
+  router.push({ path: "/residentReport", query: {} });
 };
 
 const goToQRcode = () => {
-  router.replace({ path: "/qrcode", query: {} });
+  router.push({ path: "/qrcode", query: {} });
 };
 
 const goToNoticePage = () => {

@@ -15,13 +15,13 @@
 
       <hr>
 
-      <div class="card d-flex flex-column justify-content-center p-4" style="height: 800px;">
+      <div class="card d-flex flex-column justify-content-center p-4" style="height: 1000px;">
 
 
         <!-- 사진 공간 -->
         <div class="picture mb-4 mt-4 d-flex justify-content-center align-items-center"
           style="height: 50%; width: 100%">
-          <img v-if="imageUrl" :src="imageUrl" alt="Report Image" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+          <img v-if="imageUrl" :src="imageUrl" alt="Report Image" class="img-fluid" style="max-height: 300px; max-width: 100%; object-fit: contain;">
           <p v-else>이미지를 불러올 수 없습니다.</p>
         </div>
 
@@ -102,7 +102,9 @@ const report = ref({
 });
 
 const KAKAO_MAP_KEY = 'a803ff1d149711eb074e8b95dadeab12';
-const centerPoint = ref({ lat: 37.515815, lng: 127.035772 });
+const centerPoint = ref({
+
+});
 let map;
 let clusterer;
 let markers = [];
@@ -166,6 +168,15 @@ const getReportDetail = async () => {
     if (response.status >= 200 && response.status < 300) {
       report.value = response.data;
       imageUrl.value = `/src/assets/images/uploads/${response.data.reportImage}`;
+
+      console.log(report.value)
+      if (report.value.reportLat && report.value.reportLon) {
+        centerPoint.value = {
+          lat: report.value.reportLat,
+          lng: report.value.reportLon
+        }
+      }
+      
     } else {
       throw new Error('Unexpected response status');
     }
@@ -193,6 +204,27 @@ const loadKakaoMap = () => {
           minLevel: 2,
           disableClickZoom: true,
         });
+
+        // 신고 위치 마커 추가
+        const reportLocation = report.value;
+        if (reportLocation.reportLat && reportLocation.reportLon) {  // reportLat와 reportLon 사용
+          const markerPosition = new window.kakao.maps.LatLng(reportLocation.reportLat, reportLocation.reportLon);
+          const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+            title: '신고 위치',
+          });
+          marker.setMap(map);  // 마커를 지도에 표시
+          // 마커에 팝업 텍스트 추가 예시
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: `<div style="padding:5px;">신고된 위치입니다.</div>`,
+        });
+
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          infowindow.open(map, marker);
+        });
+
+        }
+
         window.kakao.maps.event.addListener(map, 'center_changed', () => {
           const center = map.getCenter();
           centerPoint.value.lat = center.getLat();
