@@ -29,6 +29,7 @@ import Reservation from '../views/Reservation.vue'
 import BoardDetailInquiryView from '@/views/BoardDetailInquiryView.vue';
 import BoardDetailNoticeView from '../views/BoardDetailNoticeView.vue';
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -81,6 +82,11 @@ const router = createRouter({
       path: '/reportDetail/:reportId',
       name: 'reportDetail',
       component: ReportDetailView
+    },
+    {
+      path: '/disabledPersonReport',
+      name: 'disabledPersonReport',
+      component: () => import('../views/disabledPersonReport.vue'),
     },
 
     {
