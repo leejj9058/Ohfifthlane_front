@@ -8,7 +8,8 @@
 
       <h1 class="mb-4 fs-2 fw-bold">공지 게시판</h1>
       
-      <div class="d-flex justify-content-end">
+      <!-- userlevel이 1일때면 글쓰기 버튼이 보인다. -->
+      <div class="d-flex justify-content-end" v-if="userLevel === 1">
         <button class="btn btn-primary" @click="gotoNew">글쓰기</button>
       </div>
 
@@ -57,34 +58,35 @@ import Header from "@/components/Header.vue";
 import router from '@/router';
 import axios from 'axios';
 
-onMounted(() => {
-  getNotice();
-})
-
+const userLevel = ref(0) //사용자 권한 수준을 저장함
 const notices = ref ([])
 
-// //공지사항 데이터 가져오는 함수
-// const getNotices = async () => {
-//   try {
-//     //controller에서 보낸 주소 연결 -> 해당 데이터 notice.value에 넣기
-//     const response = await axios.get('api/notices');
-//     notices.value = response.data;
-//   } catch (error)
-// }
-
-// const notices = ref ( [
-//   {id:1, title: "게시글 1", date: "2024.10.11"},
-//   {id:2, title: "두번째 글", date: "2024.10.15"},
-//   {id:3, title: "세번째 글입니다.", date: "2024.10.16"}
-
-// ])
-
-const gotoNoticeOne = (noticeId) => {
-  router.push(`/boarddetail/${noticeId}`);
+const fetchData = async () => {
+  await getUserLevel(); // 사용자 권한 수준 가져오기
+  await getNotice(); // 공지사항 가져오기
 };
 
-const gotoNew = () => {
-  router.push(`/newboard`)
+onMounted(fetchData); // 컴포넌트가 마운트될 때 fetchData 호출
+
+
+//사용자 권한 가져와서 저장하기
+const getUserLevel = async () => {
+  try {
+    const response = await axios.get('/api/getUserLevel');
+    userLevel.value = response.data // 사용자 레벨 저장
+    console.log('사용자 권한 : ' , userLevel.value);
+  }catch(error) {
+    console.error('사용자 권한 가져오기 실패 : ', error);
+  }
+}
+
+
+const gotoNoticeOne = (noticeId) => {
+  router.push(`/notice/${noticeId}`);
+};
+
+function gotoNew() {
+  router.push('/newboard/notice'); //글쓰기로 넘어가는 라우터
 }
 
 //목록에서 작성일 날짜만 나오게끔 형식을 정해준다. 

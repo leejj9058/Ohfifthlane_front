@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center">
-    <div class="search-wrapper">
+    <div class="search-wrapper vh-100">
       <div class="input-group mb-3">
         <div class="position-relative flex-grow-1">
           <span class="position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%);" @click="goBack">
