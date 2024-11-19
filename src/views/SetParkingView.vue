@@ -4,7 +4,7 @@
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center ">
     <div class="card d-flex justify-content-center align-items-center p-3" id="background">
 
-      <div class="p-4 p-md-5 w-100 ">
+      <div class=" p-md-5 w-100 ">
         <div class="d-flex align-items-center ">
           <button class="btn btn-link  mb-3" @click="goBack">
             <i class="bi bi-arrow-left arrow-icon"></i>
@@ -239,7 +239,6 @@ const showModal = () => {
 
 <style scoped>
 .container-fluid {
-  padding-top: 20px;
   overflow-x: hidden;
 }
 
@@ -297,8 +296,6 @@ const showModal = () => {
     padding-bottom: 0;
   }
 
-
-
   .card {
     padding: 2rem !important;
   }
@@ -315,6 +312,9 @@ const showModal = () => {
   .form-select,
   .btn {
     font-size: 1rem !important;
+  }
+  .container-fluid{
+    margin-top: 50px;
   }
 }
 </style>

@@ -139,7 +139,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 40px;
   background-color: #f9f9f9;
   width: 100%;
   max-width: 400px;

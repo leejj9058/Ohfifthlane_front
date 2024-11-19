@@ -380,7 +380,6 @@ const confirmPayment = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding-top: 20px;
   overflow-x: hidden;
 }
 
@@ -600,4 +599,14 @@ const confirmPayment = () => {
   font-weight: bold;
   /* 원하는 색상으로 설정 */
 }
+
+@media (max-width: 460px) {
+  /* 컨테이너 */
+  .container-fluid {
+    overflow-x: hidden; /* 가로 스크롤 숨김 */
+    max-width: 360px; /* 부모 요소에 맞춤 */
+  }
+}
+
+
 </style>

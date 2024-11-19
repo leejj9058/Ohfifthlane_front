@@ -240,4 +240,41 @@ const goToNextStep = async () => {
 .qr-blue-text {
   color: #fe5950; /* 파란색 텍스트 */
 }
+
+@media (max-width: 460px) {
+ 
+  .qr-modal {
+    width: 100%; /* 화면의 95% 너비 */
+    padding: 15px; /* 내부 여백 축소 */
+  }
+
+  .qr-title {
+    font-size: 16px; /* 제목 글씨 크기 더 축소 */
+    line-height: 1.4;
+  }
+
+  .qr-code {
+    width: 120px; /* QR 코드 이미지 크기 더 축소 */
+    height: 120px;
+  }
+
+  .qr-report-button {
+    font-size: 14px; /* 버튼 글씨 크기 더 축소 */
+    padding: 8px 16px;
+  }
+
+  /* 스캐너 컨테이너 */
+  .scanner-container {
+    padding: 15px; /* 스캐너 내부 여백 추가 */
+    max-width: 100%; /* 전체 너비로 확장 */
+  }
+
+  .scanner-cancel-button,
+  .scanner-next-button {
+    max-width: 90%; /* 버튼 너비를 화면의 90%로 설정 */
+    font-size: 14px; /* 버튼 글씨 크기 축소 */
+    padding: 10px 15px; /* 버튼 크기 축소 */
+  }
+}
+
 </style>

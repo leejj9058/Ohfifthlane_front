@@ -110,7 +110,7 @@ const handleLogin = async () => {
 
 <style scoped>
 .container-fluid {
-  padding-top: 20px;
+  padding-top: 50px;
   overflow-x: hidden;
 }
 

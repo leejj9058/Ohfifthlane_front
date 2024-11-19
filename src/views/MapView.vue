@@ -593,6 +593,7 @@ const noParkingLotToast = () => {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     padding: 5px;
+    height: 40px;
 }
 
 
@@ -649,6 +650,11 @@ const noParkingLotToast = () => {
         /* 작은 화면에서 패딩 조절 */
         height: 36px;
         /* 높이도 줄여서 뚱뚱해지지 않게 조정 */
+    }
+
+    .revisitButton {
+        width: 180px;
+        font-size: 12px !important;
     }
 }
 
@@ -724,7 +730,7 @@ const noParkingLotToast = () => {
 
 /* 텍스트 스타일 */
 .filter-button .filter-text {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     /* 텍스트 크기 줄이기 */
     font-weight: 500;
     /* 텍스트 두께 유지 */
