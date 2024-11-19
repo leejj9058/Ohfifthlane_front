@@ -64,25 +64,39 @@
     await nextTick();
     await enableCamera();
   };
-  
-  const enableCamera = async () => {
-    videoElement.value = document.querySelector('video');
-    try {
-      // 후면 카메라 사용 설정
-      videoStream.value = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { exact: "environment" }
-        }
-      });
-      if (videoElement.value) {
-        videoElement.value.srcObject = videoStream.value;
+
+
+  /* const enableCamera = async () => {
+  videoElement.value = document.querySelector('video');
+  try {
+    // 후면 카메라 사용 설정
+    videoStream.value = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { exact: "environment" }
       }
-    } catch (error) {
-      alert("카메라에 접근할 수 없습니다. 후면 카메라를 사용할 수 없습니다.");
-      console.error("Camera error: ", error);
+    });
+    if (videoElement.value) {
+      videoElement.value.srcObject = videoStream.value;
     }
-  };
+  } catch (error) {
+    alert("카메라에 접근할 수 없습니다. 후면 카메라를 사용할 수 없습니다.");
+    console.error("Camera error: ", error);
+  }
+};
+*/
+const enableCamera = async () => {
+  videoElement.value = document.querySelector('video');
+  try {
+    videoStream.value = await navigator.mediaDevices.getUserMedia({ video: true });
+    if (videoElement.value) {
+      videoElement.value.srcObject = videoStream.value;
+    }
+  } catch (error) {
+    alert("카메라에 접근할 수 없습니다.");
+  }
+};
   
+
   
   const capturePhoto = () => {
     const canvas = document.createElement("canvas");
@@ -106,14 +120,17 @@
   
   const confirmPhoto = async () => {
     try {
-      const response = await axios.post('/api/uploadPhoto', {
-        reportImage: capturedPhoto.value, // 사진을 base64로 서버에 전송
+
+      const response = await axios.post('/api/uploadDisabledPersonReportPhoto', {
+        disabledPersonReportImage: capturedPhoto.value, // 사진을 base64로 서버에 전송
       });
   
       if (response.status === 200) {
-        const photoPath = response.data.reportImage; // 서버가 반환한 이미지 경로
+        const photoPath = response.data.disabledPersonReportImage; // 서버가 반환한 이미지 경로
         console.log("Returned photo path: ", photoPath);  // URL 확인용
-        window.location.href = `/residentReportWrite?photo=${encodeURIComponent(photoPath)}`; // 이미지 경로 전달
+        window.location.href = `/disabledPersonReport?photo=${encodeURIComponent(photoPath)}`; // 이미지 경로 전달
+
+    
       } else {
         alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
       }

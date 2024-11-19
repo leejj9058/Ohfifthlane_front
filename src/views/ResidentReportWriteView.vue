@@ -140,7 +140,7 @@ const submitReport = async () => {
   const response = await axios.post("/api/report", {
     report: {
       reportCarNumber: reportCarNumber.value,
-      reportImage: photo.value ? photo.value.replace("http://172.168.10.93:8080/upload/", "") : "", // 사진 URL을 사용
+      reportImage: photo.value ? photo.value.replace("http://172.168.10.73:8080/upload/", "") : "", // 사진 URL을 사용
 
       reportLat: currentLat.value, // 현재 위도
       reportLon: currentLon.value, // 현재 경도
