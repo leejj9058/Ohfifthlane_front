@@ -79,7 +79,7 @@ const submitReport = () => {
   } else if (isRegistered.value) {
     alert("신고 대상 차량이 아닙니다.");
   } else {
-    alert("신고접수 되었습니다");
+    router.push({ path: '/disabledPersonReportCamera' });
   }
 };
 

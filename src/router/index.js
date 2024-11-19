@@ -101,6 +101,12 @@ const router = createRouter({
       component: () => import('../views/disabledPersonReportDetailView.vue'),
     },
     {
+      path: '/disabledPersonReportCamera',
+      name: 'disabledPersonReportCamera',
+      component: () => import('../views/DisabledPersonReportCameraView.vue')
+    },
+    
+    {
       path: '/qrcode',
       name: 'qrcode',
       component: QRcodeView
