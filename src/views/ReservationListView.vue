@@ -12,15 +12,15 @@
 
         </div>
         <div
-          v-for="(item, index) in displayedReservations"
-          :key="index"
+          v-for="(item, index) in reservations"
+          :key="reservations.rpzNum"
           class="card mb-3 p-3 d-flex flex-row justify-content-between align-items-center"
           @click="goToDetail(item)"
         >
           <div>
             <p class="reservation-date"><strong>{{ item.reservationDay }}</strong></p>
-            <p><strong>구획번호:</strong> {{ rpzs[index].value.rpzNum }}</p>
-            <p><strong>주소:</strong> {{ rpzs[index].value.rpzAddress }}</p>
+            <p><strong>구획번호:</strong> {{ item.rpzNum }}</p>
+            <p><strong>주소:</strong> {{ item.rpzAddress }}</p>
             <p><strong>예약시간:</strong> {{ item.reservationStartTime }} ~ {{ item.reservationEndTime }}</p>
           </div>
           <button class="btn btn-danger">신고하기</button>
@@ -35,7 +35,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios'; // axios import
+import axios from 'axios'; 
 
 const router = useRouter();
 
@@ -50,19 +50,6 @@ const goBack = () => {
   window.history.back(); // 브라우저 히스토리에서 뒤로 이동
 };
 
-//RPZId로 RPZ정보 가져오기
-const getRPZById = async(RPZId) => {
-  try {
-    const response = await axios.get('/api/getRPZById',{
-      rpzId: RPZId
-    });
-
-    rpzs.value.push(response.data); // 응답 데이터를 rpzs에 추가
-    
-  } catch (error) {
-    console.error("RPZ 정보를 가져오는 데 실패했습니다:", error);
-  }
-}
 
 // axios로 실제 데이터 가져오기 대신 mockData 설정
 const fetchReservations = async () => {
@@ -72,33 +59,10 @@ const fetchReservations = async () => {
       
     // 응답 데이터를 reservations에 저장
     reservations.value = response.data;
+    console.log(reservations.value);
     loadReservations(); // 받은 데이터를 표시할 목록에 로드
   } catch (error) {
     console.error("예약 정보를 가져오는 데 실패했습니다:", error);
-    // 만약 API 호출이 실패하면 mockData 사용
-    reservations.value = [
-      {
-        rpzNum: '122-189',
-        rpzAddress: '서울 강남구 120-1',
-        reservationDay: '2024-11-06',
-        reservationStartTime: '14:00',
-        reservationEndTime: '16:10',
-      },
-      {
-        rpzNum: '122-101',
-        rpzAddress: '서울 강남구 141-15',
-        reservationDay: '2024-10-15',
-        reservationStartTime: '11:00',
-        reservationEndTime: '11:50',
-      },
-      {
-        rpzNum: '101-34',
-        rpzAddress: '서울 서초구 154-12',
-        reservationDay: '2024-05-21',
-        reservationStartTime: '18:30',
-        reservationEndTime: '19:50',
-      }
-    ];
     loadReservations();
   }
 };
@@ -137,9 +101,6 @@ const goToDetail = (item) => {
 onMounted(() => {
 
   fetchReservations();
-  reservations.forEach(element => {
-    getRPZById(element.value.RPZId);
-  });
   
 });
 </script>
