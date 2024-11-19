@@ -1254,4 +1254,7 @@ const noParkingLotToast = () => {
     border-radius: 2px;
     /* 바의 끝을 둥글게 */
 }
+
+
+
 </style>
