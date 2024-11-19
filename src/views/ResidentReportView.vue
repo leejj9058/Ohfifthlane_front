@@ -65,7 +65,7 @@ const startCamera = async () => {
   await enableCamera();
 };
 
-const enableCamera = async () => {
+/* const enableCamera = async () => {
   videoElement.value = document.querySelector('video');
   try {
     // 후면 카메라 사용 설정
@@ -80,6 +80,18 @@ const enableCamera = async () => {
   } catch (error) {
     alert("카메라에 접근할 수 없습니다. 후면 카메라를 사용할 수 없습니다.");
     console.error("Camera error: ", error);
+  }
+};
+*/
+const enableCamera = async () => {
+  videoElement.value = document.querySelector('video');
+  try {
+    videoStream.value = await navigator.mediaDevices.getUserMedia({ video: true });
+    if (videoElement.value) {
+      videoElement.value.srcObject = videoStream.value;
+    }
+  } catch (error) {
+    alert("카메라에 접근할 수 없습니다.");
   }
 };
 
