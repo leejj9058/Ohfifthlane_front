@@ -231,6 +231,12 @@ const endHours = ref([]); // 종료 가능한 시 표시
 const endMinutes = ref([]); // 종료 가능한 분 표시
 
 const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+const selectedFilter = ref(''); 
+
+const residentMarkers = ref([]);
+const publicParkingMarkers = ref([]);
+const gasStationMarkers = ref([]);
+const chargingStationMarkers = ref([]);
 
 const activeFilter = ref('resident'); // 기본 활성화 필터는 'resident'
 
@@ -241,7 +247,7 @@ const residentParkingList = ref([]);
 const chargingStationList = ref([]);
 const publicParkingList = ref([]);
 
-const daysWithDates = ref([]);
+//const daysWithDates = ref([]);
 //-----------------------------------------------함수-----------------------------------------------------------
 const initializeDaysWithDates = () => {
     const today = new Date();
@@ -442,6 +448,7 @@ onMounted(() => {
                 center: new window.kakao.maps.LatLng(centerPoint.value.lat, centerPoint.value.lng),
                 level: 5,
             };
+            
             map = new window.kakao.maps.Map(mapContainer, mapOption);
             clusterer = new window.kakao.maps.MarkerClusterer({
                 map: map,
@@ -457,6 +464,7 @@ onMounted(() => {
     searchRPZList(centerPoint.value.lng, centerPoint.value.lat);
 
     console.log(centerPoint.value.lng, centerPoint.value.lat);
+    filterResident();
 });
 
 
@@ -466,6 +474,26 @@ const deselectDestination = () => {
     destination.value = "목적지를 검색해주세요.";
     centerPoint = { defaultLat, defaultLng };
 }
+// 오늘 날짜를 기준으로 오늘, 내일, 모레의 날짜와 요일을 계산
+const daysWithDates = computed(() => {
+  const dates = [];
+  const today = new Date();
+
+  for (let i = 0; i < 3; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() + i);
+    
+    const dayIndex = date.getDay();
+    const dayName = dayNames[dayIndex];
+    
+    // 날짜와 요일을 형식에 맞춰 문자열로 생성
+    const dateStr = `${date.getMonth() + 1}월 ${date.getDate()}일 (${dayName})`;
+    dates.push(dateStr);
+  }
+  
+  return dates;
+});
+
 
 // 날짜 버튼 클릭 이벤트 핸들러
 // 날짜 버튼 클릭 이벤트 핸들러
@@ -494,7 +522,6 @@ const setAvailableTime = () => {
     endHours.value = [now.getHours(), 24];
     endMinutes.value = [now.getMinutes(), 60];
 
-}
 
 // 현재 날짜 구하기
 const recentDate = () => {
@@ -574,6 +601,7 @@ const searchRPZList = async (lng, lat) => {
             num: item.rpzNum,
             userId: item.userId
         }));
+
         // 기존 마커 제거
         removeMarkers();
         // 새로운 마커 생성
@@ -612,10 +640,22 @@ const openSelectReservationTimeModal = () => {
     console.log("Filter button clicked");
 };
 
+const showMarkers = (markers) => {
+    // 모든 마커를 지도에서 제거
+    markers.forEach(marker => {
+        marker.setMap(map); // 특정 마커를 지도에 추가
+        console.log("Marker shown:", marker); // 로그로 확인
+    });
+};
+
+
 const filterResident = async () => {
-    console.log("거주자 필터 클릭됨");
+    selectedFilter.value = 'resident';
+    showMarkers(residentMarkers.value);
+    console.log("Resident Filter Applied");
     await searchRPZList(centerPoint.value.lng, centerPoint.value.lat, 'resident'); // 'resident'를 추가하여 필터링
 };
+
 const filterPublicParking = () => {
     publicParkingInfo();
     console.log("공영주차장 필터 클릭됨");
@@ -658,27 +698,45 @@ const moveReservation = (rpzId) => {
     router.replace({ path: '/reservation/', query: { rpzId: rpzId } });
 };
 
-// 마커 생성
+// 빨간 마커 이미지 URL 설정
+const redMarkerImage = new window.kakao.maps.MarkerImage(
+    '/src/assets/images/marker_red.png', // 로컬에 저장된 빨간 마커 이미지 경로
+    new window.kakao.maps.Size(24, 35), // 마커 크기 설정
+    { offset: new window.kakao.maps.Point(12, 35) } // 마커 중앙 맞춤
+);
+
+
+// 마커 생성 함수
 const createMarker = (rpzList) => {
     if (!clusterer) {
-        console.error("Clusterer is not initialized.");
+        console.error("Clusterer가 초기화되지 않았습니다.");
         return;
     }
+
     rpzList.forEach((rpz) => {
         const markerPosition = new window.kakao.maps.LatLng(rpz.lat, rpz.lng);
+
+        // 모든 마커에 빨간색 마커 이미지 적용
         const marker = new window.kakao.maps.Marker({
             position: markerPosition,
             title: rpz.num,
+            image: redMarkerImage, // 빨간 마커 이미지 설정
         });
+
         clusterer.addMarker(marker);
         markers.push(marker);
-        // Adding click event listener to the marker
+
+        // 클릭 이벤트 추가
         window.kakao.maps.event.addListener(marker, 'click', () => {
-            selectedRPZ.value = rpz; // Set the selected RPZ information
-            showRPZDetailModal.value = true; // Show the bottom sheet modal
+            selectedRPZ.value = rpz;  // 클릭한 마커에 해당하는 주차 구역 데이터 설정
+            showRPZDetailModal.value = true; // 모달을 표시하도록 설정
         });
     });
 };
+
+
+
+
 
 // 기존 마커 삭제
 const removeMarkers = () => {
@@ -696,8 +754,7 @@ const noParkingLotToast = () => {
         autoClose: 3000,
     });
 };
-
-
+}
 </script>
 
 <style src="vue-scroll-picker/lib/style.css"></style>
