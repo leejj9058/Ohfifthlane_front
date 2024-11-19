@@ -64,7 +64,7 @@
               <td>{{ disabledPersonReport.userName }}</td>
               <td>{{ disabledPersonReport.userTel }}</td>
             </tr>
-            
+
           </tbody>
         </table>
 

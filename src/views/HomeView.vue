@@ -107,7 +107,7 @@
       <!-- 공지사항 섹션 -->
       <section class="board-section my-1 text-center">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="fw-bold">놓치면 안 될 소식</h3>
+          <h3 class="fw-bold" style="margin-top: 10px;">놓치면 안 될 소식</h3>
           <button class="btn btn-primary animated-button" style="background-color: rgb(99, 157, 224); border: none"
             @click="goToNoticePage">더보기</button>
         </div>
@@ -122,12 +122,12 @@
       </section>
 
       <!-- 영상 섹션 -->
-      <section class="video-section mt-4 text-center" style=" border: none; " >
+      <section class="video-section mt-4 text-center" style=" border: none;" >
         <h3 class="fw-bold">우리 앱이 처음이신가요?</h3>
-        <p class="mb-0">오차로를 소개합니다~</p>
+        <p class="mb-0">주차로를 소개합니다~</p>
         <!-- autoplay, loop, muted 속성 추가 -->
         <video class="mt-0" width="420" height="300" autoplay loop muted style="border-radius: 40px !important; overflow: hidden;">
-          <source src="@/assets/video/video.mp4" type="video/mp4" />
+          <source src="@/assets/video/introducevideo.mp4" type="video/mp4" />
         </video>
       </section>
 
@@ -424,9 +424,9 @@ const goToReservationHistory = () => {
 @media (max-width: 460px) {
 
   .container-fluid {
-    padding: 20px 5px; /* 모바일에서 전체 화면에 여백 추가 */
-    overflow-x: hidden;
-    max-width: 320px /* 화면의 최대 너비에 맞춤 */
+    padding: 20px ; /* 모바일에서 전체 화면에 여백 추가 */
+    width: 100%;
+    max-width: 360px;
   }
 
   .search-container {
@@ -443,12 +443,17 @@ const goToReservationHistory = () => {
   }
 
   .small-card {
-    max-width: 150px;
+    max-width: 160px;
   }
 
   .board-section,
   .video-section {
     max-width: 320px;
+    border-radius: 10px;
+    font-size: 12px;
+    border: none;
+    padding: 5px;
+
   }
 
   .video-section video {

@@ -1,18 +1,18 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
     <div class="card outer-card">
-<!-- Material Icons CDN 포함 -->
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Material Icons CDN 포함 -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<div class="map-icon-container">
-  <span class="material-icons"  @click="goToMap">map</span> <!-- 지도 모양 아이콘 -->
-</div>
+      <div class="map-icon-container">
+        <span class="material-icons" @click="goToMap">map</span> <!-- 지도 모양 아이콘 -->
+      </div>
       <img src="@/assets/images/parkingarea.png" class="card-img-top" alt="Parking" />
 
       <div class="content-card">
         <div class="card-body text-center">
-          <h5 class="card-title"><strong>{{ rpzNum }}</strong></h5>
-          <p class="card-text"><strong>{{ rpzAddress }}</strong></p>
+          <h5 class="card-title"><strong>{{ RPZNum }}</strong></h5>
+          <p class="card-text"><strong>{{ RPZAddress }}</strong></p>
           <div class="d-flex justify-content-between align-items-center">
             <p class="text mb-0"><strong>🅿️ 주차요금</strong></p>
             <p class="text mb-0"><strong>10분당 {{ rpzFee }}원</strong></p>
@@ -22,79 +22,53 @@
 
       <div class="border-top p-3">
         <div class="date-buttons d-flex justify-content-around mb-2">
-          <button 
-            class="btn btn-light-red" 
-            :class="{'active': selectedDate === 0}" 
-            @click="selectDate(0)">
+          <button class="btn btn-light-red" :class="{ 'active': selectedDate === 0 }" @click="selectDate(0)">
             {{ formattedToday }}
           </button>
-          <button 
-            class="btn btn-light-red" 
-            :class="{'active': selectedDate === 1}" 
-            @click="selectDate(1)">
+          <button class="btn btn-light-red" :class="{ 'active': selectedDate === 1 }" @click="selectDate(1)">
             {{ formattedTomorrow }}
           </button>
-          <button 
-            class="btn btn-light-red" 
-            :class="{'active': selectedDate === 2}" 
-            @click="selectDate(2)">
+          <button class="btn btn-light-red" :class="{ 'active': selectedDate === 2 }" @click="selectDate(2)">
             {{ formattedDayAfterTomorrow }}
           </button>
         </div>
 
         <div class="period-radio-buttons d-flex justify-content-around mb-2">
           <div class="form-check form-check-inline">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              id="amRadio" 
-              value="AM" 
-              v-model="selectedPeriod" 
-              @change="selectPeriod('AM')"
-              :disabled="!isDateSelected"
-            >
+            <input class="form-check-input" type="radio" id="amRadio" value="AM" v-model="selectedPeriod"
+              @change="selectPeriod('AM')" :disabled="!isDateSelected">
             <label class="form-check-label" for="amRadio">오전</label>
           </div>
           <div class="form-check form-check-inline">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              id="pmRadio" 
-              value="PM" 
-              v-model="selectedPeriod" 
-              @change="selectPeriod('PM')"
-              :disabled="!isDateSelected"
-            >
+            <input class="form-check-input" type="radio" id="pmRadio" value="PM" v-model="selectedPeriod"
+              @change="selectPeriod('PM')" :disabled="!isDateSelected">
             <label class="form-check-label" for="pmRadio">오후</label>
           </div>
         </div>
 
         <div class="rectangle-time-bar">
           <div class="scrollable">
-            <div 
-              v-for="(hour, index) in availableHours" 
-              :key="hour" 
-              :class="{
-                'selected': hour === startTime.value,
-                'greyed-out': reservedSlots.includes(hour),
-                'btn-yellow': selectedSlots.includes(hour)
-              }" 
-              @click="selectTime(hour)"
-              class="time-slot">
+            <div v-for="(hour, index) in availableHours" :key="hour" :class="{
+              'selected': hour === startTime.value,
+              'greyed-out': reservedSlots.includes(hour),
+              'btn-yellow': selectedSlots.includes(hour)
+            }" @click="selectTime(hour)" class="time-slot">
               <span class="time-label" v-if="index % 6 === 0">{{ formatHour(hour) }}</span>
-            </div>            
+            </div>
           </div>
         </div>
-        
+
         <p class="bold-text mt-3">예약시간 설정 (최소 30분부터 가능)</p>
-        
+
         <div class="d-flex flex-column align-items-center">
           <p class="selected-date small-text">
-            {{ selectedDate === 0 ? formattedToday : selectedDate === 1 ? formattedTomorrow : formattedDayAfterTomorrow }}
+            {{ selectedDate === 0 ? formattedToday : selectedDate === 1 ? formattedTomorrow : formattedDayAfterTomorrow
+            }}
           </p>
           <p class="mb-0">
             <span class="font-small">{{ selectedSlots.length === 0 ? '시간을 선택하세요' : '' }}</span>
-            <span class="font-large">{{ selectedSlots.length > 0 ? `${reservationStartTime} ~ ${reservationEndTime}` : '' }}</span>
+            <span class="font-large">{{ selectedSlots.length > 0 ? `${reservationStartTime} ~ ${reservationEndTime}` :
+              '' }}</span>
           </p>
         </div>
       </div>
@@ -117,10 +91,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router'; 
+import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
 
-const router = useRouter(); 
+//-----------------------------------변수--------------------------------------
+
+const router = useRouter();
+const route = useRoute();
 
 // 지도 페이지로 이동하는 함수
 const goToMap = () => {
@@ -128,7 +105,7 @@ const goToMap = () => {
 };
 
 // 상태 변수 설정
-const selectedDate = ref(null); 
+const selectedDate = ref(null);
 const selectedPeriod = ref(null); // AM/PM 선택
 const startTime = ref(9); // 예약 시작 시간
 const endTime = ref(10); // 예약 종료 시간
@@ -140,41 +117,67 @@ const reservedSlots = computed(() => {
   if (selectedDate.value === 0) {
     return availableHours.value.filter(hour => hour <= currentTimeInHours);
   }
-  return []; 
+  return [];
 });
 const selectedSlots = ref([]);
 
+const userId = ref(); //유저 아이디
 
 // 주차장 정보 변수
-const rpzNum = ref(''); // 예: 122-189
-const rpzAddress = ref(''); // 예: 서울 강남구 120-1
+const RPZId = route.query.rpzId; // 예: 122-189
+const RPZNum = ref(''); // 예: 122-189
+const RPZAddress = ref(''); // 예: 서울 강남구 120-1
 const rpzFee = ref(0);
 const shareStartTime = ref(0); // 예약 공유 시작 시간
 const shareEndTime = ref(24);   // 예약 공유 종료 시간
 
-onMounted(async () => {
+//-----------------------------------함수-------------------------------
+
+onMounted(() => {
+  // RPZ 정보 가져오기
+  getRPZById(route.query.rpzId);
+
+  // userId 가져오기
+  console.log(userId.value);
+  getUserId();
+});
+
+
+// RPZ정보 가져오기
+const getRPZById = async (rpzId) => {
   try {
-    // API 호출
-    const response = await axios.get('API_URL'); // 여기에 실제 API URL을 입력하세요.
-    
-    // 응답 데이터에서 변수 설정
-    rpzNum.value = response.data.rpzNum || '122-189';
-    rpzAddress.value = response.data.rpzAddress || '서울 강남구 120-1';
+
+    const response = await axios.post(`/api/getRPZById?rpzId=${rpzId}`);
+
+    console.log("1. API response data:", response.data);
+    RPZNum.value = response.data.rpzNum || '122-189';
+    RPZAddress.value = response.data.rpzAddress || '서울 강남구 120-1';
     rpzFee.value = response.data.rpzFee || 500;
     shareStartTime.value = response.data.shareStartTime || 0; // 기본값 설정
     shareEndTime.value = response.data.shareEndTime || 24;   // 기본값 설정
-    
-    const currentHour = today.getHours();
-    selectedDate.value = 0; // 오늘 날짜 선택
-    selectedPeriod.value = currentHour < 12 ? 'AM' : 'PM';
+
   } catch (error) {
-    console.error('API 호출 중 오류:', error);
-    // 기본값 설정
-    errorMessage.value = '주차장 정보를 불러오는 데 문제가 발생했습니다.';
-  } finally {
-    loading.value = false;
+
+    console.error('주차장을 찾을 수 없습니다:', error);
   }
-});
+};
+
+// userId 가져오기
+const getUserId = async () => {
+  try {
+
+    const response = await axios.get('/api/getUserId');
+
+    console.log("1. API response data:", response.data);
+    userId.value = response.data;
+
+  } catch (error) {
+    console.error('로그인 정보가 없습니다', error);
+  }
+};
+
+
+
 
 //날짜 및 시간 계산
 const today = new Date();
@@ -187,13 +190,13 @@ dayAfterTomorrow.setDate(today.getDate() + 2);
 const formattedDayAfterTomorrow = computed(() => `${dayAfterTomorrow.getMonth() + 1}/${dayAfterTomorrow.getDate()}`);
 const isDateSelected = computed(() => selectedDate.value !== null);
 const reservationDay = computed(() => {
-  return selectedDate.value === 0 ? formattedToday.value 
-       : selectedDate.value === 1 ? formattedTomorrow.value 
-       : formattedDayAfterTomorrow.value;
+  return selectedDate.value === 0 ? formattedToday.value
+    : selectedDate.value === 1 ? formattedTomorrow.value
+      : formattedDayAfterTomorrow.value;
 });
 
 
-// 예약 시간 및 비용 계산
+// 예약 시간 계산
 const duration = computed(() => {
   if (selectedSlots.value.length === 0) {
     return '0분'; // 선택한 슬롯이 없을 경우
@@ -211,6 +214,7 @@ const duration = computed(() => {
   }
 });
 
+// 예약 비용 계산
 const reservationFee = computed(() => {
   if (selectedSlots.value.length === 0) {
     return '0'; // 선택한 슬롯이 없을 경우
@@ -227,7 +231,9 @@ const reservationFee = computed(() => {
 
 
 // 시간 슬롯 계산
+// 시작시간 형변환
 const reservationStartTime = computed(() => formatTime(startTime.value));
+// 종료시간 형변환
 const reservationEndTime = computed(() => formatTime(endTime.value));
 const availableHours = computed(() => {
   const startHour = selectedPeriod.value === 'AM' ? 0 : 12;
@@ -239,7 +245,6 @@ const availableHours = computed(() => {
 
   return hourSlots;
 });
-
 
 
 const selectDate = (date) => {
@@ -313,11 +318,13 @@ const selectTime = (hour) => {
   }
 };
 
+// 시간 설정
 const formatTime = (hour) => {
   const hours = Math.floor(hour);
+  const formattedHours = hours < 10 ? '0' + hours : hours; // 한 자리일 때 앞에 0 추가
   const minutes = Math.round((hour % 1) * 60);
   const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-  return `${hours}:${formattedMinutes}`;
+  return `${formattedHours}:${formattedMinutes}`;
 };
 
 const formatHour = (hour) => {
@@ -332,32 +339,42 @@ const selectPeriod = (period) => {
   selectedSlots.value = [];
 };
 
-
-
+// 결제화면으로 이동
 const confirmPayment = () => {
+  if (selectedSlots.value.length === 0) {
+    alert("예약 시간을 선택해주세요.");
+    return;
+  }
+
   if (selectedSlots.value.length < 3) {
     alert('30분 이상부터 예약 가능합니다.');
-  } else {
-    router.push({ 
-      path: '/parkingPay', // 경로를 명시적으로 지정
-      query: {
-        rpzNum: rpzNum.value,
-        rpzAddress: rpzAddress.value,
-        reservationDay: reservationDay.value,
-        reservationStartTime: reservationStartTime.value,
-        reservationEndTime: reservationEndTime.value,
-        reservationFee: reservationFee.value,
-      }
-    });
+    return;
   }
+
+  if (!userId.value || userId.value < 1) {
+    alert("로그인이 필요합니다.");
+    router.push('/login');
+    return;
+  }
+
+  router.push({
+    path: '/parkingPayment',
+    query: {
+      userId: userId.value || 0,
+      RPZId: RPZId,
+      RPZNum: RPZNum.value || '',
+      RPZAddress: RPZAddress.value || '',
+      reservationDay: reservationDay.value || '',
+      reservationStartTime: reservationStartTime.value || '',
+      reservationEndTime: reservationEndTime.value || '',
+      reservationTotalFee: reservationFee.value || 0,
+    }
+  });
 };
-
-
 
 </script>
 
 <style scoped>
-
 .container-fluid {
   display: flex;
   justify-content: center;
@@ -366,6 +383,7 @@ const confirmPayment = () => {
   padding-top: 20px;
   overflow-x: hidden;
 }
+
 /* 사진 위에 동그란 원 배치 */
 
 .map-icon-container {
@@ -383,9 +401,12 @@ const confirmPayment = () => {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.map-icon-container i, .map-icon-container svg, .map-icon-container .material-icons {
+.map-icon-container i,
+.map-icon-container svg,
+.map-icon-container .material-icons {
   font-size: 24px;
-  color: rgb(128, 128, 128); /* 아이콘 색상 */
+  color: rgb(128, 128, 128);
+  /* 아이콘 색상 */
 }
 
 
@@ -448,14 +469,17 @@ const confirmPayment = () => {
 }
 
 .btn-pay {
-  background-color: rgb(112, 112, 112); /* 기본 배경색 */
+  background-color: rgb(112, 112, 112);
+  /* 기본 배경색 */
   color: white;
   margin: 5px;
-  transition: background-color 0.3s ease; /* 색상 변화에 부드러운 전환 효과 추가 */
+  transition: background-color 0.3s ease;
+  /* 색상 변화에 부드러운 전환 효과 추가 */
 }
 
 .btn-pay:hover {
-  background-color: rgb(0, 0, 0); /* 마우스를 올렸을 때 배경색 진회색으로 변경 */
+  background-color: rgb(0, 0, 0);
+  /* 마우스를 올렸을 때 배경색 진회색으로 변경 */
 }
 
 .date-buttons {
@@ -540,32 +564,40 @@ const confirmPayment = () => {
 
 .rectangle-time-bar div.greyed-out {
   background-color: rgba(200, 200, 200, 0.5);
-  cursor: not-allowed; /* 클릭할 수 없음을 표시 */
+  cursor: not-allowed;
+  /* 클릭할 수 없음을 표시 */
 }
 
 
 .rectangle-time-bar div.btn-yellow {
-  background-color: #ffeb3b; /* 노란색 */
+  background-color: #ffeb3b;
+  /* 노란색 */
   color: black;
 }
 
 .font-large {
   font-size: 2rem;
-  color: #273788; /* 원하는 색상 */
-  font-weight: bold; /* 글자 굵게 */
+  color: #273788;
+  /* 원하는 색상 */
+  font-weight: bold;
+  /* 글자 굵게 */
 }
 
 .font-small {
-  font-size: 1.3rem; /* 원하는 크기로 설정 */
+  font-size: 1.3rem;
+  /* 원하는 크기로 설정 */
   color: #ff6565;
-  font-weight: bold; /* 색상 유지 */
+  font-weight: bold;
+  /* 색상 유지 */
 }
 
 .small-text {
-  font-size: 1.25rem; /* 글자 크기를 작게 */
-  margin-bottom: 1px; /* 아래 요소와의 간격을 줄임 */
+  font-size: 1.25rem;
+  /* 글자 크기를 작게 */
+  margin-bottom: 1px;
+  /* 아래 요소와의 간격을 줄임 */
   color: #273788;
-  font-weight: bold;/* 원하는 색상으로 설정 */
+  font-weight: bold;
+  /* 원하는 색상으로 설정 */
 }
-
 </style>

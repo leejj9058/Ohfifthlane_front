@@ -64,9 +64,9 @@ const router = useRouter();
 const userId = ref("");
 const password = ref("");
 
-//goBack 함수
+// 뒤로 가기
 const goBack = () => {
-  router.go(-1);
+  router.back(); // 이전 화면으로 돌아가는 로직
 };
 
 
