@@ -3,7 +3,8 @@
         <div id="map" style="width:100%; height:auto;"></div>
         <!-- 어두워지는 오버레이 -->
 
-        <div v-if="reservationDateTimeModal || showRPZDetailModal" class="map-overlay" @click="closeModal"></div>
+        <div v-if="reservationDateTimeModal || showRPZDetailModal || showChargingDetailModal || showPublicDetailModal"
+            class="map-overlay" @click="closeModal"></div>
 
         <div class="search-bar">
 
@@ -29,23 +30,18 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
         <div class="filter-buttons">
-            <button class="filter-option" @click="filterResident">
+            <button class="filter-option" :class="{ active: activeFilter === 'resident' }"
+                @click="setFilter('resident')">
                 <i class="fas fa-home icon-resident"></i> 거주자
             </button>
-            <button class="filter-option" @click="filterPublicParking">
+            <button class="filter-option" :class="{ active: activeFilter === 'public' }" @click="setFilter('public')">
                 <i class="fas fa-warehouse icon-parking"></i> 공영주차장
             </button>
-            <button class="filter-option" @click="filterGasStations">
-                <i class="fas fa-gas-pump icon-gas"></i> 주유소
-            </button>
-            <button class="filter-option" @click="filterChargingStations">
+            <button class="filter-option" :class="{ active: activeFilter === 'charging' }"
+                @click="setFilter('charging')">
                 <i class="fas fa-charging-station icon-charging"></i> 충전소
             </button>
         </div>
-
-
-
-
 
         <button class="filter-button" @click="openSelectReservationTimeModal">
             <i class="bi bi-sliders"></i> <!-- 필터 아이콘 -->
@@ -62,7 +58,8 @@
         </div>
 
         <transition name="slide-fade">
-            <div v-if="reservationDateTimeModal || showRPZDetailModal" class="bottom-sheet">
+            <div v-if="reservationDateTimeModal || showRPZDetailModal || showPublicDetailModal || showChargingDetailModal"
+                class="bottom-sheet">
                 <!-- 회색 바 -->
                 <div class="modal-header-bar"></div>
                 <!-- 예약 날짜 시간 선택 모달 내용 -->
@@ -81,10 +78,12 @@
                                 <!-- 날짜 선택 버튼들을 가로로 배치 -->
                                 <div class="d-flex justify-content-between mb-3">
                                     <button v-for="(day, index) in daysWithDates" :key="index"
-                                        @click="handleDateClick(index)" class="btn-date">
-                                        {{ day }}
+                                        :class="{ 'btn-date': true, 'active': selectedDate.value === day.fullDate }"
+                                        @click="handleDateClick(index)">
+                                        {{ day.display }}
                                     </button>
                                 </div>
+
 
                                 <!-- 예약 시작 시간과 종료 시간을 가로로 배치 -->
                                 <div class="d-flex justify-content-between">
@@ -115,29 +114,62 @@
                 </div>
 
 
+
                 <!-- RPZ 정보 모달 내용 -->
                 <div v-if="showRPZDetailModal" class="modal-content-rpz" @click="moveReservation(selectedRPZ.id)">
-                    <h3 style="display: flex; justify-content: center; align-items: center;">{{ selectedRPZ.num }}</h3>
+                    <h3 style="display: flex; justify-content: center; align-items: center;">{{ selectedRPZ.rpzNum }}
+                    </h3>
 
 
                     <!-- 주소 -->
                     <p style="margin: 0; padding: 0; line-height: 2; text-align: left; color: #6c757d;">
                         <i class="bi bi-geo-alt-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
-                        {{ selectedRPZ.address }}
+                        {{ selectedRPZ.rpzAddress }}
                     </p>
 
-<!-- 요금 -->
-<p style="margin: 0; padding: 0; line-height: 1; text-align: left; margin-top: 5px; color: #6c757d;">
-  <i class="bi bi-wallet-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
-  10분 당 : {{ selectedRPZ.fee }}원
-</p>
+                    <!-- 요금 -->
+                    <p
+                        style="margin: 0; padding: 0; line-height: 1; text-align: left; margin-top: 5px; color: #6c757d;">
+                        <i class="bi bi-wallet-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
+                        10분 당 : {{ selectedRPZ.fee }}원
+                    </p>
 
 
 
-                      <!-- 버튼들 -->
- 
+                    <!-- 버튼들 -->
+
 
                 </div>
+                <div v-if="showPublicDetailModal" class="modal-content-public">
+                    <h3 style="display: flex; justify-content: center; align-items: center;">{{
+                        selectedPublic.publicParkingName }}</h3>
+
+                    <!-- 주소 -->
+                    <p style="margin: 0; padding: 0; line-height: 2; text-align: left; color: #6c757d;">
+                        <i class="bi bi-geo-alt-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
+                        {{ selectedPublic.publicParkingAddress }}
+                    </p>
+
+                    <!-- 총 충전 가능 대수 -->
+                    <p
+                        style="margin: 0; padding: 0; line-height: 1.5; text-align: left; margin-top: 5px; color: #6c757d;">
+                        <i class="bi bi-car-front-fill" style="font-size: 20px; margin-right: 0px; color: #f4c542;"></i>
+                        총 주차 가능 대수: {{ selectedPublic.publicParkingTotal }}
+                    </p>
+                </div>
+
+                <!-- 충전소 모달 -->
+                <div v-if="showChargingDetailModal" class="modal-content-charging">
+                    <h3 style="display: flex; justify-content: center; align-items: center;">{{
+                        selectedCharging.chargingStationName }}</h3>
+
+                    <!-- 주소 -->
+                    <p style="margin: 0; padding: 0; line-height: 2; text-align: left; color: #6c757d;">
+                        <i class="bi bi-geo-alt-fill" style="font-size: 20px; margin-right: 0px; color: #d6d6d6;"></i>
+                        {{ selectedCharging.chargingStationAddress }}
+                    </p>
+                </div>
+
             </div>
         </transition>
 
@@ -153,6 +185,10 @@ import TimePicker from 'vue3-timepicker'
 import 'vue3-timepicker/dist/VueTimepicker.css'
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import markerBlue from '@/assets/images/marker_blue.png';
+import markerRed from '@/assets/images/marker_red.png';
+import markerGreen from '@/assets/images/marker_green.png';
+
 
 //-------------------------------------------변수-------------------------------------------------
 
@@ -178,8 +214,13 @@ let map;
 let clusterer;
 let markers = [];
 const markerObject = ref([]);
-const selectedRPZ = ref([]);
+const selectedRPZ = ref({}); // 빈 객체로 초기화
+const selectedCharging = ref({});
+const selectedPublic = ref({});
 const showRPZDetailModal = ref(false); // RPZ상세정보 모달 온/오프
+const showPublicDetailModal = ref(false); // 공영주차장 상세 모달 상태
+const showChargingDetailModal = ref(false); // 충전소 상세 모달 상태
+
 const reservationDateTimeModal = ref(false); // 예약 날짜 시간 설정 온/오프
 const router = useRouter();
 const selectedDestination = ref(false); // 목적지 설정 여부
@@ -191,13 +232,104 @@ const endMinutes = ref([]); // 종료 가능한 분 표시
 
 const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
 
+const activeFilter = ref('resident'); // 기본 활성화 필터는 'resident'
+
+
 //-----------------------------------------------함수-----------------------------------------------------
 
-
+const residentParkingList = ref([]);
 const chargingStationList = ref([]);
 const publicParkingList = ref([]);
 
+const daysWithDates = ref([]);
 //-----------------------------------------------함수-----------------------------------------------------------
+const initializeDaysWithDates = () => {
+    const today = new Date();
+    const dates = [];
+
+    for (let i = 0; i < 3; i++) { // 오늘 + 2일
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+
+        // 날짜 포맷 예: "11월 18일 (토)"
+        const formattedDate = date.toLocaleDateString('ko-KR', {
+            month: 'long',
+            day: 'numeric',
+            weekday: 'short',
+        });
+
+        dates.push({ fullDate: date, display: formattedDate });
+    }
+
+    daysWithDates.value = dates; // ref를 업데이트
+};
+
+
+const setFilter = (filterType) => {
+    activeFilter.value = filterType;
+    if (filterType === 'resident') {
+        filterResident();
+    } else if (filterType === 'public') {
+        filterPublicParking();
+    } else if (filterType === 'charging') {
+        filterChargingStations();
+    }
+};
+
+const residentParkingInfo = async () => {
+    try {
+        const response = await axios.post('/api/residentParkingList', {
+
+        });
+
+        residentParkingList.value = response.data;
+        console.log('거주자주차장 정보 : ', response.data);
+        createResidentMarkers(residentParkingList.value);
+    } catch (error) {
+        console.error("거주자 정보를 가져오는 중 오류 발생:", error);
+    }
+};
+
+
+//공유주차장 마커생성
+const createResidentMarkers = (residents) => {
+    if (!clusterer) {
+        console.error("Clusterer is not initialized.");
+        return;
+    }
+
+    residents.forEach((resident) => {
+        const lat = resident.rpzLat; // 위도
+        const lng = resident.rpzLon; // 경도
+        const markerPosition = new window.kakao.maps.LatLng(lat, lng);
+
+        // 이미지 마커 설정
+        const markerImage = new window.kakao.maps.MarkerImage(
+            markerRed, // 거주자 마커 이미지 경로
+            new window.kakao.maps.Size(40, 40) // 마커 크기
+        );
+
+        const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+            image: markerImage,
+            title: resident.rpzId, // 마커 제목으로 거주자 주차 번호 설정
+        });
+
+        clusterer.addMarker(marker); // 클러스터에 추가
+        markers.push(marker); // 마커 저장
+
+        // 마커 클릭 이벤트
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+            selectedRPZ.value = { ...resident }; // 데이터 복사 후 업데이트
+            showRPZDetailModal.value = true; // 모달 열기
+            console.log("선택된 RPZ 데이터:", selectedRPZ.value); // 디버깅 로그
+        });
+
+
+    });
+};
+
+//====================================================
 const publicParkingInfo = async () => {
     try {
         const response = await axios.post('/api/publicParkingList', {
@@ -212,7 +344,9 @@ const publicParkingInfo = async () => {
     }
 };
 
+
 //공유주차장 마커생성
+// 공영주차장 마커 생성 함수
 const createPublicParkingMarkers = (parkings) => {
     if (!clusterer) {
         console.error("Clusterer is not initialized.");
@@ -220,118 +354,83 @@ const createPublicParkingMarkers = (parkings) => {
     }
 
     parkings.forEach((parking) => {
-        const lat = parking.publicParkingLat; // 위도
-        const lng = parking.publicParkingLon; // 경도
+        const lat = parking.publicParkingLat;
+        const lng = parking.publicParkingLon;
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
-        
-        const color = 'skyblue';
-        const svgMarker = `
-            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="20" cy="20" r="15" fill="${color}" stroke="white" stroke-width="2"/>
-            </svg>
-        `;
-        
-        // SVG 이미지를 URL로 인코딩하여 전달
-        const encodedSvg = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker);
-        const markerImage = new window.kakao.maps.MarkerImage(encodedSvg, new window.kakao.maps.Size(40, 40));
 
-        // 마커 객체 생성
+        const markerImage = new window.kakao.maps.MarkerImage(
+            markerBlue,
+            new window.kakao.maps.Size(30, 42)
+        );
+
         const marker = new window.kakao.maps.Marker({
             position: markerPosition,
             image: markerImage,
-            title: parking.publicParkingName, 
+            title: parking.publicParkingName,
         });
 
-        // 클러스터러에 마커 추가
         clusterer.addMarker(marker);
-        markers.push(marker); // markers 배열에 마커 추가
+        markers.push(marker);
 
-        // 마커 클릭 이벤트 
-        window.kakao.maps.event.addListener(marker, 'click', () => {
-            console.log("공영주차장 클릭됨:", parking);
-            // 여기서 공영주차장에 대한 상세 정보 표시 가능
+        // 마커 클릭 이벤트
+        window.kakao.maps.event.addListener(marker, "click", () => {
+            selectedPublic.value = parking; // 선택된 공영주차장 정보 업데이트
+            showPublicDetailModal.value = true; // 공영주차장 모달 표시
         });
     });
 };
+
 //------------------------------------------------------------------------
-const chargingStationInfo = async () => {
-    try {
-        const response = await axios.post('/api/chargingStationList', {
-            
-        });
-        chargingStationList.value = response.data;
-        console.log('충전소 정보', response.data);
-
-        createChargingStationMarkers(chargingStationList.value);
-    } catch (error) {
-        console.error("충전소 정보를 가져오는 중 오류 발생:", error);
-    }
-};
-
-
-        //충전소 마커생성
-        const createChargingStationMarkers = (stations) => {
+// 충전소 마커 생성 함수
+const createChargingStationMarkers = (stations) => {
     if (!clusterer) {
         console.error("Clusterer is not initialized.");
         return;
     }
 
     stations.forEach((station) => {
-        const lat = station.chargingStationLat; // 위도
-        const lng = station.chargingStationLon; // 경도
+        const lat = station.chargingStationLat;
+        const lng = station.chargingStationLon;
         const markerPosition = new window.kakao.maps.LatLng(lat, lng);
-        
-        const color = 'green';
-        const svgMarker = `
-            <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="20" cy="20" r="15" fill="${color}" stroke="white" stroke-width="2"/>
-            </svg>
-        `;
-        
-        // SVG 이미지를 URL로 인코딩하여 전달
-        const encodedSvg = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgMarker);
-        const markerImage = new window.kakao.maps.MarkerImage(encodedSvg, new window.kakao.maps.Size(40, 40));
 
-        // 마커 객체 생성
+        const markerImage = new window.kakao.maps.MarkerImage(
+            markerGreen,
+            new window.kakao.maps.Size(40, 40)
+        );
+
         const marker = new window.kakao.maps.Marker({
             position: markerPosition,
             image: markerImage,
-            title: station.chargingStationName, // 충전소 이름을 마커의 제목으로 설정
+            title: station.chargingStationName,
         });
 
-        // 클러스터러에 마커 추가
         clusterer.addMarker(marker);
-        markers.push(marker); // markers 배열에 마커 추가
+        markers.push(marker);
 
-        // 마커 클릭 이벤트 (예: 충전소 정보 표시)
-        window.kakao.maps.event.addListener(marker, 'click', () => {
-            console.log("충전소 클릭됨:", station);
-            // 여기서 충전소에 대한 상세 정보 표시 가능
+        // 마커 클릭 이벤트
+        window.kakao.maps.event.addListener(marker, "click", () => {
+            selectedCharging.value = station; // 선택된 충전소 정보 업데이트
+            showChargingDetailModal.value = true; // 충전소 모달 표시
         });
     });
 };
 
 
+
 onMounted(() => {
     console.log(route.query.item)
-    const item = JSON.parse(route.query.item || '{}'); // 쿼리에서 item이 없으면 빈 객체로 처리
+    const item = JSON.parse(route.query.item || '{}');
     const lat = parseFloat(route.query.lat) || centerPoint.value.lat;
     const lng = parseFloat(route.query.lng) || centerPoint.value.lng;
     let text = "";
 
-    // 목적지 선택 여부 변경
     if (Object.keys(item).length > 0) {
         selectedDestination.value = true;
         text = item.title.replace(/<\/?b>/g, "");
-        console.log(text);
     }
 
-    destination.value = text || '목적지를 검색해보세요'; // item의 title을 사용하거나 기본 텍스트 설정
+    destination.value = text || '목적지를 검색해보세요';
     centerPoint.value = { lat, lng };
-
-    console.log('Destination:', destination.value);
-    console.log('Latitude:', lat);
-    console.log('Longitude:', lng);
 
     const script = document.createElement('script');
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
@@ -350,11 +449,8 @@ onMounted(() => {
                 minLevel: 2,
                 disableClickZoom: true,
             });
-            window.kakao.maps.event.addListener(map, 'center_changed', () => {
-                const center = map.getCenter();
-                centerPoint.value.lat = center.getLat();
-                centerPoint.value.lng = center.getLng();
-            });
+            filterResident(); // 기본 활성화된 거주자 데이터 로드
+            initializeDaysWithDates();
         });
     };
     resetTime();
@@ -362,6 +458,7 @@ onMounted(() => {
 
     console.log(centerPoint.value.lng, centerPoint.value.lat);
 });
+
 
 // 목적지 선택 해제
 const deselectDestination = () => {
@@ -371,21 +468,31 @@ const deselectDestination = () => {
 }
 
 // 날짜 버튼 클릭 이벤트 핸들러
+// 날짜 버튼 클릭 이벤트 핸들러
 const handleDateClick = (index) => {
-    selectedDate = daysWithDates.value[index].fullDate;
-    console.log("선택한 날짜:", selectedDate); // 원하는 날짜 정보를 사용
+    const clickedDate = daysWithDates.value[index].fullDate;
 
+    // 같은 날짜를 누르면 선택 해제
+    if (selectedDate.value === clickedDate) {
+        selectedDate.value = ""; // 선택 해제
+    } else {
+        selectedDate.value = clickedDate; // 새로운 날짜 선택
+    }
+
+    console.log("선택한 날짜:", selectedDate.value); // 디버깅 로그
 };
+
+
 
 // 선택 가능한 시간 표시
 const setAvailableTime = () => {
     const now = new Date();
 
     // 현재 시간 이후로
-    startHours = [now.getHours, 24];
-    startMinutes = [now.getMinutes, 60];
-    endHours = [now.getHours, 24];
-    endMinutes = [now.getMinutes, 60];
+    startHours.value = [now.getHours(), 24];
+    startMinutes.value = [now.getMinutes(), 60];
+    endHours.value = [now.getHours(), 24];
+    endMinutes.value = [now.getMinutes(), 60];
 
 }
 
@@ -439,6 +546,7 @@ const navigateToMainPage = () => {
 };
 
 //거주자 우선 주차 리스트 가져오기
+// 기존 searchRPZList 함수 수정
 const searchRPZList = async (lng, lat) => {
     try {
         console.log(recentTime());
@@ -469,12 +577,15 @@ const searchRPZList = async (lng, lat) => {
         // 기존 마커 제거
         removeMarkers();
         // 새로운 마커 생성
-        createMarker(markerObject.value);
+        createResidentMarkers(markerObject.value); // 거주자 마커 생성 함수 호출
     } catch (error) {
         noParkingLotToast();
         console.error('주차장 리스트를 찾을 수 없습니다:', error);
     }
 };
+
+// 기존 createMarker 함수를 삭제하고 거주자 마커 함수 활용
+
 
 // 현재 위치로 돌아오기
 const returnToCurrentLocation = () => {
@@ -501,25 +612,45 @@ const openSelectReservationTimeModal = () => {
     console.log("Filter button clicked");
 };
 
-const filterResident = () => {
-    selectedFilter.value = 'resident';
-    showMarkers(residentMarkers.value);
+const filterResident = async () => {
+    console.log("거주자 필터 클릭됨");
+    await searchRPZList(centerPoint.value.lng, centerPoint.value.lat, 'resident'); // 'resident'를 추가하여 필터링
 };
 const filterPublicParking = () => {
     publicParkingInfo();
     console.log("공영주차장 필터 클릭됨");
 };
 
-const filterChargingStations = () => {
-    chargingStationInfo();
-    console.log("충전소 필터 클릭됨");
+//-----------------------------------------------충전소 데이터 필터-----------------------------------------------------------
+const filterChargingStations = async () => {
+    try {
+        // 모든 마커 초기화
+        clearMarkers();
+
+        // 충전소 데이터 가져오기
+        const response = await axios.post('/api/chargingStationList', {});
+        const chargingStationList = response.data;
+
+        // 충전소 데이터로 마커 생성
+        createChargingStationMarkers(chargingStationList);
+
+        console.log("충전소 데이터:", chargingStationList);
+    } catch (error) {
+        console.error("충전소 데이터를 가져오는 중 오류 발생:", error);
+    }
 };
+
 
 // 모달 끄기
 const closeModal = () => {
-    reservationDateTimeModal.value = false;
     showRPZDetailModal.value = false;
+    showPublicDetailModal.value = false;
+    showChargingDetailModal.value = false;
+    selectedRPZ.value = {};
+    selectedPublic.value = {};
+    selectedCharging.value = {};
 };
+
 
 
 // 거주자 우선 주차면 상세페이지로 이동
@@ -615,8 +746,8 @@ const noParkingLotToast = () => {
     right: 10px;
     z-index: 1;
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 2px;
     background-color: transparent;
     /* 배경색을 투명으로 설정하여 전체 테두리 제거 */
     padding: 0;
@@ -645,6 +776,16 @@ const noParkingLotToast = () => {
     margin-right: 5px;
 }
 
+.filter-option.active {
+    background-color: #007bff;
+    /* 활성화된 버튼의 배경색 */
+    color: white;
+    /* 활성화된 버튼의 텍스트 색상 */
+    border: 1px solid #0056b3;
+    /* 테두리 색상 */
+}
+
+
 /* 작은 화면에서의 반응형 설정 */
 @media (max-width: 768px) {
     .filter-option {
@@ -663,18 +804,13 @@ const noParkingLotToast = () => {
 }
 
 .icon-parking {
-    color: #ffb400;
-    /* 노란색 */
-}
-
-.icon-gas {
-    color: #28a745;
-    /* 초록색 */
+    color: #007bff;
+    /* 파란색 */
 }
 
 .icon-charging {
-
-    color: #007bff;
+    color: #28a745;
+    /* 초록색 */
 }
 
 /* 마우스 오버 효과 */
@@ -857,6 +993,8 @@ const noParkingLotToast = () => {
 
 /* 모달이 열릴 때 애니메이션을 제거하고, 그냥 위치 고정 */
 .modal-content-time,
+.modal-content-public,
+.modal-content-charging,
 .modal-content-rpz {
     width: 100%;
     max-width: 460px;
@@ -864,8 +1002,6 @@ const noParkingLotToast = () => {
     padding: 30px;
     background-color: white;
     border-radius: 30px 30px 0 0;
-
-
     flex-direction: column;
     justify-content: flex-start;
     /* 컨텐츠 상단 정렬 */
@@ -873,9 +1009,12 @@ const noParkingLotToast = () => {
     /* 좌측 정렬 */
     overflow: auto;
     /* 내용이 넘칠 경우 스크롤 가능 */
+
 }
 
 .modal-content-rpz h3,
+.modal-content-charging h3,
+.modal-content-public h3,
 .modal-content-time h1 {
     margin-bottom: 15px;
     color: #333;
@@ -884,6 +1023,8 @@ const noParkingLotToast = () => {
 }
 
 .modal-content-rpz p,
+.modal-content-charging p,
+.modal-content-public p,
 .modal-content-time label {
 
     margin-bottom: 10px;
@@ -985,6 +1126,7 @@ const noParkingLotToast = () => {
     cursor: pointer;
     font-size: 1rem;
     flex: 1;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     /* 버튼들을 균등하게 배치 */
 }
 
@@ -992,6 +1134,20 @@ const noParkingLotToast = () => {
 .btn-date:hover {
     background-color: #0056b3;
 }
+
+/* 활성화된 버튼 스타일 */
+.btn-date.active {
+    background-color: #28a745;
+    /* 활성화된 버튼의 배경색 (초록색) */
+    color: #ffffff;
+    /* 텍스트 색상 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* 그림자 효과 */
+    transform: scale(1.05);
+    /* 버튼 약간 확대 */
+}
+
+
 
 /* TimePicker 컨테이너 (시작/종료 시간 가로로 배치) */
 .time-picker-container {
