@@ -230,18 +230,12 @@ const loadKakaoMap = () => {
           centerPoint.value.lat = center.getLat();
           centerPoint.value.lng = center.getLng();
         });
-
-
-        
       } else {
         console.error("Map container not found.");
       }
     });
   };
 };
-
-
-
 
 </script>
 

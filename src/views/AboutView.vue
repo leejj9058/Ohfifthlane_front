@@ -28,7 +28,7 @@
                 <i class="fas fa-home icon-resident"></i> 거주자
             </button>
             <button class="filter-option" @click="filterPublicParking">
-                <i class="fas fa-warehouse icon-parking"></i> 공영주차장
+                <i class="fas fa-warehouse icon-parking"></i> 공영주차장    
             </button>
             <button class="filter-option" @click="filterGasStations">
                 <i class="fas fa-gas-pump icon-gas"></i> 주유소

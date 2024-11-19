@@ -17,14 +17,16 @@ export default defineConfig({
   },
   server: {
     https: {
-      key: fs.readFileSync("../localhost+3-key.pem"), // 키 파일 경로
-      cert: fs.readFileSync("../localhost+3.pem"), // 인증서 파일 경로
+      key: fs.readFileSync("../localhost+4-key.pem"), // 키 파일 경로
+      cert: fs.readFileSync("../localhost+4.pem"), // 인증서 파일 경로
     },
-    host: "172.168.10.93", // 로컬 네트워크 IP 주소로 설정
+
+    host: "172.168.10.18", // 로컬 네트워크 IP 주소로 설정
     port: 5173,
     proxy: {
       "/api": {
-        target: "http://172.168.10.93:8080",
+        target: "http://172.168.10.18:8080",
+
         changeOrigin: true,
       },
       "/ai": {
