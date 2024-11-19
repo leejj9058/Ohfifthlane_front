@@ -58,3 +58,7 @@ npm install @vuepic/vue-datepicker
 
 4. toast
    npm i vue3-toastify
+
+
+5. 부트페이 결제
+ npm install bootpay-js   

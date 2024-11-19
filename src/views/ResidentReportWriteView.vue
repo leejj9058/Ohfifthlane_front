@@ -1,13 +1,53 @@
 <template>
   <Header />
   <div class="form-container">
+     <!-- 큰 제목: 불법주차 신고하기 -->
+     <h2 class="title-main text-center mb-2">불법주차 신고하기</h2>
+  
+  <!-- 작은 제목: 장애인 전용구역 -->
+  <h5 class="title-sub text-center mb-5">거주자 우선 주차구역</h5>
+  <p class="form-title"><strong><i class="bi bi-image me-2 text-primary"></i>사진</strong></p>
+
 <img v-if="photo" :src="`/src/assets/images/uploads/${photo}`" alt="Captured Photo" style="width:350px; height: 350px;"/>
-    <p class="form-title">차량번호</p>
+    <p class="form-title"><strong><i class="bi bi-car-front me-2 text-primary"></i>차량번호</strong></p>
     <input type="text" class="form-input" placeholder="차량번호 입력" v-model="reportCarNumber" />
-    <p class="form-title">주차면번호</p>
-    <input type="text" class="form-input" placeholder="주차면번호 입력" v-model="rpzNum" />
-    <button class="submit-button" @click="submitReport()">신고하기</button>
-  </div>
+    <p class="form-title"><strong><i class="bi bi-house-door me-2 text-primary"></i>거주자 주차 구획 번호</strong></p>
+    <input type="text" class="form-input" placeholder="주차면번호를 입력하세요. 예 : 11305-00-00" v-model="rpzNum" />
+    <!-- 신고 내용 공유 동의 체크박스 -->
+    <div class="form-check mb-3 text-start">
+          <input
+            type="checkbox"                   
+            id="agreeCheckbox"
+            v-model="isAgreed"
+            class="form-check-input"
+          />
+          <label class="form-check-label" for="agreeCheckbox">
+            신고 내용 공유에 동의합니다.
+          </label>
+        </div>
+        <div class="button-container d-flex justify-content-between" style="width: 100%;">
+  <!-- 신고하기 버튼 -->
+  <button
+    type="submit"
+    class="btn btn-primary"
+    :style="{ width: '48%' }"
+    :disabled="!isAgreed"
+    @click="submitReport"
+  >
+    신고하기
+  </button>
+
+  <!-- 닫기 버튼 -->
+  <button
+    type="button"
+    class="btn btn-secondary"
+    :style="{ width: '48%' }"
+    @click="resetForm"
+  >
+    닫기
+  </button>
+</div>
+</div>
 </template>
 
 <script setup>
@@ -100,7 +140,7 @@ const submitReport = async () => {
   const response = await axios.post("/api/report", {
     report: {
       reportCarNumber: reportCarNumber.value,
-      reportImage: photo.value ? photo.value.replace("http://172.168.10.93:8080/upload/", "") : "", // 사진 URL을 사용
+      reportImage: photo.value ? photo.value.replace("http://172.168.10.73:8080/upload/", "") : "", // 사진 URL을 사용
 
       reportLat: currentLat.value, // 현재 위도
       reportLon: currentLon.value, // 현재 경도
@@ -147,6 +187,12 @@ onMounted(() => {
   border-radius: 10px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
+.title-main {
+    font-size: 34px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
 
 .form-title {
   width: 100%;
@@ -154,6 +200,12 @@ onMounted(() => {
   font-size: 16px;
   margin-bottom: 5px;
 }
+.title-sub {
+    font-size: 22px;
+    font-weight: bold;
+    color: #003366;
+    margin-top: 0;
+  }
 
 .form-input {
   width: 100%;
@@ -175,4 +227,23 @@ onMounted(() => {
   width: 100%;
   max-width: 300px;
 }
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.form-check {
+  text-align: left; /* 컨테이너 왼쪽 정렬 */
+  width: 100%; /* 가로 전체 사용 */
+}
+
+.form-check-input,
+.form-check-label {
+  display: inline-block; /* 체크박스와 라벨을 같은 줄에 배치 */
+  vertical-align: middle; /* 높이 정렬 */
+}
+
+.form-check-label {
+  margin-left: 5px; /* 체크박스와 라벨 사이 간격 */
+}
+
 </style>

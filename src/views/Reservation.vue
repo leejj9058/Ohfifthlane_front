@@ -11,8 +11,8 @@
 
       <div class="content-card">
         <div class="card-body text-center">
-          <h5 class="card-title"><strong>{{ RPZId }}</strong></h5>
-          <p class="card-text"><strong>{{ rpzAddress }}</strong></p>
+          <h5 class="card-title"><strong>{{ RPZNum }}</strong></h5>
+          <p class="card-text"><strong>{{ RPZAddress }}</strong></p>
           <div class="d-flex justify-content-between align-items-center">
             <p class="text mb-0"><strong>🅿️ 주차요금</strong></p>
             <p class="text mb-0"><strong>10분당 {{ rpzFee }}원</strong></p>
@@ -149,9 +149,9 @@ const getRPZById = async (rpzId) => {
 
     const response = await axios.post(`/api/getRPZById?rpzId=${rpzId}`);
 
-    console.log("API response data:", response.data);
-    RPZNum.value = response.data.RPZNum || '122-189';
-    RPZAddress.value = response.data.RPZAddress || '서울 강남구 120-1';
+    console.log("1. API response data:", response.data);
+    RPZNum.value = response.data.rpzNum || '122-189';
+    RPZAddress.value = response.data.rpzAddress || '서울 강남구 120-1';
     rpzFee.value = response.data.rpzFee || 500;
     shareStartTime.value = response.data.shareStartTime || 0; // 기본값 설정
     shareEndTime.value = response.data.shareEndTime || 24;   // 기본값 설정

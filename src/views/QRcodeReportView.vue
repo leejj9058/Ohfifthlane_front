@@ -25,9 +25,10 @@ import { ref, onMounted } from 'vue';
 import Header from '@/components/Header.vue';
 import qrCodeImage from '@/assets/images/qr-code.png';
 import axios from 'axios';
-import { useRoute} from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 const vehicleNumber = ref(""); // 차량번호를 입력받기 위한 변수
 const isRegistered = ref(false); // 차량이 등록된 상태인지 확인하는 변수 (true: 등록됨, false: 미등록)
 const registrationChecked = ref(false); // 조회 완료 상태를 나타내는 변수 (true: 조회 완료됨)
@@ -79,7 +80,7 @@ const submitReport = () => {
   } else if (isRegistered.value) {
     alert("신고 대상 차량이 아닙니다.");
   } else {
-    alert("신고접수 되었습니다");
+    router.push({ path: '/disabledPersonReportCamera' });
   }
 };
 

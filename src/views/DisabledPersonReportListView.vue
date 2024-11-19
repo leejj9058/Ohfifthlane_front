@@ -2,70 +2,84 @@
   <Header></Header>
 
   <div class="d-flex justify-content-center align-items-center p-3" id="background h-100">
-
     <!-- 본문 -->
     <div class="p-4 p-md-5 w-100">
-
-      <h1 class="mb-4 fs-2 fw-bold">신고 내역</h1>
+      <h1 class="mb-4 fs-2 fw-bold">장애인 신고 내역</h1>
 
       <div class="d-flex justify-content-start">
-        <Datepicker class="customPicker" v-model="picked" :locale="locale" :format="inputFormat"
-          @update:model-value="handleDateChange">
+        <Datepicker
+          class="customPicker"
+          v-model="picked"
+          :locale="locale"
+          :format="inputFormat"
+          @update:model-value="handleDateChange"
+        >
         </Datepicker>
       </div>
 
-
       <!-- 줄 -->
-      <hr>
+      <hr />
       <!-- 줄 -->
 
       <!-- 게시글 테이블 -->
-      <div class="table-responsive  vh-100">
-
-        <table class="table mb-3 ">
+      <div class="table-responsive vh-100">
+        <table class="table mb-3">
           <thead>
             <tr class="text-center">
-              <th class="reportNo">No</th>
-              <th class="reportTitle">제목</th>
-              <th class="reportTitle">날짜</th>
-              <th class="reportStatus">상태</th>
+              <th class="disabledPersonReportNo">No</th>
+              <th class="disabledPersonReportTitle">제목</th>
+              <th class="disabledPersonReportTitle">날짜</th>
+              <th class="disabledPersonReportStatus">상태</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="report in reportList" :key="report.reportId" class="reportIndex" @click="goToReportDetail(report.reportId)">
-              <td class="text-center">{{ report.reportId }}</td>
-              <td class="reportTitle text-center">{{ report.reportAddress }}</td>
-              <td class="reportTitle text-center">{{ formatDate(report.reportTime) }}</td>
+            <tr
+              v-for="disabledPersonReport in disabledPersonReportList"
+              :key="disabledPersonReport.disabledPersonReportId"
+              class="disabledPersonReportIndex"
+              @click="
+                goTodisabledPersonReportDetail(
+                  disabledPersonReport.disabledPersonReportId
+                )
+              "
+            >
               <td class="text-center">
-                <span :class="['status-badge', getStatusClass(report.reportStatus)]">
-                  {{ getStatusText(report.reportStatus) }}
+                {{ disabledPersonReport.disabledPersonReportId }}
+              </td>
+              <td class="disabledPersonReportTitle text-center">
+                {{ disabledPersonReport.disabledPersonReportAddress }}
+              </td>
+              <td class="disabledPersonReportTitle text-center">
+                {{ formatDate(disabledPersonReport.disabledPersonReportTime) }}
+              </td>
+              <td class="text-center">
+                <span
+                  :class="[
+                    'status-badge',
+                    getStatusClass(disabledPersonReport.disabledPersonReportStatus),
+                  ]"
+                >
+                  {{ getStatusText(disabledPersonReport.disabledPersonReportStatus) }}
                 </span>
               </td>
             </tr>
-
           </tbody>
         </table>
-
       </div>
-
     </div>
     <!-- 본문 -->
-
-
   </div>
-
-
 </template>
 
 <script setup>
 import Header from "@/components/Header.vue";
-import Datepicker from 'vue3-datepicker';
-import { ko } from 'date-fns/locale';
-import { ref, reactive, onMounted } from 'vue';
-import axios from 'axios';
-import { format } from 'date-fns'; // date-fns에서 format 함수 가져오기
-import { useRouter } from 'vue-router'; // router 추가
+import Datepicker from "vue3-datepicker";
+import { ko } from "date-fns/locale";
+import { ref, reactive, onMounted } from "vue";
+import axios from "axios";
+import { format } from "date-fns"; // date-fns에서 format 함수 가져오기
+import { useRouter } from "vue-router"; // router 추가
 
 const router = useRouter();
 
@@ -73,59 +87,37 @@ const router = useRouter();
 const picked = ref(new Date()); // 오늘 날짜
 const locale = reactive(ko); // 한국어 로케일 적용
 const inputFormat = (date) => {
-  if (!date) return '';
+  if (!date) return "";
   const year = date.getFullYear(); //날짜 가져오기
-  const month = String(date.getMonth() + 1).padStart(2, '0'); //월 + 1 = javascript에서는 월 0부터 시작 + 두 자리 문자열로 만든다.
-  const day = String(date.getDate()).padStart(2, '0'); // 일 = 두 자리 문자열로 만든다. 
+  const month = String(date.getMonth() + 1).padStart(2, "0"); //월 + 1 = javascript에서는 월 0부터 시작 + 두 자리 문자열로 만든다.
+  const day = String(date.getDate()).padStart(2, "0"); // 일 = 두 자리 문자열로 만든다.
   return `${year}-${month}-${day}`; // YYYY-MM-DD 형식으로 처리
 };
 
-// reportTime 포맷팅 함수
+// disabledPersonReportTime 포맷팅 함수
 const formatDate = (dateString) => {
   const date = new Date(dateString); // ISO 8601 형식의 문자열을 Date 객체로 변환
-  return format(date, 'yyyy-MM-dd HH:mm'); // 원하는 형식으로 반환
+  return format(date, "yyyy-MM-dd HH:mm"); // 원하는 형식으로 반환
 };
 
 // 날짜 선택 이벤트 핸들러
 const handleDateChange = (date) => {
-  console.log('선택된 날짜:', inputFormat(date));
+  console.log("선택된 날짜:", inputFormat(date));
   fetchList(); // 날짜 변경 후 목록 다시 가져오기
 };
 
-//const reportList = ref([]); // 신고 내역 리스트
-const reportList = ref([
-  {
-    reportId: 1,
-    reportAddress: '서울 강남구 123-45',
-    reportTime: '2024-11-01T14:00:00',
-    reportStatus: 0,
-  },
-  {
-    reportId: 2,
-    reportAddress: '서울 서초구 234-56',
-    reportTime: '2024-11-02T15:30:00',
-    reportStatus: 1,
-  },
-  {
-    reportId: 3,
-    reportAddress: '서울 종로구 345-67',
-    reportTime: '2024-11-03T16:45:00',
-    reportStatus: 2,
-  },
-]);
-
+const disabledPersonReportList = ref([]); // 신고 내역 리스트
 
 // 신고 목록 가져오기
 const fetchList = async () => {
   try {
-    const response = await axios.post('/api/reportList', {
-      date: inputFormat(picked.value) // 날짜 서버에 전달
+    const response = await axios.post("/api/disabledPersonReportList", {
+      date: inputFormat(picked.value), // 날짜 서버에 전달
     });
-    // 서버 응답이 빈 배열이면 기본 더미 데이터 유지
-    reportList.value = response.data.length ? response.data : reportList.value;
+    disabledPersonReportList.value = response.data; // 응답 데이터에서 disabledPersonReportList를 받음
     console.log(`response:`, response.data);
   } catch (error) {
-    console.error('Error fetching report list:', error);
+    console.error("Error fetching disabledPersonReport list:", error);
   }
 };
 
@@ -135,32 +127,35 @@ onMounted(() => {
 
 const getStatusClass = (status) => {
   switch (status) {
-    case 0: return 'status-unprocessed';
-    case 1: return 'status-completed';
-    case 2: return 'status-rejected';
-    default: return '';
+    case 0:
+      return "status-unprocessed";
+    case 1:
+      return "status-completed";
+    case 2:
+      return "status-rejected";
+    default:
+      return "";
   }
 };
 
 const getStatusText = (status) => {
   switch (status) {
-    case 0: return '미처리';
-    case 1: return '완료';
-    case 2: return '반려';
-    default: return '알 수 없음';
+    case 0:
+      return "미처리";
+    case 1:
+      return "완료";
+    case 2:
+      return "반려";
+    default:
+      return "알 수 없음";
   }
 };
 
 // 해당 신고 상세 페이지로 이동
-const goToReportDetail = (reportId) => {
-  router.push(`/reportDetail/${reportId}`);
+const goTodisabledPersonReportDetail = (disabledPersonReportId) => {
+  router.push(`/disabledPersonReportDetail/${disabledPersonReportId}`);
 };
-
 </script>
-
-
-
-
 
 <style scoped>
 /* 상태 뱃지 */
@@ -198,8 +193,6 @@ const goToReportDetail = (reportId) => {
 
 /* 상태뱃지 */
 
-
-
 .customPicker {
   font-size: 14px;
   width: 100px;
@@ -231,17 +224,28 @@ const goToReportDetail = (reportId) => {
   width: 100%;
 }
 
-.reportNo {
+/* 테이블 셀에서 줄 바꿈 방지 */
+.table td,
+.table th {
+  white-space: nowrap; /* 줄 바꿈 방지 */
+}
+
+.disabledPersonReportNo {
   width: 10%;
 }
 
-.reportTitle {
+.disabledPersonReportTitle {
   width: 70%;
   cursor: pointer;
 }
 
-.reportDate {
+.disabledPersonReportDate {
   width: 20%;
+}
+
+/* 상태 열 너비 조정 */
+.disabledPersonReportStatus {
+  width: 15%; /* 너비 조정 */
 }
 
 /* 반응형 디자인을 위한 미디어 쿼리 */
@@ -275,15 +279,15 @@ const goToReportDetail = (reportId) => {
     font-size: 0.8rem;
   }
 
-  .reportNo {
+  .disabledPersonReportNo {
     width: 15%;
   }
 
-  .reportTitle {
+  .disabledPersonReportTitle {
     width: 55%;
   }
 
-  .reportDate {
+  .disabledPersonReportDate {
     width: 30%;
   }
 }

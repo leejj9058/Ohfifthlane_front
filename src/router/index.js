@@ -86,20 +86,31 @@ const router = createRouter({
     {
       path: '/disabledPersonReport',
       name: 'disabledPersonReport',
-      component: () => import('../views/disabledPersonReport.vue'),
+      component: () => import('../views/DisabledPersonReportView.vue'),
     },
 
     {
       path: '/disabledPersonReportList',
       name: 'disabledPersonReportList',
-      component: () => import('../views/disabledPersonReportView.vue'),
+      component: () => import('../views/DisabledPersonReportListView.vue'),
     },
 
     {
       path: '/disabledPersonReportDetail/:disabledPersonReportId',
       name: 'disabledPersonReportDetail',
-      component: () => import('../views/disabledPersonReportDetailView.vue'),
+      component: () => import('../views/DisabledPersonReportDetailView.vue'),
     },
+    {
+      path: '/disabledPersonReportCamera',
+      name: 'disabledPersonReportCamera',
+      component: () => import('../views/DisabledPersonReportCameraView.vue'),
+    },
+    {
+      path: '/disabledPersonReportCamera',
+      name: 'disabledPersonReportCamera',
+      component: () => import('../views/DisabledPersonReportCameraView.vue')
+    },
+    
     {
       path: '/qrcode',
       name: 'qrcode',
