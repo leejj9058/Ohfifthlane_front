@@ -5,6 +5,12 @@
         <button class="btn btn-link text-danger mb-2" @click="goBack">
           <i class="bi bi-arrow-left arrow-icon"></i>
         </button>
+        <div v-if="reservations === null">
+
+        </div>
+        <div v-else>
+
+        </div>
         <div
           v-for="(item, index) in displayedReservations"
           :key="index"
@@ -13,11 +19,12 @@
         >
           <div>
             <p class="reservation-date"><strong>{{ item.reservationDay }}</strong></p>
-            <p><strong>구획번호:</strong> {{ item.rpzNum }}</p>
-            <p><strong>주소:</strong> {{ item.rpzAddress }}</p>
+            <p><strong>구획번호:</strong> {{ rpzs[index].value.rpzNum }}</p>
+            <p><strong>주소:</strong> {{ rpzs[index].value.rpzAddress }}</p>
             <p><strong>예약시간:</strong> {{ item.reservationStartTime }} ~ {{ item.reservationEndTime }}</p>
           </div>
-          <button class="btn btn-danger">길찾기</button>
+          <button class="btn btn-danger">신고하기</button>
+
         </div>
         <button v-if="showMore" class="btn btn-secondary mt-3 w-100" @click="loadMore">더보기</button>
       </div>
@@ -33,6 +40,7 @@ import axios from 'axios'; // axios import
 const router = useRouter();
 
 const reservations = ref([]); // 전체 예약 내역을 저장하는 변수
+const rpzs = ref([]); // 예약에 있는 거주자 우선 주차구역 리스트
 const displayedReservations = ref([]); // 표시할 예약 내역을 저장하는 변수
 const itemsToShow = ref(5); // 한 번에 표시할 예약 내역 개수
 const showMore = ref(true); // '더보기' 버튼을 보여줄지 여부
@@ -42,40 +50,26 @@ const goBack = () => {
   window.history.back(); // 브라우저 히스토리에서 뒤로 이동
 };
 
+//RPZId로 RPZ정보 가져오기
+const getRPZById = async(RPZId) => {
+  try {
+    const response = await axios.get('/api/getRPZById',{
+      rpzId: RPZId
+    });
+
+    rpzs.value.push(response.data); // 응답 데이터를 rpzs에 추가
+    
+  } catch (error) {
+    console.error("RPZ 정보를 가져오는 데 실패했습니다:", error);
+  }
+}
+
 // axios로 실제 데이터 가져오기 대신 mockData 설정
 const fetchReservations = async () => {
   try {
     // 실제 API 호출을 대신해 mockData를 사용한 axios 호출 처리
-    const response = await axios.get('https://api.example.com/reservations') // 실제 API 경로로 변경해야 함
-      .catch(() => {
-        // 여기서 mockData를 직접 넣기
-        return {
-          data: [
-            {
-              rpzNum: '122-189',
-              rpzAddress: '서울 강남구 120-1',
-              reservationDay: '2024-11-06',
-              reservationStartTime: '14:00',
-              reservationEndTime: '16:10',
-            },
-            {
-              rpzNum: '122-101',
-              rpzAddress: '서울 강남구 141-15',
-              reservationDay: '2024-10-15',
-              reservationStartTime: '11:00',
-              reservationEndTime: '11:50',
-            },
-            {
-              rpzNum: '101-34',
-              rpzAddress: '서울 서초구 154-12',
-              reservationDay: '2024-05-21',
-              reservationStartTime: '18:30',
-              reservationEndTime: '19:50',
-            }
-          ]
-        };
-      });
-
+    const response = await axios.get('/api/getReservationListByUserId');
+      
     // 응답 데이터를 reservations에 저장
     reservations.value = response.data;
     loadReservations(); // 받은 데이터를 표시할 목록에 로드
@@ -139,7 +133,15 @@ const goToDetail = (item) => {
   });
 };
 
-onMounted(fetchReservations); // 컴포넌트가 마운트 될 때 예약 정보를 가져옵니다.
+// 컴포넌트가 마운트 될 때 예약 정보를 가져옵니다.
+onMounted(() => {
+
+  fetchReservations();
+  reservations.forEach(element => {
+    getRPZById(element.value.RPZId);
+  });
+  
+});
 </script>
 
 <style scoped>

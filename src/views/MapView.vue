@@ -113,10 +113,8 @@
                     </div>
                 </div>
 
-
-
                 <!-- RPZ 정보 모달 내용 -->
-                <div v-if="showRPZDetailModal" class="modal-content-rpz" @click="moveReservation(selectedRPZ.id)">
+                <div v-if="showRPZDetailModal" class="modal-content-rpz" @click="moveReservation(selectedRPZ.rpzId)">
                     <h3 style="display: flex; justify-content: center; align-items: center;">{{ selectedRPZ.rpzNum }}
                     </h3>
 
