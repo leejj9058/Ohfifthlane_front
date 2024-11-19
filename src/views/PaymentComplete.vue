@@ -19,7 +19,6 @@
           </div>
           <hr class="thick-line" />
           <p>결제일시: {{ data.paymentDate }}</p>
-          <p>사용 포인트: {{ data.usedPoint }}</p>
           <p>총 금액: {{ data.reservationTotalFee }}원</p>
         </div>
         <div class="text-center mt-4">
