@@ -3,7 +3,7 @@
     <Header />
 
     <!-- 전체 페이지 컨테이너 -->
-    <div class="container-fluid d-flex flex-column align-items-center justify-content-center   vh-100">
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
       
       <!-- 잔여 포인트 섹션 -->
       <section class="point-balance-section text-center mt-0">

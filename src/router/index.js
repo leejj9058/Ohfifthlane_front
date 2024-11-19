@@ -106,6 +106,12 @@ const router = createRouter({
       component: () => import('../views/DisabledPersonReportCameraView.vue'),
     },
     {
+      path: '/disabledPersonReportCamera',
+      name: 'disabledPersonReportCamera',
+      component: () => import('../views/DisabledPersonReportCameraView.vue')
+    },
+    
+    {
       path: '/qrcode',
       name: 'qrcode',
       component: QRcodeView
@@ -187,8 +193,8 @@ const router = createRouter({
       component: SearchView
     },
     {
-      path: '/parkingPay',
-      name: 'parkingPay',
+      path: '/parkingPayment',
+      name: 'parkingPayment',
       component: ParkingPayment
     },
     {

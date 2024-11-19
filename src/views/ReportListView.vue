@@ -92,7 +92,28 @@ const handleDateChange = (date) => {
   fetchList(); // 날짜 변경 후 목록 다시 가져오기
 };
 
-const reportList = ref([]); // 신고 내역 리스트
+//const reportList = ref([]); // 신고 내역 리스트
+const reportList = ref([
+  {
+    reportId: 1,
+    reportAddress: '서울 강남구 123-45',
+    reportTime: '2024-11-01T14:00:00',
+    reportStatus: 0,
+  },
+  {
+    reportId: 2,
+    reportAddress: '서울 서초구 234-56',
+    reportTime: '2024-11-02T15:30:00',
+    reportStatus: 1,
+  },
+  {
+    reportId: 3,
+    reportAddress: '서울 종로구 345-67',
+    reportTime: '2024-11-03T16:45:00',
+    reportStatus: 2,
+  },
+]);
+
 
 // 신고 목록 가져오기
 const fetchList = async () => {
@@ -100,9 +121,9 @@ const fetchList = async () => {
     const response = await axios.post('/api/reportList', {
       date: inputFormat(picked.value) // 날짜 서버에 전달
     });
-    reportList.value = response.data; // 응답 데이터에서 reportList를 받음
+    // 서버 응답이 빈 배열이면 기본 더미 데이터 유지
+    reportList.value = response.data.length ? response.data : reportList.value;
     console.log(`response:`, response.data);
-
   } catch (error) {
     console.error('Error fetching report list:', error);
   }
@@ -134,6 +155,7 @@ const getStatusText = (status) => {
 const goToReportDetail = (reportId) => {
   router.push(`/reportDetail/${reportId}`);
 };
+
 </script>
 
 

@@ -19,6 +19,7 @@
           </div>
           <hr class="thick-line" />
           <p>결제일시: {{ data.paymentDate }}</p>
+          <p>사용 포인트: {{ data.usedPoint }}</p>
           <p>총 금액: {{ data.reservationTotalFee }}원</p>
         </div>
         <div class="text-center mt-4">
@@ -38,8 +39,8 @@ import axios from 'axios';
 const route = useRoute();
 const router = useRouter(); // useRouter 초기화
 const data = reactive({
-  rpzNum: route.query.rpzNum || 'N/A',
-  rpzAddress: route.query.rpzAddress || 'N/A',
+  rpzNum: route.query.RPZNum || 'N/A',
+  rpzAddress: route.query.RPZAddress || 'N/A',
   reservationDay: route.query.reservationDay || 'N/A', // URL에서 예약일 가져오기
   reservationStartTime: route.query.reservationStartTime || 'N/A', // URL에서 시작시간 가져오기
   reservationEndTime: route.query.reservationEndTime || 'N/A', // URL에서 종료시간 가져오기

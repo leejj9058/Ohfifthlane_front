@@ -15,6 +15,12 @@
           <img :src="qrCodeImage" alt="QR 코드" class="qr-code" />
         </div>
         <button class="qr-report-button" @click="startScanning">QR코드 인식하기</button>
+        <p class="qr-content">
+          <i class="bi bi-exclamation-triangle" style="font-size: 20px; margin-right: 0px; color: orange;"></i>
+          장애인 주차 표지가 없을 경우,<br />
+          아래 버튼을 눌러 촬영 후 신고해 주세요.
+        </p>
+        <button class="qr-report-button2" @click="startCamera">촬영하기</button>
       </div>
     </div>
   
@@ -84,6 +90,7 @@ const stopScanning = () => {
   scanning.value = false;
 };
 
+
 const goToNextStep = async () => {
   alert(result.value);
   const encryptedDataB64 = result.value;
@@ -101,6 +108,12 @@ const goToNextStep = async () => {
   } catch (error) {
     console.error("복호화 또는 JSON 파싱 중 에러 발생:", error);
   }
+};
+
+// 촬영하기 버튼 클릭 시 호출되는 함수
+const startCamera = () => {
+  // disabledPersonReportCamera 페이지로 이동
+  router.push({ path: '/disabledPersonReportCamera' });
 };
 </script>
 
@@ -177,6 +190,18 @@ const goToNextStep = async () => {
   color: white;
   padding: 12px 25px;
   border: none;
+  border-radius: 50px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.qr-report-button2 {
+  background: rgb(235, 205, 95); /* 배경색은 회색 */
+  color: rgb(0, 0, 0);
+  padding: 4px 20px;
+  border: 2px solid orange; /* 오렌지 색 테두리 */
   border-radius: 50px;
   font-size: 18px;
   cursor: pointer;
