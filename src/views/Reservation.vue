@@ -130,24 +130,23 @@ const RPZAddress = ref(''); // 예: 서울 강남구 120-1
 const rpzFee = ref(0);
 const shareStartTime = ref(0); // 예약 공유 시작 시간
 const shareEndTime = ref(24);   // 예약 공유 종료 시간
-
+const reservationTimes = ref([]); // DB에서 가져온 예약정보
 //-----------------------------------함수-------------------------------
 
 onMounted(() => {
   // RPZ 정보 가져오기
   getRPZById(route.query.rpzId);
 
-  // userId 가져오기
-  console.log(userId.value);
   getUserId();
+  getReservation();
 });
 
 
 // RPZ정보 가져오기
-const getRPZById = async (rpzId) => {
+const getRPZById = async (RPZId) => {
   try {
 
-    const response = await axios.post(`/api/getRPZById?rpzId=${rpzId}`);
+    const response = await axios.post(`/api/getRPZById?rpzId=${RPZId}`);
 
     console.log("1. API response data:", response.data);
     RPZNum.value = response.data.rpzNum || '122-189';
@@ -168,9 +167,25 @@ const getUserId = async () => {
 
     const response = await axios.get('/api/getUserId');
 
-    console.log("1. API response data:", response.data);
     userId.value = response.data;
 
+  } catch (error) {
+    console.error('로그인 정보가 없습니다', error);
+  }
+};
+
+// 예약정보 가져오기
+const getReservation = async () => {
+  try {
+
+    console.log("2. API RPZId:", typeof RPZId);
+    const rpzId = Number(RPZId);
+    console.log("2. API RPZId:", typeof rpzId + rpzId);
+    const response = await axios.get('/api/getReservationListByRpzId', {
+      params: { RPZId: rpzId }, // 쿼리 파라미터는 params 객체로 전달
+    });
+    reservationTimes.value = response.data;
+    console.log("2. API response data:", response.data);
   } catch (error) {
     console.error('로그인 정보가 없습니다', error);
   }

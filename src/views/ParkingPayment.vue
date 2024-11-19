@@ -107,7 +107,6 @@ const route = useRoute();
 const userPoint = ref(0); // 보유 포인트
 const inputUsedPoints = ref(''); // 사용할 포인트
 const usedPoints = ref('');
-
 // reservation 객체 정의
 // const reservation = ref({
 //   userId: '',
@@ -154,7 +153,7 @@ onMounted(() => {
 
   // 객체 값 초기화
   userId.value = route.query.userId || 0;
-  RPZId.value = route.query.RPZId || '';
+  RPZId.value = Number(route.query.RPZId) || 0;
   RPZNum.value = route.query.RPZNum || '';
   RPZAddress.value = route.query.RPZAddress || '';
   reservationDay.value = route.query.reservationDay || '';
@@ -184,7 +183,7 @@ const fetchUserPoint = async () => {
     console.log(response.data);
     userPoint.value = response.data; // 받아온 포인트 값 설정
   } catch (error) {
-    console.error("포인트를 가져오는 데 실패했습니다:", error);
+    console.error("예약하는데 실패:", error);
   }
 };
 
@@ -220,28 +219,48 @@ const completePayment = async () => {
   })
   .done((data) => {
     console.log("결제 성공:", data);
-
-      // 결제 성공 시 결제 완료 페이지로 이동
-      router.push({
-        name: 'paymentComplete', 
-        query: {
-          RPZId: RPZId.value,
-          RPZNum: RPZNum.value,
-          RPZAddress: RPZAddress.value,
-          reservationDay: reservationDay.value,
-          reservationStartTime: reservationStartTime.value,
-          reservationEndTime: reservationEndTime.value,
-          paymentDate: new Date().toLocaleString(),
-          reservationTotalFee: reservationTotalFee.value,
-          image: image,
-
-        }
-      });
+    insertReservation();
     })
     .catch(error => {
       console.error("결제 실패:", error);
       alert("결제에 실패하였습니다. 다시 시도해주세요.");
     });
+};
+
+// 결제
+const insertReservation = async() => {
+  console.log(reservationStartTime.value)
+  try {
+    const response = await axios.post("/api/addReservation", 
+    {
+      userId : userId.value,
+      reservationStartTime: reservationStartTime.value,
+      reservationEndTime: reservationEndTime.value,
+      reservationDay: reservationDay.value,
+      reservationTotalFee: reservationTotalFee.value,
+      rpzId: RPZId.value,
+    }); 
+    console.log(response.data);
+    
+    // 결제 완료 페이지 이동
+    router.push({
+    name: 'paymentComplete', 
+    query: {
+      RPZId: RPZId.value,
+      RPZNum: RPZNum.value,
+      RPZAddress: RPZAddress.value,
+      reservationDay: reservationDay.value,
+      reservationStartTime: reservationStartTime.value,
+      reservationEndTime: reservationEndTime.value,
+      paymentDate: new Date().toLocaleString(),
+      reservationTotalFee: reservationTotalFee.value,
+      image: image,
+    }
+  });
+  } catch (error) {
+    console.error("포인트를 가져오는 데 실패했습니다:", error);
+  }
+  
 };
 
 
