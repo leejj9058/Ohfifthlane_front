@@ -2,7 +2,7 @@
   <header class="header" :class="{ scrolled: isScrolled }">
     <div class="container">
       <div class="logo">
-        <span class="logo-text" style="margin-right: 100px; font-size: 40px;">오차로</span>
+        <span class="logo-text" style="margin-right: 100px; font-size: 40px;">주차로</span>
       </div>
       <nav class="nav" style="margin-right: 60px;">
         <ul>
@@ -15,7 +15,8 @@
       <div>
         <button v-if="!isLoggedIn" class="btn btn-primary" style="margin-right: 50px;" @click="goToLogin">로그인 / 회원가입</button>
         <div v-else>
-          <button class="btn btn-danger" style="margin-right: 20px;" @click="goToReportList">신고내역</button>
+          <button class="btn btn-danger" style="margin-right: 20px;" @click="goToReportList">거주자신고내역</button>
+          <button class="btn btn-warning" style="margin-right: 20px;" @click="goToDisabledPersonReportList">장애인신고내역</button>
           <button class="btn btn-primary" style="margin-right: 50px;" @click="goToLogout">로그아웃</button>
         </div>
       </div>
@@ -37,6 +38,10 @@ const goToLogin = () => {
 const goToReportList = () => {
   router.push('/reportList'); // 신고내역 페이지로 이동
 };
+
+const goToDisabledPersonReportList = () => {
+  router.push('/disabledPersonReportList'); //장애인 신고내역으로 이동
+}
 
 const goToLogout = () => {
   // 로그아웃 로직 추가 (예: API 호출 후 상태 변경)

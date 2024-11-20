@@ -65,7 +65,6 @@
     await enableCamera();
   };
 
-
   /* const enableCamera = async () => {
   videoElement.value = document.querySelector('video');
   try {
@@ -96,7 +95,7 @@ const enableCamera = async () => {
   }
 };
   
-
+  
   
   const capturePhoto = () => {
     const canvas = document.createElement("canvas");
@@ -120,7 +119,6 @@ const enableCamera = async () => {
   
   const confirmPhoto = async () => {
     try {
-
       const response = await axios.post('/api/uploadDisabledPersonReportPhoto', {
         disabledPersonReportImage: capturedPhoto.value, // 사진을 base64로 서버에 전송
       });
@@ -129,8 +127,6 @@ const enableCamera = async () => {
         const photoPath = response.data.disabledPersonReportImage; // 서버가 반환한 이미지 경로
         console.log("Returned photo path: ", photoPath);  // URL 확인용
         window.location.href = `/disabledPersonReport?photo=${encodeURIComponent(photoPath)}`; // 이미지 경로 전달
-
-    
       } else {
         alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
       }

@@ -61,11 +61,10 @@ import axios from 'axios'
 
 // ]
 
-onMounted(() => {
-  console.log('문의사항 요청 시작');
-  //onMounted로 바로 게시글을 불러온다. 
-  getInquiry();
-})
+onMounted(async () => {
+  console.log('컴포넌트 마운트됨');
+  await getInquiry();
+});
 
 const inquiries = ref([])
 
