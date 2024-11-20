@@ -9,7 +9,7 @@
         <div class="spacer mb-3"></div>
           <h1 class="fw-bold">주차가 걱정될 때</h1>
           <h2 class="fw-bold">대한민국 1등 주차 플랫폼</h2>
-          <h1 class="fw-bold">(OH!)차로</h1>
+          <h1 class="fw-bold">주차로</h1>
       </div>
 
       <!-- 오른쪽 열: 이미지 -->
@@ -28,10 +28,10 @@
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
           <h3 class="subheading text-primary">거주자 우선주차 쉐어링 | 거주자 우선주차 신고 | 장애인QR신고</h3>
-        <h2 class="main-heading fw-bold">한번에 해결하는 ALL IN ONE 플랫폼<br>(OH!)차로</h2>
-        <p>웹 과 모바일에 최적화된 화면을 제공합니다.</p>
+        <h2 class="main-heading fw-bold">한번에 해결하는 ALL IN ONE 플랫폼<br>주차로</h2>
+        <p>웹과 모바일에 최적화된 화면을 제공합니다.</p>
           <button class="btn btn-primary mt-3 px-5 py-3" @click="goToHome">
-            오차로 사용하기
+            주차로 사용하기
           </button>
         </div>
 
