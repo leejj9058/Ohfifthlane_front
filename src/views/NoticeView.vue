@@ -156,6 +156,14 @@ const getNotice = async () => {
 
 
 @media (max-width: 768px) {
+  .p-4 {
+    padding-top: 3rem !important; /* 모바일 화면에서 위쪽 여백 추가 */
+  }
+
+  .vh-100 {
+    margin-top: 2rem; /* 공지 게시판 아래로 내리기 위해 여백 추가 */
+  }
+
   .noticeNo {
     width: 10%;
   }

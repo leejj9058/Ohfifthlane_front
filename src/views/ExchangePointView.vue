@@ -202,6 +202,7 @@ onMounted(async () => {
 .container-fluid {
   padding-top: 20px;
   overflow-x: hidden;
+  margin-top: 40px;
 }
 
 .point-balance-section {

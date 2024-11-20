@@ -299,6 +299,7 @@ const registerForm = async () => {
 <style scoped>
 .container-fluid {
   overflow-x: hidden;
+  margin-top: 50px;
 }
 
 .signup-section {
@@ -400,5 +401,52 @@ button:hover {
 .btn-link:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 460px) {
+  .container-fluid {
+    width: 360px;
+    margin-top: 50px;
+    padding: 0 10px;
+  }
+
+  .signup-section {
+    padding: 15px;
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  input {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  .dash {
+    font-size: 16px;
+  }
+
+  .phone-input-container input {
+    padding: 6px;
+    margin-bottom: 10px;
+  }
+
+  .btn-link {
+    font-size: 1.2rem;
+  }
+
+  .arrow-icon {
+    font-size: 1.2rem;
+  }
+
+}
+
 
 </style>

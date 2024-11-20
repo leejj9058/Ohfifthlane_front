@@ -221,6 +221,7 @@ isMobile.value = window.innerWidth <= 768;
 .container-fluid {
   padding-top: 20px;
   overflow-x: hidden;
+  margin-top: 50px;
 }
 
 .custom-placeholder input::placeholder {
@@ -273,5 +274,6 @@ isMobile.value = window.innerWidth <= 768;
     width: 100%;
     gap: 10px;
   }
+
 }
 </style>

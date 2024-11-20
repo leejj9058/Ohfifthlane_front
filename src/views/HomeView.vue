@@ -5,13 +5,11 @@
     <!-- 컨테이너 중앙 정렬 -->
     <div class="container-fluid d-flex flex-column align-items-center justify-content-center" >
 
-
-
       <!-- 검색창 -->
-      <div class="search-container mb-3" style="width: 460px;">
+      <div class="search-container mb-3" style="width: 450px;">
         <div class="input-group searchBar d-flex align-items-center" style="color: rgb(99, 157, 224);">
           <i class="bi bi-geo-alt-fill fs-4 ms-3" style="background-color: white;"></i>
-          <input type="text" class="rounded-search form-control ms-1" style="border: none;" placeholder="어디로 갈까요?"
+          <input type="text" class="rounded-search form-control ms-1" style="border: none; font-size: 12px; " placeholder="어디로 갈까요?"
             v-model="destination" @focus="searchDestination()" />
           <button class="search-button">
             <i class="bi bi-search fs-4 me-2"></i>
@@ -31,7 +29,7 @@
                   <img src="@/assets/images/main11.png" alt="거주자 우선주차" class="card-image" />
                 </div>
                 <div class="card-content">
-                  <h6 class="mt-3 text-start" style="font-weight: bold; font-size: 24px; color:white;">공유 주차장 찾기</h6>
+                  <h6 class="mt-3 text-start" style="font-weight: bold; font-size: 14px; color:white;">공유 주차장 찾기</h6>
                   <div style="color: white;">
                     <p class="mt-0 mb-0 text-start" style="font-size: 12px;">내 근처 공유된 </p>
                     <p class="text-start" style="font-size: 12px;">주차장을 찾을 수 있어요 </p>
@@ -51,8 +49,8 @@
               </div>
 
               <div class="card-content " style="width: 100%; padding: 10px;">
-                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 18px;">거주자</h6>
-                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 18px;">우선주차 구역 신고</h6>
+                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 14px;">거주자</h6>
+                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 13px;">우선주차 구역 신고</h6>
                 <p class="mt-0 mb-0 text-end" style="font-size: 12px;">부정주차 신고</p>
 
                 <div class="text-start">
@@ -73,7 +71,7 @@
               </div>
 
               <div class="card-content" style="width: 100%; padding: 10px;">
-                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 18px;">장애인 주차구역 신고</h6>
+                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 14px;">장애인 주차구역 신고</h6>
                 <p class="mt-0 mb-0 text-end w-100" style="font-size: 12px;">불법주차 QR신고</p>
 
                 <div class="text-start mt-3">
@@ -97,7 +95,7 @@
           <div class="card d-flex flex-row p-3 shadow-sm custom-card justify-content-center align-items-center"
             style="height: 60px; width: 420px; background-color:white;" @click="goToReservationHistory">
             <i class="bi bi-calendar-check d-flex align-items-center me-3 fs-4"></i>
-            <h6 class="m-0 d-flex align-items-center" style="font-weight: bold;">내 예약내역 확인</h6>
+            <h6 class="m-0 d-flex align-items-center" style="font-weight: bold; font-size: 12px;">내 예약내역 확인</h6>
           </div>
         </div>
 
@@ -107,8 +105,8 @@
       <!-- 공지사항 섹션 -->
       <section class="board-section my-1 text-center">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="fw-bold" style="margin-top: 10px;">놓치면 안 될 소식</h3>
-          <button class="btn btn-primary animated-button" style="background-color: rgb(99, 157, 224); border: none"
+          <h6 class="fw-bold" style="margin-top: 10px; font-size: 14px; margin-left: 10px;">📌 놓치면 안 되는 소식</h6>
+          <button class="btn btn-primary animated-button" style="background-color: rgb(99, 157, 224); border: none; "
             @click="goToNoticePage">더보기</button>
         </div>
         <ul class="list-unstyled">
@@ -123,7 +121,7 @@
 
       <!-- 영상 섹션 -->
       <section class="video-section mt-4 text-center" style=" border: none;" >
-        <h3 class="fw-bold">우리 앱이 처음이신가요?</h3>
+        <h6 class="fw-bold">👋 우리 앱이 처음이신가요?</h6>
         <p class="mb-0">주차로를 소개합니다~</p>
         <!-- autoplay, loop, muted 속성 추가 -->
         <video class="mt-0" width="420" height="300" autoplay loop muted style="border-radius: 40px !important; overflow: hidden;">
@@ -323,6 +321,7 @@ const goToReservationHistory = () => {
   padding-top: 20px;
   overflow-x: hidden;
   box-shadow: 0 6px 20px rgba(114, 114, 114, 0.1);
+  padding-bottom: 56.25%; /* 16:9 비율 유지 */
 }
 
 .card {
@@ -384,6 +383,9 @@ const goToReservationHistory = () => {
   transition: background-color 0.3s ease, transform 0.2s ease;
   /* 배경색과 변형에 대한 부드러운 전환 */
   /* 애니메이션 부드럽게 */
+  height: 30px;
+  font-size: 12px;
+  margin-right: 10px;
 }
 
 .animated-button:hover {
@@ -427,6 +429,7 @@ const goToReservationHistory = () => {
     padding: 20px ; /* 모바일에서 전체 화면에 여백 추가 */
     width: 100%;
     max-width: 360px;
+    margin-top: 60px;
   }
 
   .search-container {
@@ -436,6 +439,14 @@ const goToReservationHistory = () => {
 
   .custom-card {
     max-width: 320px;
+  }
+
+  .card-content h6 {
+    font-size: 16px; /* 카드 제목 */
+  }
+
+  .card-content p {
+    font-size: 5px; /* 카드 본문 */
   }
 
   .big-card {

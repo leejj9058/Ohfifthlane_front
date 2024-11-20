@@ -772,6 +772,7 @@ const noParkingLotToast = () => {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     padding: 5px;
+    height: 40px;
 }
 
 
@@ -785,11 +786,11 @@ const noParkingLotToast = () => {
 .filter-buttons {
     position: absolute;
     top: 70px;
-    left: 10px;
-    right: 10px;
+    left: 30px;
+    right: 30px;
     z-index: 1;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 2px;
     background-color: transparent;
     /* 배경색을 투명으로 설정하여 전체 테두리 제거 */
@@ -839,6 +840,27 @@ const noParkingLotToast = () => {
         height: 36px;
         /* 높이도 줄여서 뚱뚱해지지 않게 조정 */
     }
+
+    .revisitButton {
+        width: 180px;
+        font-size: 12px !important;
+    }
+
+    .filter-buttons {
+    position: absolute;
+    top: 60px;
+    left: 30px;
+    right: 30px;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 2px;
+    background-color: transparent;
+    /* 배경색을 투명으로 설정하여 전체 테두리 제거 */
+    padding: 0;
+    /* 전체 패딩 제거 */
+    margin-top: 10px;
+}
 }
 
 /* 아이콘 색상 스타일 */
@@ -908,7 +930,7 @@ const noParkingLotToast = () => {
 
 /* 텍스트 스타일 */
 .filter-button .filter-text {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     /* 텍스트 크기 줄이기 */
     font-weight: 500;
     /* 텍스트 두께 유지 */
@@ -1198,6 +1220,7 @@ const noParkingLotToast = () => {
     /* 각 TimePicker를 균등하게 배치 */
     margin-right: 10px;
     /* TimePicker 간의 간격 */
+    font-size: 13px;
 }
 
 .btn-action {

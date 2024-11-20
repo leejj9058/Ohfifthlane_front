@@ -11,9 +11,10 @@
   <button class="report-back-button mt-1" @click="goBack">
     <i class="fas fa-arrow-left"></i> <!-- 뒤로가기 아이콘 -->
   </button>
-  <p class="report-title">
-  신고할 차량을 <span class="qr-blue-text">번호판이 나오도록</span> 촬영해주세요.
-</p>
+  <p class="report-title text-center">
+  신고 차량의 </p> <span class="qr-blue-text " style="margin-left: 10px; font-weight: bold;">번호판이 나오도록 촬영 </span> 
+  <span class=" text-center">해 주세요</span>
+
 </div>
 
 
@@ -148,6 +149,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+
+.container-fluid {
+  padding-top: 30px;
+  overflow-x: hidden;
+  max-width: 460px;
+  margin: 0 auto;
+  
+}
 /* 모달 스타일 */
 .report-tutorial-container {
   display: flex;
@@ -181,7 +190,7 @@ onBeforeUnmount(() => {
 
 /* 텍스트 스타일 */
 .report-title {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
   margin: 0; /* 텍스트 마진 제거 */
   color: #333;
@@ -296,4 +305,36 @@ onBeforeUnmount(() => {
 .cancel-button {
   background-color: gray;
 }
+@media (max-width: 460px) {
+  .report-modal,
+  .photo-preview {
+    width: 100%; /* 화면 너비의 95%로 설정 */
+  }
+
+  .report-example {
+    width: 180px; /* 예시 이미지 크기 더 축소 */
+    height: 120px;
+  }
+
+  .captured-photo {
+    max-width: 250px; /* 미리보기 사진 크기 더 축소 */
+  }
+
+  .report-title {
+    font-size: 16px; /* 제목 글자 크기 축소 */
+  }
+
+  .report-button,
+  .capture-button,
+  .confirm-button,
+  .cancel-button {
+    font-size: 14px; /* 버튼 글자 크기 더 축소 */
+    padding: 8px 16px; /* 버튼 크기 더 축소 */
+  }
+
+  .camera-video {
+    max-width: 100%; /* 비디오 화면 크기 최적화 */
+  }
+}
+
 </style>
