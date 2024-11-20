@@ -4,13 +4,13 @@
       <button @click="toggleSidebar" class="sidebar-toggle">
         <i class="bi bi-list" ></i>
       </button>
-      <h1 class="logo-text ps-3" @click="goToHome" >주차로</h1>
+      <h1 class="logo-text ps-3 tenada-font" @click="goToHome" >주차로</h1>
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
       <div class="logo-container" v-if="!isMobile">
-        <img width="100" height="100" src="@/assets/images/111.png" alt="car-icon" @click="goToHome" />
-        <h1 class="logo-text">주 차</h1>
+        <img class="mark" width="100" height="100" src="@/assets/images/mark.png" alt="car-icon" @click="goToHome" />
+        <h1 class="logo-text tenada-font">주 차 로</h1>
       </div>
       
       <nav class="nav-menu text-center">
@@ -148,6 +148,24 @@ const goToLogout = async () => {
 </script>
 
 <style scoped>
+
+/* 글씨체 */
+@font-face {
+  font-family: 'Tenada';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-2@1.0/Tenada.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.tenada-font {
+  font-family: 'Tenada', sans-serif;
+}
+
+
+.mark {
+  border-radius: 10%;
+  border: 2px solid #ffffff; /* 흰색 테두리 추가 */
+}
 
 .header-container {
   position: fixed;

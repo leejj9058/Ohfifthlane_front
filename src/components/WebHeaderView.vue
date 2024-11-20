@@ -2,7 +2,7 @@
   <header class="header" :class="{ scrolled: isScrolled }">
     <div class="container">
       <div class="logo">
-        <span class="logo-text" style="margin-right: 100px; font-size: 40px;">오차로</span>
+        <span class="logo-text" style="margin-right: 100px; font-size: 40px;">주차로</span>
       </div>
       <nav class="nav" style="margin-right: 60px;">
         <ul>

@@ -461,5 +461,7 @@ const goToReservationHistory = () => {
     height: auto;
   }
 
+  
+
 }
 </style>
