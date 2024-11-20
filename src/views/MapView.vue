@@ -786,11 +786,11 @@ const noParkingLotToast = () => {
 .filter-buttons {
     position: absolute;
     top: 70px;
-    left: 10px;
-    right: 10px;
+    left: 30px;
+    right: 30px;
     z-index: 1;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: 2px;
     background-color: transparent;
     /* 배경색을 투명으로 설정하여 전체 테두리 제거 */
@@ -845,6 +845,22 @@ const noParkingLotToast = () => {
         width: 180px;
         font-size: 12px !important;
     }
+
+    .filter-buttons {
+    position: absolute;
+    top: 60px;
+    left: 30px;
+    right: 30px;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 2px;
+    background-color: transparent;
+    /* 배경색을 투명으로 설정하여 전체 테두리 제거 */
+    padding: 0;
+    /* 전체 패딩 제거 */
+    margin-top: 10px;
+}
 }
 
 /* 아이콘 색상 스타일 */
@@ -1204,6 +1220,7 @@ const noParkingLotToast = () => {
     /* 각 TimePicker를 균등하게 배치 */
     margin-right: 10px;
     /* TimePicker 간의 간격 */
+    font-size: 13px;
 }
 
 .btn-action {

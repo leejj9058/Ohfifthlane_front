@@ -5,8 +5,6 @@
     <!-- 컨테이너 중앙 정렬 -->
     <div class="container-fluid d-flex flex-column align-items-center justify-content-center" >
 
-
-
       <!-- 검색창 -->
       <div class="search-container mb-3" style="width: 450px;">
         <div class="input-group searchBar d-flex align-items-center" style="color: rgb(99, 157, 224);">
