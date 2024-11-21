@@ -174,7 +174,7 @@ const updateRegister = async () => {
 <style scoped>
 .container-fluid {
   overflow-x: hidden;
-  margin-top: 40px;
+  margin-top: 48px;
 }
 
 .signup-section {

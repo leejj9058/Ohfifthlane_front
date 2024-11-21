@@ -136,15 +136,16 @@ const goNoticeDetail = (noticeId) => {
 .form-input {
   flex: 1;
   padding: 10px;
-  font-size: 16px;
+  font-size: 10px;
   border-radius: 5px;
   border: 1px solid #ddd;
+
 }
 
 .lookup-button {
   margin-left: 10px;
   padding: 10px 15px;
-  font-size: 14px;
+  font-size: 13px;
   background-color: #e0e0e0;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -219,5 +220,15 @@ const goNoticeDetail = (noticeId) => {
 
 .animated-button:active {
   transform: scale(1.1);
+}
+
+@media (max-width:360px) {
+  .form-container {
+  
+  margin: 80px auto;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+
+}
 }
 </style>

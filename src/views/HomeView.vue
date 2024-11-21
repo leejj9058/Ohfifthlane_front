@@ -321,7 +321,6 @@ const goToReservationHistory = () => {
   padding-top: 20px;
   overflow-x: hidden;
   box-shadow: 0 6px 20px rgba(114, 114, 114, 0.1);
-  padding-bottom: 56.25%; /* 16:9 비율 유지 */
 }
 
 .card {
@@ -423,7 +422,7 @@ const goToReservationHistory = () => {
 }
 
 
-@media (max-width: 460px) {
+@media (max-width: 360px) {
 
   .container-fluid {
     padding: 20px ; /* 모바일에서 전체 화면에 여백 추가 */

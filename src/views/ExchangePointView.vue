@@ -7,14 +7,16 @@
       
       <!-- 잔여 포인트 섹션 -->
       <section class="point-balance-section text-center mt-0">
-        <div class="d-flex align-items-center justify-content-between w-100 mb-3">
+        <div class="d-flex align-items-center position-relative w-100 mb-3">
           <!-- 뒤로가기 버튼 -->
           <button class="btn btn-link" @click="goBack">
             <i class="bi bi-arrow-left arrow-icon"></i>
           </button>
-          </div>
-          <!-- 교환소 제목 -->
-          <h4 class="fw-bold text-center">교환소</h4>
+           <!-- 교환소 제목 -->
+          <h4 class="fw-bold text-center" style="margin-left: 90px; text-align: center;">교환소</h4>
+       </div>
+         
+          
         
         <div class="point-info d-flex align-items-center justify-content-between">
           <span>{{ userName }}님</span>
@@ -200,7 +202,7 @@ onMounted(async () => {
 
 <style scoped>
 .container-fluid {
-  padding-top: 20px;
+  padding-top: 30px;
   overflow-x: hidden;
   margin-top: 40px;
 }
