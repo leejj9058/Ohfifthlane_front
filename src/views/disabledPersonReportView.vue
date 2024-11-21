@@ -76,7 +76,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const photo = ref(route.query.photo || null);
-const disabledPersonReportCarNumber = ref("");
+const disabledPersonReportCarNumber = ref(route.query.vehicleNumber || '');
 const currentLat = ref(null); // 현재 위도
 const currentLon = ref(null); // 현재 경도
 const isAgreed = ref(false);
@@ -88,6 +88,7 @@ const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       currentLat.value = position.coords.latitude;
       currentLon.value = position.coords.longitude;
+      console.log('Current Location:', currentLat.value, currentLon.value);
     }, (error) => {
       console.error("위치 정보 가져오기 실패:", error);
       alert("위치 정보를 가져오는 데 실패했습니다.");
@@ -102,6 +103,10 @@ const submitReport = async () => {
   try {
     if (!disabledPersonReportCarNumber.value) {
       alert("차량 번호를 입력하세요.");
+      return;
+    }
+    if (currentLat.value === null || currentLon.value === null) {
+      alert("위치 정보를 가져올 수 없습니다. 다시 시도해 주세요.");
       return;
     }
 
@@ -138,6 +143,7 @@ onMounted(() => {
   if (photo.value) {
     console.log("Captured photo received:", photo.value);
   }
+  
   getCurrentLocation(); // 컴포넌트가 마운트되면 현재 위치 가져오기
 });
 

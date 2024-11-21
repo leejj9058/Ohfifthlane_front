@@ -58,7 +58,7 @@ import axios from "axios";
 
 const route = useRoute();
 const reportCarNumber = ref("");
-const rpzNum = ref("");
+const rpzNum = ref(route.query.rpzNum || "");
 const photo = ref(route.query.photo || null);
 const currentLat = ref(null); // 현재 위도
 const currentLon = ref(null); // 현재 경도
@@ -71,7 +71,7 @@ const sendImageUrl = async () => {
     // Flask 서버에 GET 요청 보내기
     const response = await axios.get("/ai/detect_plate", {
       params: {
-        image_url: `https://172.168.10.11:5173/src/assets/images/uploads/${photo.value}`,
+        image_url: `https://172.168.10.73:5173/src/assets/images/uploads/${photo.value}`,
       },
     });
     console.log(response.data);
@@ -177,6 +177,7 @@ onMounted(() => {
   }
   sendImageUrl();
   getCurrentLocation(); // 컴포넌트가 마운트되면 현재 위치 가져오기
+  
 });
 </script>
 
