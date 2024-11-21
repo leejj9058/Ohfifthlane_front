@@ -49,12 +49,19 @@
 import { ref, onBeforeUnmount, nextTick } from 'vue';
 import Header from '@/components/Header.vue';
 import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
+
+//구획번호 받고 넘기려고 만든 변수
+const route = useRoute();
+const rpzNum = route.query.rpzNum;
+//---------------------------------
 
 const showModal = ref(true);
 const showPreview = ref(false);
 const capturedPhoto = ref(null);
 const videoStream = ref(null);
 const videoElement = ref(null);
+
 
 const goBack = () => {
   window.history.back();
@@ -126,7 +133,7 @@ const confirmPhoto = async () => {
     if (response.status === 200) {
       const photoPath = response.data.reportImage; // 서버가 반환한 이미지 경로
       console.log("Returned photo path: ", photoPath);  // URL 확인용
-      window.location.href = `/residentReportWrite?photo=${encodeURIComponent(photoPath)}`; // 이미지 경로 전달
+      window.location.href = `/residentReportWrite?photo=${encodeURIComponent(photoPath)}&rpzNum=${encodeURIComponent(rpzNum)}`; // 이미지 경로 전달
     } else {
       alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
     }

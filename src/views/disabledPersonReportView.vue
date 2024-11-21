@@ -76,7 +76,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const photo = ref(route.query.photo || null);
-const disabledPersonReportCarNumber = ref("");
+const disabledPersonReportCarNumber = ref(route.query.vehicleNumber || '');
 const currentLat = ref(null); // 현재 위도
 const currentLon = ref(null); // 현재 경도
 const isAgreed = ref(false);

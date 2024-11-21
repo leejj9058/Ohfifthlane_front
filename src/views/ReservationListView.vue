@@ -5,25 +5,19 @@
         <button class="btn btn-link text-danger mb-2" @click="goBack">
           <i class="bi bi-arrow-left arrow-icon"></i>
         </button>
-        <div v-if="reservations === null">
-
-        </div>
-        <div v-else>
-
-        </div>
+        
         <div
           v-for="(item, index) in reservations"
-          :key="reservations.rpzNum"
+          :key="item.rpzNum"
           class="card mb-3 p-3 d-flex flex-row justify-content-between align-items-center"
-          @click="goToDetail(item)"
         >
-          <div>
+          <div @click="goToDetail(item)">
             <p class="reservation-date"><strong>{{ item.reservationDay }}</strong></p>
             <p><strong>구획번호:</strong> {{ item.rpzNum }}</p>
             <p><strong>주소:</strong> {{ item.rpzAddress }}</p>
             <p><strong>예약시간:</strong> {{ item.reservationStartTime }} ~ {{ item.reservationEndTime }}</p>
           </div>
-          <button class="btn btn-danger" @click="goToResidentReport">신고하기</button>
+          <button class="btn btn-danger" @click="goToResidentReport(item)">신고하기</button>
 
         </div>
         <button v-if="showMore" class="btn btn-secondary mt-3 w-100" @click="loadMore">더보기</button>
@@ -40,7 +34,7 @@ import axios from 'axios';
 const router = useRouter();
 
 const reservations = ref([]); // 전체 예약 내역을 저장하는 변수
-const rpzs = ref([]); // 예약에 있는 거주자 우선 주차구역 리스트
+// const rpzs = ref([]); // 예약에 있는 거주자 우선 주차구역 리스트
 const displayedReservations = ref([]); // 표시할 예약 내역을 저장하는 변수
 const itemsToShow = ref(5); // 한 번에 표시할 예약 내역 개수
 const showMore = ref(true); // '더보기' 버튼을 보여줄지 여부
@@ -104,8 +98,10 @@ onMounted(() => {
   
 });
 
-const goToResidentReport = () => {
-  router.replace({ path: "/residentReport", query: {} });
+const goToResidentReport = (item) => {
+  router.replace({ 
+    path: "/residentReport", 
+    query: { rpzNum: item.rpzNum }}); //일단 구획번호만 넘김
 };
 
 </script>

@@ -80,7 +80,10 @@ const submitReport = () => {
   } else if (isRegistered.value) {
     alert("신고 대상 차량이 아닙니다.");
   } else {
-    router.push({ path: '/disabledPersonReportCamera' });
+    router.push({ 
+      path: '/disabledPersonReportCamera',
+      query: { vehicleNumber: vehicleNumber.value } //차량 번호 다음페이지 넘기기
+    });
   }
 };
 

@@ -55,6 +55,14 @@
 import { ref, onBeforeUnmount, nextTick } from "vue";
 import Header from "@/components/Header.vue";
 import axios from "axios";
+import { useRoute } from 'vue-router';
+
+
+
+const route = useRoute();
+
+//쿼리 파라미터로 입력한 차량번호
+const vehicleNumber = route.query.vehicleNumber;
 
 const showModal = ref(true);
 const showPreview = ref(false);
@@ -135,7 +143,8 @@ const confirmPhoto = async () => {
       console.log("Returned photo path: ", photoPath); // URL 확인용
       window.location.href = `/disabledPersonReport?photo=${encodeURIComponent(
         photoPath
-      )}`; // 이미지 경로 전달
+      )}&vehicleNumber=${encodeURIComponent(vehicleNumber)}`; // 이미지 경로와 차량 번호 전달
+
     } else {
       alert("사진 전송에 실패했습니다. 다시 시도해 주세요.");
     }
