@@ -99,7 +99,7 @@ onMounted(() => {
 });
 
 const goToResidentReport = (item) => {
-  router.replace({ 
+  router.push({ 
     path: "/residentReport", 
     query: { rpzNum: item.rpzNum }}); //일단 구획번호만 넘김
 };

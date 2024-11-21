@@ -177,6 +177,7 @@ onMounted(() => {
   }
   sendImageUrl();
   getCurrentLocation(); // 컴포넌트가 마운트되면 현재 위치 가져오기
+  
 });
 </script>
 
