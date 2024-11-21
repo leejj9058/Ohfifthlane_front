@@ -48,7 +48,8 @@
             type="submit"
             class="btn btn-primary"
             :style="{ width: '48%' }"
-            :disabled="!isAgreed || !disabledPersonReportCarNumber" @click="submitReport"
+            :disabled="!isAgreed || !disabledPersonReportCarNumber" 
+            @click="submitReport"
           >
             신고하기
           </button>
