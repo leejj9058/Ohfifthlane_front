@@ -63,6 +63,7 @@ const photo = ref(route.query.photo || null);
 const currentLat = ref(null); // 현재 위도
 const currentLon = ref(null); // 현재 경도
 const router = useRouter();
+const isAgreed = ref(false);
 
 // 파이썬 서버로 사진을 보내서 번호판 인식된 값 받아오는 메서드
 const sendImageUrl = async () => {
@@ -163,6 +164,11 @@ const submitReport = async () => {
   alert("신고 중 오류가 발생했습니다. 다시 시도해 주세요.");
 }
 
+};
+
+// 닫기 버튼 클릭 시 이전 페이지로 돌아가기
+const resetForm = () => {
+  router.back(); // 이전 페이지로 돌아감
 };
 
 onMounted(() => {

@@ -58,7 +58,7 @@ const iv = CryptoJS.enc.Utf8.parse("956914c27b3f7490");
 function onDetect(detectedCodes) {
   result.value = detectedCodes.map((code) => code.rawValue).join(', ');
   const encryptedDataB64 = result.value;
-  alert(`QR 코드가 인식되었습니다: ${result.value}`);
+  alert(`QR 코드가 인식되었습니다`);
 }
 
 function onInit(promise) {
@@ -92,7 +92,7 @@ const stopScanning = () => {
 
 
 const goToNextStep = async () => {
-  alert(result.value);
+  
   const encryptedDataB64 = result.value;
 
   try {
