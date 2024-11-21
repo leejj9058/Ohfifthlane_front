@@ -2,7 +2,7 @@
   <Header />
   <div class="form-container">
      <!-- 큰 제목: 불법주차 신고하기 -->
-     <h2 class="title-main text-center mb-2">불법주차 신고하기</h2>
+     <h2 class="title-main text-center mb-2">부정주차 신고하기</h2>
   
   <!-- 작은 제목: 장애인 전용구역 -->
   <h5 class="title-sub text-center mb-5">거주자 우선 주차구역</h5>
@@ -188,10 +188,10 @@ onMounted(() => {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 .title-main {
-    font-size: 34px;
+    font-size: 25px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: px;
   }
 
 .form-title {
@@ -201,7 +201,7 @@ onMounted(() => {
   margin-bottom: 5px;
 }
 .title-sub {
-    font-size: 22px;
+    font-size: 15px;
     font-weight: bold;
     color: #003366;
     margin-top: 0;
@@ -244,6 +244,14 @@ onMounted(() => {
 
 .form-check-label {
   margin-left: 5px; /* 체크박스와 라벨 사이 간격 */
+}
+
+@media (max-width: 360px) {
+  .form-container {
+  max-width: 350px;
+  }
+
+
 }
 
 </style>

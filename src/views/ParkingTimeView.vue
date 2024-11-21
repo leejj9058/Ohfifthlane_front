@@ -2,7 +2,7 @@
   <Header></Header>
 
   <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
-    <div class="d-flex justify-content-center align-items-center p-3 card" id="background">
+    <div class="d-flex justify-content-center align-items-center  card" id="background">
       <div class="p-4" style="max-width: 700px;">
         <div class="d-flex align-items-center">
           <button class="btn btn-link mb-3" @click="goBack">

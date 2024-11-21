@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid d-flex flex-column align-items-center">
-    <div class="search-wrapper vh-100">
+    <div class="search-wrapper ">
       <div class="input-group mb-3">
         <div class="position-relative flex-grow-1">
           <span class="position-absolute" style="left: 10px; top: 50%; transform: translateY(-50%);" @click="goBack">
@@ -225,10 +225,16 @@ const updateMap = (lat, lng) => {
 </script>
 
 <style scoped>
+.container-fluid{
+  overflow-x: hidden;
+  padding: 0 0 ;
+}
+
 .map-container {
-  width: 100%;
   height: 300px;
   margin-top: 20px;
+  border: 1px solid rgb(204, 192, 192); 
+  border-radius: 8px;
 }
 
 #map {
@@ -251,7 +257,6 @@ const updateMap = (lat, lng) => {
   border-radius: 8px;
   padding: 20px;
   margin-top: 20px;
-  min-height: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -267,10 +272,14 @@ const updateMap = (lat, lng) => {
 }
 
 /* 화면 크기가 576px 이하일 때 */
-@media (max-width: 576px) {
+@media (max-width: 360px) {
   .search-wrapper {
     padding: 10px;
   }
+
+  .container-fluid{
+  padding: 0 0 ;
+}
 }
 
 /* placeholder 색상 조정 */
@@ -313,10 +322,7 @@ input:focus {
   transition: background-color 0.3s;
 }
 
-.container-fluid {
-  padding-top: 20px;
-  overflow-x: hidden;
-}
+
 
 .input-group-text {
   cursor: pointer;
