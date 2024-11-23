@@ -1,233 +1,237 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import SetParking from '../views/SetParkingView.vue';
-import ParkingTime from '../views/ParkingTimeView.vue';
-import NoticeBoard from '../views/NoticeView.vue';
-import InquiryBoard from '../views/InquiryBoardView.vue';
-import Notice from '../views/NoticeView.vue';
-import BoardDetail from '../views/BoardDetailNoticeView.vue';   
-import NewBoard from '../views/BoardWriteView.vue';
-import ReportListView from '../views/ReportListView.vue';
-import ReportDetailView from '../views/ReportDetailView.vue';
-import QRcodeView from '../views/QRcodeView.vue';
-import QRcodeReportView from '../views/QRcodeReportView.vue';
-import ResidentReportView from '../views/ResidentReportView.vue' 
-import ResidentReportWriteView from '../views/ResidentReportWriteView.vue'
-import MapView from '../views/MapView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import HomeView from "../views/HomeView.vue";
+import SetParking from "../views/SetParkingView.vue";
+import ParkingTime from "../views/ParkingTimeView.vue";
+import NoticeBoard from "../views/NoticeView.vue";
+import InquiryBoard from "../views/InquiryBoardView.vue";
+import Notice from "../views/NoticeView.vue";
+import BoardDetail from "../views/BoardDetailNoticeView.vue";
+import NewBoard from "../views/BoardWriteView.vue";
+import ReportListView from "../views/ReportListView.vue";
+import ReportDetailView from "../views/ReportDetailView.vue";
+import QRcodeView from "../views/QRcodeView.vue";
+import QRcodeReportView from "../views/QRcodeReportView.vue";
+import ResidentReportView from "../views/ResidentReportView.vue";
+import ResidentReportWriteView from "../views/ResidentReportWriteView.vue";
+import MapView from "../views/MapView.vue";
+import RecommendNearRPZView from "@/views/RecommendNearRPZView.vue";
+import ResidentReportComplete from "@/views/ResidentReportComplete.vue";
 
-
-
-import Search from '../views/SearchView.vue';
+import Search from "../views/SearchView.vue";
 //연습
-import DatePicker from '../views/DatePicker.vue'
-import PaymentComplete from '../views/PaymentComplete.vue'
-import ReservationListView from '../views/ReservationListView.vue'
-import ReservationDetail from '../views/ReservationDetail.vue'
-import SearchView from '../views/SearchView.vue'
-import ParkingPayment from '../views/ParkingPayment.vue'
-import Reservation from '../views/Reservation.vue'
-import BoardDetailInquiryView from '@/views/BoardDetailInquiryView.vue';
-import BoardDetailNoticeView from '../views/BoardDetailNoticeView.vue';
-
+import DatePicker from "../views/DatePicker.vue";
+import PaymentComplete from "../views/PaymentComplete.vue";
+import ReservationListView from "../views/ReservationListView.vue";
+import ReservationDetail from "../views/ReservationDetail.vue";
+import SearchView from "../views/SearchView.vue";
+import ParkingPayment from "../views/ParkingPayment.vue";
+import Reservation from "../views/Reservation.vue";
+import BoardDetailInquiryView from "@/views/BoardDetailInquiryView.vue";
+import BoardDetailNoticeView from "../views/BoardDetailNoticeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
+      path: "/",
+      name: "home",
+      component: HomeView,
     },
     {
-      path: '/setParking',
-      name: 'setParking',
-      component: SetParking
+      path: "/setParking",
+      name: "setParking",
+      component: SetParking,
     },
     {
-      path: '/timeSet',
-      name: 'timeSet',
-      component: ParkingTime
+      path: "/timeSet",
+      name: "timeSet",
+      component: ParkingTime,
     },
     {
-      path: '/notice',
-      name: 'notice',
-      component: Notice
+      path: "/notice",
+      name: "notice",
+      component: Notice,
     },
     {
-      path: '/inquiry',
-      name: 'inquiry',
-      component: InquiryBoard
+      path: "/inquiry",
+      name: "inquiry",
+      component: InquiryBoard,
     },
     {
-      path: '/notice/:noticeId',  // 동적 라우트 경로
-      name: 'boardDetailNotice',
-      component: BoardDetailNoticeView
+      path: "/notice/:noticeId", // 동적 라우트 경로
+      name: "boardDetailNotice",
+      component: BoardDetailNoticeView,
     },
     {
-      path: '/inquiry/:inquiryId',  
-      name: 'boardDetailInquiry',
+      path: "/inquiry/:inquiryId",
+      name: "boardDetailInquiry",
       component: BoardDetailInquiryView, //문의사항 상세
     },
     {
-      path: '/newBoard/:boardType',
-      name: 'newBoard',
-      component: NewBoard
+      path: "/newBoard/:boardType",
+      name: "newBoard",
+      component: NewBoard,
     },
     {
-      path: '/reportList',
-      name: 'reportList',
-      component: ReportListView
+      path: "/reportList",
+      name: "reportList",
+      component: ReportListView,
     },
     {
-      path: '/reportDetail/:reportId',
-      name: 'reportDetail',
-      component: ReportDetailView
+      path: "/reportDetail/:reportId",
+      name: "reportDetail",
+      component: ReportDetailView,
     },
     {
-      path: '/disabledPersonReport',
-      name: 'disabledPersonReport',
-      component: () => import('../views/DisabledPersonReportView.vue'),
-    },
-
-    {
-      path: '/disabledPersonReportList',
-      name: 'disabledPersonReportList',
-      component: () => import('../views/DisabledPersonReportListView.vue'),
+      path: "/disabledPersonReport",
+      name: "disabledPersonReport",
+      component: () => import("../views/DisabledPersonReportView.vue"),
     },
 
     {
-      path: '/disabledPersonReportDetail/:disabledPersonReportId',
-      name: 'disabledPersonReportDetail',
-      component: () => import('../views/DisabledPersonReportDetailView.vue'),
+      path: "/disabledPersonReportList",
+      name: "disabledPersonReportList",
+      component: () => import("../views/DisabledPersonReportListView.vue"),
+    },
+
+    {
+      path: "/disabledPersonReportDetail/:disabledPersonReportId",
+      name: "disabledPersonReportDetail",
+      component: () => import("../views/DisabledPersonReportDetailView.vue"),
     },
     {
-      path: '/disabledPersonReportCamera',
-      name: 'disabledPersonReportCamera',
-      component: () => import('../views/DisabledPersonReportCameraView.vue'),
+      path: "/disabledPersonReportCamera",
+      name: "disabledPersonReportCamera",
+      component: () => import("../views/DisabledPersonReportCameraView.vue"),
     },
     {
-      path: '/disabledPersonReportCamera',
-      name: 'disabledPersonReportCamera',
-      component: () => import('../views/DisabledPersonReportCameraView.vue')
+      path: "/disabledPersonReportCamera",
+      name: "disabledPersonReportCamera",
+      component: () => import("../views/DisabledPersonReportCameraView.vue"),
     },
-    
+
     {
-      path: '/qrcode',
-      name: 'qrcode',
-      component: QRcodeView
-    },
-    {
-      path: '/qrcodereport',
-      name: 'qrcodereport',
-      component: QRcodeReportView
+      path: "/qrcode",
+      name: "qrcode",
+      component: QRcodeView,
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/RegisterView.vue')
+      path: "/qrcodereport",
+      name: "qrcodereport",
+      component: QRcodeReportView,
     },
     {
-      path: '/updateRegister',
-      name: 'updateRegister',
-      component: () => import('../views/UpdateRegisterView.vue')
+      path: "/register",
+      name: "register",
+      component: () => import("../views/RegisterView.vue"),
     },
     {
-      path: '/findId',
-      name: 'findId',
-      component: () => import('../views/FindIdView.vue')
+      path: "/updateRegister",
+      name: "updateRegister",
+      component: () => import("../views/UpdateRegisterView.vue"),
     },
     {
-      path: '/findPassword',
-      name: 'findPassword',
-      component: () => import('../views/FindPwView.vue')
+      path: "/findId",
+      name: "findId",
+      component: () => import("../views/FindIdView.vue"),
     },
     {
-      path: '/updatePw',
-      name: 'updatePw',
-      component: () => import('../views/UpdatePwView.vue')
+      path: "/findPassword",
+      name: "findPassword",
+      component: () => import("../views/FindPwView.vue"),
     },
     {
-      path: '/exchange',
-      name: 'exchange',
-      component: () => import('../views/ExchangePointView.vue')
+      path: "/updatePw",
+      name: "updatePw",
+      component: () => import("../views/UpdatePwView.vue"),
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/Login.vue')
+      path: "/exchange",
+      name: "exchange",
+      component: () => import("../views/ExchangePointView.vue"),
     },
     {
-      path: '/residentReport',
-      name: 'residentReport',
-      component: ResidentReportView
+      path: "/login",
+      name: "login",
+      component: () => import("../views/Login.vue"),
     },
     {
-      path: '/residentReportWrite',
-      name: 'residentReportWrite',
+      path: "/residentReport",
+      name: "residentReport",
+      component: ResidentReportView,
+    },
+    {
+      path: "/residentReportWrite",
+      name: "residentReportWrite",
       component: ResidentReportWriteView,
       props: true,
     },
     {
-      path: '/paymentComplete',
-      name: 'paymentComplete',
-      component: PaymentComplete
+      path: "/paymentComplete",
+      name: "paymentComplete",
+      component: PaymentComplete,
     },
     {
-      path: '/reservationList',
-      name: 'reservationList',
-      component: ReservationListView
+      path: "/reservationList",
+      name: "reservationList",
+      component: ReservationListView,
     },
     {
-      path: '/reservationDetail',
-      name: 'reservationDetail',
-      component: ReservationDetail
+      path: "/reservationDetail",
+      name: "reservationDetail",
+      component: ReservationDetail,
     },
     {
-      path: '/search/:destination',
-      name: 'searchDestination',
-      component: SearchView
+      path: "/search/:destination",
+      name: "searchDestination",
+      component: SearchView,
     },
     {
-      path: '/search',
-      name: 'search',
-      component: SearchView
+      path: "/search",
+      name: "search",
+      component: SearchView,
     },
     {
-      path: '/parkingPayment',
-      name: 'parkingPayment',
-      component: ParkingPayment
+      path: "/parkingPayment",
+      name: "parkingPayment",
+      component: ParkingPayment,
     },
     {
-      path: '/datepicker',
-      name: 'datepicker',
-      component: DatePicker
+      path: "/datepicker",
+      name: "datepicker",
+      component: DatePicker,
     },
     {
-      path: '/map',
-      name: 'map',
+      path: "/map",
+      name: "map",
       component: MapView,
     },
     {
-      path: '/main',
-      name: 'main',
-      component: () => import('../views/MainWebView.vue')
+      path: "/main",
+      name: "main",
+      component: () => import("../views/MainWebView.vue"),
     },
     {
-      path: '/reservation',
-      name: 'reservation',
-      component: Reservation
-    }
-    ,
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+      path: "/reservation",
+      name: "reservation",
+      component: Reservation,
     },
-
-    
-
-  ]
-  
+    {
+      path: "/about",
+      name: "about",
+      component: () => import("../views/AboutView.vue"),
+    },
+    {
+      path: "/recommendNearRPZView",
+      name: "recommendNearRPZView",
+      component: RecommendNearRPZView,
+    },
+    {
+      path: "/residentReportComplete",
+      name: "residentReportComplete",
+      component: ResidentReportComplete,
+    },
+  ],
 });
 
 export default router;
