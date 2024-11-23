@@ -57,12 +57,15 @@
 
   <!-- 목적지 선택 확인 모달 -->
   <div v-if="showConfirmModal" class="modal-overlay">
-    <div class="modal-content">
-      <p>목적지를 선택하시겠습니까?</p>
-      <button @click="moveToMap(selectedItem)">확인</button>
-      <button @click="showConfirmModal = false">취소</button>
+  <div class="modal-content">
+    <p>목적지를 선택하시겠습니까?</p>
+    <div class="button-group">
+      <button class="btn btn-confirm" @click="moveToMap(selectedItem)">확인</button>
+      <button class="btn btn-cancel" @click="showConfirmModal = false">취소</button>
     </div>
   </div>
+</div>
+
 </template>
 
 <script setup>import { ref, onMounted, nextTick } from 'vue';
@@ -355,14 +358,54 @@ input:focus {
   justify-content: center;
   z-index: 9999;
 }
-
 .modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
-  width: 80%;
+  width: 90%;
   max-width: 400px;
+}
+
+.modal-content p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.btn {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-confirm {
+  background-color: #93b0ff; /* 연파랑 */
+  color: white;
+}
+
+.btn-confirm:hover {
+  background-color: #6f96ff; /* 살짝 어두운 연파랑 */
+}
+
+.btn-cancel {
+  background-color: #d3d3d3; /* 연회색 */
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background-color: #c0c0c0; /* 살짝 어두운 연회색 */
 }
 </style>

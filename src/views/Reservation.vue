@@ -135,7 +135,7 @@ const reservationTimes = ref([]); // DB에서 가져온 예약정보
 
 onMounted(() => {
   // RPZ 정보 가져오기
-  getRPZById(route.query.rpzId);
+  getRPZById(RPZId);
 
   getUserId();
   getReservation();
