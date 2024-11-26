@@ -58,7 +58,7 @@
   <!-- 목적지 선택 확인 모달 -->
   <div v-if="showConfirmModal" class="modal-overlay">
   <div class="modal-content">
-    <p>목적지를 선택하시겠습니까?</p>
+    <p style="font-size: 18px;">목적지를 선택하시겠습니까?</p>
     <div class="button-group">
       <button class="btn btn-confirm" @click="moveToMap(selectedItem)">확인</button>
       <button class="btn btn-cancel" @click="showConfirmModal = false">취소</button>

@@ -29,10 +29,10 @@
                   <img src="@/assets/images/main11.png" alt="거주자 우선주차" class="card-image" />
                 </div>
                 <div class="card-content">
-                  <h6 class="mt-3 text-start" style="font-weight: bold; font-size: 14px; color:white;">공유 주차장 찾기</h6>
+                  <h6 class="mt-3 text-start" style="font-weight: bold; font-size: 15px; color:white;">공유 주차장 찾기</h6>
                   <div style="color: white;">
-                    <p class="mt-0 mb-0 text-start" style="font-size: 12px;">내 근처 공유된 </p>
-                    <p class="text-start" style="font-size: 12px;">주차장을 찾을 수 있어요 </p>
+                    <p class="mt-0 mb-0 text-start" style="font-size: 10px;">내 근처 공유된 </p>
+                    <p class="text-start" style="font-size: 10px;">주차장을 찾을 수 있어요 </p>
                   </div>
                 </div>
               </div>
@@ -71,7 +71,7 @@
               </div>
 
               <div class="card-content" style="width: 100%; padding: 10px;">
-                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 14px;">장애인 주차구역 신고</h6>
+                <h6 class="mb-0 text-end" style="font-weight: bold; font-size: 12px;">장애인 주차구역 신고</h6>
                 <p class="mt-0 mb-0 text-end w-100" style="font-size: 12px;">불법주차 QR신고</p>
 
                 <div class="text-start mt-3">
@@ -318,9 +318,10 @@ const goToReservationHistory = () => {
 }
 
 .container-fluid {
-  padding-top: 20px;
+  padding-top: 80px;
   overflow-x: hidden;
   box-shadow: 0 6px 20px rgba(114, 114, 114, 0.1);
+
 }
 
 .card {

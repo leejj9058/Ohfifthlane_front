@@ -471,7 +471,7 @@ const confirmPayment = () => {
 }
 
 .card-text {
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   line-height: 0.5;
   color: rgb(114, 114, 114);
 }

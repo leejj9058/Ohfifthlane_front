@@ -80,10 +80,11 @@ onMounted(() => {
 }
 
 .confirmation-message {
-  font-size: 28px;
+  font-size: 25px;
   font-weight: bold;
   color: rgb(63, 63, 63);
   margin-top: 20px;
+
 }
 
 .notification {
@@ -119,11 +120,16 @@ button {
 .btn-home {
   background-color: #dcdcdc;
   color: #333333;
+  width: 200px;
+  height: 50px;
 }
 
 .btn-recommend {
   background-color: #b8d3ff;
   color: rgb(0, 0, 0);
+  width: 200px;
+  height: 50px;
+  font-size: 12px;
 }
 
 button:hover {
