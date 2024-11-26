@@ -30,13 +30,13 @@
       type="number" 
       class="form-control no-focus me-2" 
       placeholder="사용할 포인트를 입력해주세요." 
-      style="width: 280px; padding: 0.3rem; font-size: 0.9rem;" 
-      v-model="inputUsedPoints"
+      style="width: 190px; padding: 0.3rem; font-size: 0.6rem; height: 50px;" 
+      v-model="inputUsedPoints" 
     />
     <button 
       class="btn custom-btn" 
       :class="{ 'custom-btn-active': inputUsedPoints > 0 }" 
-      @click="usedPoint"
+      @click="usedPoint" style="font-size: 12px; margin-left: 2px; height: 50px;"
     >사용하기</button>
   </div>
   <div class="d-flex justify-content-between align-items-center mt-2">

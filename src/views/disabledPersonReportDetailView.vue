@@ -74,7 +74,7 @@
               class="btn btn-primary me-4"
               @click="updateDisabledPersonReportStatus(1)"
             >
-              견인
+              승인
             </button>
             <button
               class="btn btn-danger ms-4"
@@ -111,7 +111,7 @@ const disabledPersonReport = ref({});
 const loading = ref(true);
 
 const updateDisabledPersonReportStatus = async (status) => {
-  const statusText = status === 1 ? "견인" : "반려";
+  const statusText = status === 1 ? "승인" : "반려";
   if (confirm(`${statusText} 처리 하시겠습니까?`)) {
     try {
       const response = await axios.put(

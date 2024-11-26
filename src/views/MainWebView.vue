@@ -38,7 +38,7 @@
         <!-- 오른쪽 열: 왼쪽에서 날아오는 애니메이션 -->
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
-          <img src="@/assets/images/Omaincapture.png" class="animated-icon fade-in-down scroll-animate" style="height: 400px;"/>
+          <img src="@/assets/images/WebMain.png" class="animated-icon fade-in-down scroll-animate" style="height: 400px;"/>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@
         <!-- 오른쪽 열: 오른쪽에서 날아오는 애니메이션 -->
         <div class="col-md-6">
           <div class="spacer mb-3"></div>
-          <img src="@/assets/images/shareimage.png" class="animated-icon fade-in-left scroll-animate" style="height: 400px;" />
+          <img src="@/assets/images/parkingshare.png" class="animated-icon fade-in-left scroll-animate" style="height: 400px;" />
         </div>
       </div>
     </div>
