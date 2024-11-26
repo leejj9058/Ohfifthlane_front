@@ -73,7 +73,7 @@ const startCamera = async () => {
   await enableCamera();
 };
 
-/* const enableCamera = async () => {
+ const enableCamera = async () => {
   videoElement.value = document.querySelector('video');
   try {
     // 후면 카메라 사용 설정
@@ -90,7 +90,7 @@ const startCamera = async () => {
     console.error("Camera error: ", error);
   }
 };
-*/
+/*
 const enableCamera = async () => {
   videoElement.value = document.querySelector('video');
   try {
@@ -102,7 +102,7 @@ const enableCamera = async () => {
     alert("카메라에 접근할 수 없습니다.");
   }
 };
-
+*/
 
 const capturePhoto = () => {
   const canvas = document.createElement("canvas");
@@ -277,6 +277,7 @@ onBeforeUnmount(() => {
   align-items: center;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
+  margin-top: 30px;
 }
 
 .photo-preview {
@@ -289,14 +290,15 @@ onBeforeUnmount(() => {
 }
 
 .preview-title {
-  font-size: 22px;
+  font-size: 20x;
+  
   margin-bottom: 20px;
 }
 
 .preview-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .captured-photo {

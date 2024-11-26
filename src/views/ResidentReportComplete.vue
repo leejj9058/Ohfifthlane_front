@@ -16,12 +16,6 @@
         </button>
       </div>
 
-      <!-- 위도와 경도 표시 -->
-      <div v-if="latitude && longitude">
-        <p>현재 위치:</p>
-        <p>위도: {{ latitude }}</p>
-        <p>경도: {{ longitude }}</p>
-      </div>
     </div>
   </div>
 </template>
