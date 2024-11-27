@@ -5,19 +5,19 @@
     <h2 class="title-main text-center mb-2">부정주차 신고하기</h2>
 
     <!-- 작은 제목: 장애인 전용구역 -->
-    <h5 class="title-sub text-center mb-5">거주자 우선 주차구역</h5>
+    <h5 class="title-sub text-center mb-5"ㅍ>거주자 우선 주차구역</h5>
     <p class="form-title"><strong><i class="bi bi-image me-2 text-primary"></i>사진</strong></p>
 
     <img v-if="photo" :src="`/src/assets/images/uploads/${photo}`" alt="Captured Photo"
       style="width:350px; height: 350px;" />
-    <p class="form-title"><strong><i class="bi bi-car-front me-2 text-primary"></i>차량번호</strong></p>
+    <p class="form-title"><strong><i class="bi bi-car-front me-2 text-primary" ></i>차량번호</strong></p>
     <input type="text" class="form-input" placeholder="차량번호 입력" v-model="reportCarNumber" />
     <p class="form-title"><strong><i class="bi bi-house-door me-2 text-primary"></i>거주자 주차 구획 번호</strong></p>
     <input type="text" class="form-input" placeholder="주차면번호를 입력하세요. 예 : 11305-00-00" v-model="rpzNum" />
     <!-- 신고 내용 공유 동의 체크박스 -->
     <div class="form-check mb-3 text-start">
       <input type="checkbox" id="agreeCheckbox" v-model="isAgreed" class="form-check-input" />
-      <label class="form-check-label" for="agreeCheckbox">
+      <label class="form-check-label" for="agreeCheckbox" >
         신고 내용 공유에 동의합니다.
       </label>
     </div>
@@ -188,7 +188,7 @@ onMounted(() => {
 }
 
 .title-main {
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
   color: #333;
   margin-bottom: px;
@@ -202,7 +202,7 @@ onMounted(() => {
 }
 
 .title-sub {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: bold;
   color: #003366;
   margin-top: 0;
@@ -211,7 +211,7 @@ onMounted(() => {
 .form-input {
   width: 100%;
   padding: 10px;
-  font-size: 16px;
+  font-size: 20px;
   margin-bottom: 15px;
   border-radius: 5px;
   border: 1px solid #ddd;

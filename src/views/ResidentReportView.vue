@@ -11,36 +11,36 @@
   <button class="report-back-button mt-1" @click="goBack">
     <i class="fas fa-arrow-left"></i> <!-- 뒤로가기 아이콘 -->
   </button>
-  <p class="report-title text-center">
-  신고 차량의 </p> <span class="qr-blue-text " style="margin-left: 10px; font-weight: bold;">번호판이 나오도록 촬영 </span> 
-  <span class=" text-center">해 주세요</span>
+  <p class="report-title text-center " style="font-size: 25px;">
+  신고 차량의 </p> <span class="qr-blue-text " style="margin-left: 10px; font-weight: bold; font-size: 25px;">번호판이 나오도록 촬영 </span> 
+  <span class=" text-center" style="font-size: 25px;">해 주세요</span>
 
 </div>
 
 
       <div class="report-container">
-        <img src="@/assets/images/example-photo.png" alt="예시 이미지" class="report-example" />
+        <img src="@/assets/images/example-photo.png" alt="예시 이미지" class="report-example" style="width: 300px; height: 250px"/>
       </div>
-      <button class="report-button" @click="startCamera">촬영하기</button>
+      <button class="report-button" @click="startCamera" style="font-size: 25px;">촬영하기</button>
     </div>
   </div>
 
   <!-- 두 번째 모달: 사진 미리보기 -->
   <div v-else-if="showPreview" class="photo-preview-modal">
     <div class="photo-preview">
-      <p class="preview-title">이 사진으로 하시겠습니까?</p>
+      <p class="preview-title" style="font-size: 25px;">이 사진으로 하시겠습니까?</p>
       <div class="preview-container">
         <img :src="capturedPhoto" alt="Captured Photo" class="captured-photo" />
       </div>
-      <button class="confirm-button" @click="confirmPhoto">확인</button>
-      <button class="cancel-button" @click="retakePhoto">다시 촬영</button>
+      <button class="confirm-button" @click="confirmPhoto" style="font-size: 20px;">확인</button>
+      <button class="cancel-button" @click="retakePhoto" style="margin-left: 10px; font-size: 20px;">다시 촬영</button>
     </div>
   </div>
 
   <!-- 카메라 뷰 (사진 촬영) -->
   <div v-else class="camera-view">
     <video ref="video" class="camera-video" autoplay></video>
-    <button class="capture-button" @click="capturePhoto">사진 찍기</button>
+    <button class="capture-button" @click="capturePhoto" style="font-size: 25px;">사진 찍기</button>
   </div>
 </template>
 
@@ -197,7 +197,7 @@ onBeforeUnmount(() => {
 
 /* 텍스트 스타일 */
 .report-title {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   margin: 0; /* 텍스트 마진 제거 */
   color: #333;

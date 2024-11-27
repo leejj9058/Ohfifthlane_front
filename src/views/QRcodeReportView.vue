@@ -1,17 +1,17 @@
 <template>
   <Header></Header>
   <div class="form-container">
-    <p class="form-title">신고할 차량의 차량번호를 조회하기</p>
+    <p class="form-title" style="font-size: 25px;">신고할 차량의 차량번호를 조회하기</p>
     <div class="input-row">
-      <input type="text" class="form-input" placeholder="차량번호 입력" v-model="vehicleNumber" />
-      <button class="lookup-button" @click="checkVehicleRegistration">조회</button>
+      <input type="text" class="form-input"  placeholder="차량번호 입력" v-model="vehicleNumber" />
+      <button class="lookup-button" @click="checkVehicleRegistration" >조회</button>
     </div>
     <div v-if="registrationChecked">
       <div v-if="isRegistered" class="info-box registered">
         <p><strong class="inputCarNum">{{ staticVehicleNumber }}</strong>차량은 신고 대상 차량이 아닙니다</p>
       </div>
       <div v-else class="info-box unregistered">
-        <p><strong class="inputCarNum">{{ staticVehicleNumber }}</strong>차량은 신고 대상 차량입니다.</p>
+        <p style="font-size: 20px;"><strong class="inputCarNum">{{ staticVehicleNumber }}</strong> 차량은 신고 대상 차량입니다.</p>
         <p class="warning">*차량번호가 일치하는지 한번 더 확인해 주세요*</p>
         
       </div>
@@ -106,13 +106,14 @@ const goNoticeDetail = (noticeId) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 50px;
   background-color: #f9f9f9;
   width: 100%;
   max-width: 460px;
   margin: 30px auto;
   border-radius: 15px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+
 }
 
 .form-photo {
@@ -139,7 +140,7 @@ const goNoticeDetail = (noticeId) => {
 .form-input {
   flex: 1;
   padding: 10px;
-  font-size: 10px;
+  font-size: 12px;
   border-radius: 5px;
   border: 1px solid #ddd;
 
@@ -148,7 +149,7 @@ const goNoticeDetail = (noticeId) => {
 .lookup-button {
   margin-left: 10px;
   padding: 10px 15px;
-  font-size: 13px;
+  font-size: 20px;
   background-color: #e0e0e0;
   border: 1px solid #ddd;
   border-radius: 5px;

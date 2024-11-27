@@ -14,7 +14,7 @@
         v-if="photo"
         :src="`/src/assets/images/uploads/${photo}`"
         alt="Captured Photo"
-        style="width: 300px; height: 300px"
+        style="width: 380px; height: 350px"
       />
 
       <!-- 차량 번호 입력 -->
@@ -22,7 +22,7 @@
         <!-- 차량 번호 아이콘 -->
         <i class="bi bi-car-front me-2 text-primary"></i>
         <!-- 차량 번호 텍스트 왼쪽 정렬 -->
-        <label for="disabledPersonReportCarNumber" class="form-label mb-0"
+        <label for="disabledPersonReportCarNumber" class="form-label mb-0" style="font-size: 25px;"
           >차량 번호</label
         >
       </div>
@@ -45,7 +45,7 @@
           v-model="isAgreed"
           class="form-check-input"
         />
-        <label class="form-check-label mb-2" for="agreeCheckbox">
+        <label class="form-check-label mb-2" for="agreeCheckbox" style="font-size: 20px;">
           신고 내용 공유에 동의합니다.
         </label>
       </div>

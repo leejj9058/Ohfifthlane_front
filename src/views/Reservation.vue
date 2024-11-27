@@ -12,10 +12,10 @@
       <div class="content-card">
         <div class="card-body text-center">
           <h5 class="card-title"><strong>{{ RPZNum }}</strong></h5>
-          <p class="card-text"><strong>{{ RPZAddress }}</strong></p>
+          <p class="card-text" style="font-size: 15px;"><strong>{{ RPZAddress }}</strong></p>
           <div class="d-flex justify-content-between align-items-center">
-            <p class="text mb-0"><strong>🅿️ 주차요금</strong></p>
-            <p class="text mb-0"><strong>10분당 {{ rpzFee }}원</strong></p>
+            <p class="text mb-0" style="font-size: 18px;"><strong>🅿️ 주차요금</strong></p>
+            <p class="text mb-0" style="font-size: 18px;"><strong>10분당 {{ rpzFee }}원</strong></p>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
           </div>
         </div>
 
-        <p class="bold-text mt-3">예약시간 설정 (최소 30분부터 가능)</p>
+        <p class="bold-text mt-3" style="font-size: 20px;">예약시간 설정 (최소 30분부터 가능)</p>
 
         <div class="d-flex flex-column align-items-center">
           <p class="selected-date small-text">
@@ -619,7 +619,8 @@ const confirmPayment = () => {
   /* 컨테이너 */
   .container-fluid {
     overflow-x: hidden; /* 가로 스크롤 숨김 */
-    max-width: 360px; /* 부모 요소에 맞춤 */
+    max-width: 480px; /* 부모 요소에 맞춤 */
+    padding: 0;
   }
 }
 
