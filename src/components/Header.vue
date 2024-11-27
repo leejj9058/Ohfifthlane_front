@@ -8,7 +8,7 @@
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
-      <div class="logo-container" v-if="!isMobile">
+      <div class="logo-container">
         <img class="mark" width="100" height="100" src="@/assets/images/mark.png" alt="car-icon" @click="goToHome" />
         <h1 class="logo-text tenada-font">주 차 로</h1>
       </div>
