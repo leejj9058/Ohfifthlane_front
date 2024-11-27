@@ -30,13 +30,13 @@
       type="number" 
       class="form-control no-focus me-2" 
       placeholder="사용할 포인트를 입력해주세요." 
-      style="width: 190px; padding: 0.3rem; font-size: 0.6rem; height: 50px;" 
+      style="width: 220px; padding: 0.3rem; font-size: 0.9rem; height: 50px;" 
       v-model="inputUsedPoints" 
     />
     <button 
       class="btn custom-btn" 
       :class="{ 'custom-btn-active': inputUsedPoints > 0 }" 
-      @click="usedPoint" style="font-size: 12px; margin-left: 2px; height: 50px;"
+      @click="usedPoint" style="font-size: 15px; margin-left: 9px; height: 50px;"
     >사용하기</button>
   </div>
   <div class="d-flex justify-content-between align-items-center mt-2">
@@ -376,10 +376,8 @@ const reservationPaymentFee = () => {
 @media (max-width: 460px) {
 
   .container-fluid {
-    padding: 20 5px;
-    /* 모바일에서 전체 화면에 10px 패딩 추가 */
-    overflow-x: hidden;
-    max-width: 360px;
+
+    max-width: 390px;
   }
 
   .payment-buttons {

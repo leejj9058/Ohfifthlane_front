@@ -29,13 +29,13 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
         <div class="filter-buttons">
-            <button class="filter-option" @click="filterResident">
-                <i class="fas fa-home icon-resident"></i> 거주자
+            <button class="filter-option" @click="filterResident" style="font-size: 20px;">
+                <i class="fas fa-home icon-resident" ></i> 거주자
             </button>
-            <button class="filter-option" @click="filterPublicParking">
+            <button class="filter-option" @click="filterPublicParking" style="font-size: 20px;">
                 <i class="fas fa-warehouse icon-parking"></i> 공영주차장
             </button>
-            <button class="filter-option" @click="filterChargingStations">
+            <button class="filter-option" @click="filterChargingStations" style="font-size: 20px;">
                 <i class="fas fa-charging-station icon-charging"></i> 충전소
             </button>
         </div>
@@ -49,7 +49,7 @@
             <span class="filter-text">필터</span> <!-- 필터 텍스트 -->
         </button>
         <div class="button-container">
-            <button class="revisitButton" @click="revisit">
+            <button class="revisitButton" @click="revisit" style="font-size: 20px;">
                 <i class="bi bi-arrow-clockwise"></i>이 지역 주차장 검색
             </button>
             <button class="return-location-button" @click="getCurrentLocation">
@@ -795,7 +795,7 @@ const noParkingLotToast = () => {
 
 /* 아이콘 스타일 */
 .filter-button i {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     /* 아이콘 크기 줄이기 */
     margin-right: 6px;
     /* 아이콘과 텍스트 간의 간격 줄이기 */
@@ -803,7 +803,7 @@ const noParkingLotToast = () => {
 
 /* 텍스트 스타일 */
 .filter-button .filter-text {
-    font-size: 0.9rem;
+    font-size: 1.5rem;
     /* 텍스트 크기 줄이기 */
     font-weight: 500;
     /* 텍스트 두께 유지 */

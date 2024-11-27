@@ -7,20 +7,20 @@
         <button class="qr-back-button" @click="goBack">
           <i class="fas fa-arrow-left"></i> <!-- FontAwesome 아이콘 추가 -->
         </button>
-        <p class="qr-title">
+        <p class="qr-title" style="font-size: 25px;">
   장애인 주차 표지 내<br />
   <span class="qr-blue-text">QR코드를 인식</span>해 주세요.
 </p>
         <div class="qr-container">
-          <img :src="qrCodeImage" alt="QR 코드" class="qr-code" />
+          <img :src="qrCodeImage" alt="QR 코드" class="qr-code" style="width: 200px; height: 200px;"/>
         </div>
-        <button class="qr-report-button" @click="startScanning">QR코드 인식하기</button>
-        <p class="qr-content">
-          <i class="bi bi-exclamation-triangle" style="font-size: 20px; margin-right: 0px; color: orange;"></i>
+        <button class="qr-report-button" @click="startScanning" style="font-size: 25px;">QR코드 인식하기</button>
+        <p class="qr-content" style="font-size: 25px;">
+          <i class="bi bi-exclamation-triangle" style="font-size: 25px; margin-right: 0px; color: orange;"></i>
           장애인 주차 표지가 없을 경우,<br />
           아래 버튼을 눌러 촬영 후 신고해 주세요.
         </p>
-        <button class="qr-report-button2" @click="startCamera">촬영하기</button>
+        <button class="qr-report-button2" @click="startCamera" style="font-size: 25px;">촬영하기</button>
       </div>
     </div>
   

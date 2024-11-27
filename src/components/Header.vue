@@ -4,7 +4,7 @@
       <button @click="toggleSidebar" class="sidebar-toggle">
         <i class="bi bi-list" ></i>
       </button>
-      <h1 class="logo-text ps-3 tenada-font" @click="goToHome" >주차로</h1>
+      <h1 class="logo-text ps-3 tenada-font" @click="goToHome" style="font-size: 25px;">주차로</h1>
     </div>
 
     <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">

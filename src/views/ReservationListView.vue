@@ -17,10 +17,10 @@
             <p><strong>주소:</strong> {{ item.rpzAddress }}</p>
             <p><strong>예약시간:</strong> {{ item.reservationStartTime }} ~ {{ item.reservationEndTime }}</p>
           </div>
-          <button class="btn btn-danger" @click="goToResidentReport(item)">신고하기</button>
+          <button class="btn btn-danger" @click="goToResidentReport(item)" style="margin-left: 50px;">신고하기</button>
 
         </div>
-        <button v-if="showMore" class="btn btn-secondary mt-3 w-100" @click="loadMore">더보기</button>
+        <button v-if="showMore" class="btn btn-secondary mt-3 " @click="loadMore">더보기</button>
       </div>
     </div>
   </div>
@@ -134,6 +134,7 @@ const goToResidentReport = (item) => {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-left: 10px;
 }
 
 .reservation-date {
