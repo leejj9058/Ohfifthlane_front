@@ -5,7 +5,7 @@
     <h2 class="title-main text-center mb-2">부정주차 신고하기</h2>
 
     <!-- 작은 제목: 장애인 전용구역 -->
-    <h5 class="title-sub text-center mb-5"ㅍ>거주자 우선 주차구역</h5>
+    <h5 class="title-sub text-center mb-5">거주자 우선 주차구역</h5>
     <p class="form-title"><strong><i class="bi bi-image me-2 text-primary"></i>사진</strong></p>
 
     <img v-if="photo" :src="`/src/assets/images/uploads/${photo}`" alt="Captured Photo"
@@ -127,7 +127,7 @@ const submitReport = async () => {
     const response = await axios.post("/api/report", {
       report: {
         reportCarNumber: reportCarNumber.value,
-        reportImage: photo.value ? photo.value.replace("http://172.168.10.11:8080/upload/", "") : "", // 사진 URL을 사용
+        reportImage: photo.value ? photo.value.replace("http://172.168.10.35:8080/upload/", "") : "", // 사진 URL을 사용
 
         reportLat: currentLat.value, // 현재 위도
         reportLon: currentLon.value, // 현재 경도
