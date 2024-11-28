@@ -6,7 +6,7 @@
     <!-- 본문 -->
     <div class="p-4 p-md-5 w-100">
 
-      <h1 class="mb-4 fs-2 fw-bold">신고 내역</h1>
+      <h1 class="mb-4 fs-2 fw-bold">거주자 신고 내역</h1>
 
       <div class="d-flex justify-content-start">
         <Datepicker class="customPicker" v-model="picked" :locale="locale" :format="inputFormat"
