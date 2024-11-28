@@ -11,7 +11,7 @@
         <p><strong class="inputCarNum">{{ staticVehicleNumber }}</strong>차량은 신고 대상 차량이 아닙니다</p>
       </div>
       <div v-else class="info-box unregistered">
-        <p style="font-size: 20px;"><strong class="inputCarNum">{{ staticVehicleNumber }}</strong> 차량은 신고 대상 차량입니다.</p>
+        <p style="font-size: 19px;"><strong class="inputCarNum">{{ staticVehicleNumber }}</strong> 차량은 신고 대상 차량입니다.</p>
         <p class="warning">*차량번호가 일치하는지 한번 더 확인해 주세요*</p>
         
       </div>

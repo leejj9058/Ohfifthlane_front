@@ -154,8 +154,8 @@ import markerGreen from '@/assets/images/marker_green.png';
 import markerMyLocation from '@/assets/images/marker_myLocation.png';
 //-------------------------------------------변수-------------------------------------------------
 
-const defaultLat = 37.515815; // 초기 lat
-const defaultLng = 127.035772; // 초기 lng
+const defaultLat = 37.566802117; // 초기 lat
+const defaultLng = 127.007358177138; // 초기 lng 우리 발표하는 장소로 변경
 
 
 // 선택한 예약 시작 시간
@@ -737,18 +737,14 @@ const noParkingLotToast = () => {
 }
 
 .icon-parking {
-    color: #ffb400;
+    color: #007bff;
     /* 노란색 */
 }
 
-.icon-gas {
-    color: #28a745;
-    /* 초록색 */
-}
 
 .icon-charging {
 
-    color: #007bff;
+    color: #28a745;
 }
 
 /* 마우스 오버 효과 */
